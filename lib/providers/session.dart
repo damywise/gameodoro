@@ -40,7 +40,7 @@ class Session extends _$Session {
   late Stopwatch _stopwatch;
 
   void start() {
-    state = state.copyWith(stopwatchState: StopwatchState.started);
+    state = state.copyWith(stopwatchState: StopwatchState.started, number: 1);
     _stopwatch.start();
   }
 
@@ -59,16 +59,18 @@ class Session extends _$Session {
       _stopwatch.reset();
       switch (state.studyState) {
         case StudyState.focus:
-          const newState = StudyState.shortBreak;
-          state = state.copyWith(studyState: newState);
+          state = state.copyWith(
+            studyState: state.number == 4
+                ? StudyState.longBreak
+                : StudyState.shortBreak,
+          );
           break;
         case StudyState.shortBreak:
         case StudyState.longBreak:
-          const newState = StudyState.focus;
-          state = state.copyWith(studyState: newState);
+          state = state.copyWith(studyState: StudyState.focus);
           break;
       }
-      if (state.number == 5) {
+      if (state.number >= 4) {
         state = state.copyWith(number: 1);
       } else {
         state = state.copyWith(number: state.number + 1);

@@ -37,8 +37,7 @@ class Timer extends ConsumerWidget {
               textAlign: TextAlign.center,
               maxLines: 1,
               style: Theme.of(context)
-                  .typography
-                  .dense
+                  .textTheme
                   .displayLarge
                   ?.copyWith(fontSize: 1000),
             ),

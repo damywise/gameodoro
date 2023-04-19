@@ -64,7 +64,7 @@ class Tetris extends _$Tetris {
     );
   }
 
-  void place(Block block, {bool bottom = false, bool remove = false}) {
+  void place(Block block, {bool lock = false, bool remove = false}) {
     final newLevel = [...state.level];
 
     final blockCoordinate = block.coordinates[block.rotation];
@@ -79,7 +79,7 @@ class Tetris extends _$Tetris {
         final levelY = [...newLevel[posX]];
         levelY[posY] = remove
             ? 7
-            : bottom
+            : lock
                 ? 8
                 : block.index;
         newLevel[posX] = levelY;
@@ -143,7 +143,7 @@ class Tetris extends _$Tetris {
     return false;
   }
 
-  bool move(AxisDirection direction, {bool fall = false}) {
+  bool move(AxisDirection direction, {bool fall = false, bool noLock = false}) {
     final studyState =
         ref.read(sessionProvider.select((value) => value.studyState));
     final isFocusing = studyState == StudyState.focus;
@@ -156,7 +156,7 @@ class Tetris extends _$Tetris {
     if (state.currentBlock == null) return false;
     final block = state.currentBlock!;
     if (fall) {
-      while (move(AxisDirection.down)) {}
+      while (move(AxisDirection.down, noLock: true)) {}
       return false;
     }
     final newBlock = copyBlock(block);
@@ -171,7 +171,7 @@ class Tetris extends _$Tetris {
       state = state.copyWith(currentBlock: newBlock);
       return true;
     } else if (direction == AxisDirection.down) {
-      place(block, bottom: true);
+      place(block, lock: !noLock);
     } else {
       place(block);
     }
@@ -181,13 +181,13 @@ class Tetris extends _$Tetris {
   /// Rotate
   void rotate() {
     final studyState =
-        ref.watch(sessionProvider.select((value) => value.studyState));
-    final isCompleted = studyState == StudyState.focus;
+        ref.read(sessionProvider.select((value) => value.studyState));
+    final isStudying = studyState == StudyState.focus;
     if (!state.isPlaying ||
         state.isGameover ||
         state.isPaused ||
         state.currentBlock == null ||
-        isCompleted) {
+        isStudying) {
       return;
     }
     final block = state.currentBlock!;

@@ -30,7 +30,7 @@ class Main extends HookWidget {
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.blueAccent,
-          brightness: Brightness.dark,
+          brightness: usePlatformBrightness(),
         ),
       ),
       home: const MainPage(title: 'Gameodoro'),

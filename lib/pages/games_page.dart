@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gameodoro/pages/games/tetris.dart';
+import 'package:gameodoro/pages/games/tetris_page.dart';
 
 /// Contains a curated selection of games
 class GamesPage extends StatelessWidget {
@@ -9,7 +9,7 @@ class GamesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final games = {
-      'Tetris': const TetrisGame(),
+      'Tetris': const TetrisPage(),
     };
     const cardWidth = 180.0;
     const cardHeight = 240.0;

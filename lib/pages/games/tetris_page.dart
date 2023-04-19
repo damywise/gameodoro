@@ -6,8 +6,8 @@ import 'package:gameodoro/providers/tetris.dart';
 import 'package:gameodoro/utils.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class TetrisGame extends HookConsumerWidget {
-  const TetrisGame({super.key});
+class TetrisPage extends HookConsumerWidget {
+  const TetrisPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -195,6 +195,9 @@ class TetrisGame extends HookConsumerWidget {
                                                 ? 'Pause'
                                                 : 'Start',
                                   ),
+                                ),
+                                const SizedBox(
+                                  width: 12,
                                 ),
                                 SizedBox(
                                   width: 56 * 3,

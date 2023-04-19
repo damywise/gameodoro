@@ -2,11 +2,12 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gameodoro/pages/full_screen_page.dart';
 import 'package:gameodoro/pages/games_page.dart';
 import 'package:gameodoro/providers/session.dart';
-import 'package:gameodoro/utils.dart';
+import 'package:gameodoro/widgets/state_text.dart';
 import 'package:gameodoro/widgets/timer.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -16,22 +17,22 @@ class HomePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    useEffect(
+      () {
+        SystemChrome.setPreferredOrientations([
+          DeviceOrientation.portraitDown,
+          DeviceOrientation.portraitUp,
+        ]);
+        return null;
+      },
+      [],
+    );
     final sessionNotifier = ref.watch(sessionProvider.notifier);
-    final studyState =
-        ref.watch(sessionProvider.select((value) => value.studyState));
     final isRunning =
         ref.watch(sessionProvider.select((value) => value.stopwatchState)) ==
             StopwatchState.started;
-    final stateText = useState('');
-    useEffect(
-      () {
-        getStudyStateName(studyState, stateText);
-        return null;
-      },
-      [studyState],
-    );
     final maxHeight = Theme.of(context).textTheme.displayLarge?.fontSize ?? 57;
-    final radius = min(MediaQuery.of(context).size.width, 240.0);
+    final radius = min(MediaQuery.of(context).size.width, 240);
 
     return Stack(
       children: [
@@ -43,10 +44,10 @@ class HomePage extends HookConsumerWidget {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
-                    maxWidth: radius,
+                    maxWidth: radius.toDouble(),
                   ),
                   child: AspectRatio(
                     aspectRatio: 1,
@@ -61,16 +62,24 @@ class HomePage extends HookConsumerWidget {
                                 animationDuration: 100,
                                 animateFromLastPercent: true,
                                 circularStrokeCap: CircularStrokeCap.round,
+                                progressColor:
+                                    Theme.of(context).colorScheme.primary,
+                                backgroundColor: Theme.of(context)
+                                    .colorScheme
+                                    .primaryContainer,
                                 percent: min(
                                   1,
                                   ref.watch(
                                         sessionProvider.select(
-                                            (value) => value.elapsed + 100),
+                                          (value) => value.elapsed > 0
+                                              ? value.elapsed + 100
+                                              : 0,
+                                        ),
                                       ) /
                                       sessionNotifier.duration().inMilliseconds,
                                 ),
                                 center: const Padding(
-                                  padding: EdgeInsets.all(32.0),
+                                  padding: EdgeInsets.all(32),
                                   child: Timer(),
                                 ),
                               ),
@@ -78,10 +87,7 @@ class HomePage extends HookConsumerWidget {
                             Center(
                               child: Padding(
                                 padding: EdgeInsets.only(top: maxHeight * 2),
-                                child: Text(
-                                  stateText.value,
-                                  style: Theme.of(context).textTheme.titleLarge,
-                                ),
+                                child: const StateText(),
                               ),
                             )
                           ],

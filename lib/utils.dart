@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gameodoro/providers/session.dart';
 
-void getStudyStateName(StudyState studyState, ValueNotifier<String> stateText) {
+String getStudyStateName(StudyState studyState) {
   switch (studyState) {
     case StudyState.focus:
-      stateText.value = 'Focus';
-      break;
+      return 'Focus';
     case StudyState.shortBreak:
-      stateText.value = 'Short Break';
-      break;
+      return 'Short Break';
     case StudyState.longBreak:
-      stateText.value = 'Long Break';
-      break;
+      return 'Long Break';
   }
 }
 
