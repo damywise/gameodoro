@@ -42,54 +42,51 @@ class HomePage extends HookConsumerWidget {
               height: 40,
             ),
             Expanded(
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: radius,
-                    ),
-                    child: AspectRatio(
-                      aspectRatio: 1,
-                      child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          return Stack(
-                            children: [
-                              Center(
-                                child: CircularPercentIndicator(
-                                  radius: radius / 2,
-                                  animation: true,
-                                  animationDuration: 100,
-                                  animateFromLastPercent: true,
-                                  circularStrokeCap: CircularStrokeCap.round,
-                                  percent: min(
-                                    1,
-                                    ref.watch(
-                                          sessionProvider.select(
-                                              (value) => value.elapsed + 100),
-                                        ) /
-                                        sessionNotifier.duration().inMilliseconds,
-                                  ),
-                                  center: const Padding(
-                                    padding: EdgeInsets.all(32.0),
-                                    child: Timer(),
-                                  ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: radius,
+                  ),
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        return Stack(
+                          children: [
+                            Center(
+                              child: CircularPercentIndicator(
+                                radius: radius / 2,
+                                animation: true,
+                                animationDuration: 100,
+                                animateFromLastPercent: true,
+                                circularStrokeCap: CircularStrokeCap.round,
+                                percent: min(
+                                  1,
+                                  ref.watch(
+                                        sessionProvider.select(
+                                            (value) => value.elapsed + 100),
+                                      ) /
+                                      sessionNotifier.duration().inMilliseconds,
+                                ),
+                                center: const Padding(
+                                  padding: EdgeInsets.all(32.0),
+                                  child: Timer(),
                                 ),
                               ),
-                              Center(
-                                child: Padding(
-                                  padding: EdgeInsets.only(top: maxHeight * 2),
-                                  child: Text(
-                                    stateText.value,
-                                    style: Theme.of(context).textTheme.titleLarge,
-                                  ),
+                            ),
+                            Center(
+                              child: Padding(
+                                padding: EdgeInsets.only(top: maxHeight * 2),
+                                child: Text(
+                                  stateText.value,
+                                  style: Theme.of(context).textTheme.titleLarge,
                                 ),
-                              )
-                            ],
-                          );
-                        },
-                      ),
+                              ),
+                            )
+                          ],
+                        );
+                      },
                     ),
                   ),
                 ),
