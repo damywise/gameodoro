@@ -1,23 +1,23 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'session.dart';
+part of 'tetris.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$sessionHash() => r'67563f3f94e081b666cf56a5b70cc5de56dd5c90';
+String _$tetrisHash() => r'31c2543f425236903ec80607a28527d016d902be';
 
-/// See also [Session].
-@ProviderFor(Session)
-final sessionProvider = NotifierProvider<Session, SessionData>.internal(
-  Session.new,
-  name: r'sessionProvider',
+/// See also [Tetris].
+@ProviderFor(Tetris)
+final tetrisProvider = AutoDisposeNotifierProvider<Tetris, TetrisData>.internal(
+  Tetris.new,
+  name: r'tetrisProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$sessionHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$tetrisHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$Session = Notifier<SessionData>;
+typedef _$Tetris = AutoDisposeNotifier<TetrisData>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

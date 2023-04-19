@@ -16,12 +16,14 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$SessionData {
-  String get name => throw _privateConstructorUsedError;
-  Duration get studyDuration => throw _privateConstructorUsedError;
-  Duration get shortBreakDuration => throw _privateConstructorUsedError;
-  Duration get longBreakDuration => throw _privateConstructorUsedError;
-  bool get selected => throw _privateConstructorUsedError;
-  SessionState get state => throw _privateConstructorUsedError;
+  SessionModel get data => throw _privateConstructorUsedError;
+  int get elapsed => throw _privateConstructorUsedError;
+  StopwatchState get stopwatchState => throw _privateConstructorUsedError;
+  StudyState get studyState => throw _privateConstructorUsedError;
+
+  /// Number of current session.
+  /// 0 if not started at all yet
+  int get number => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SessionDataCopyWith<SessionData> get copyWith =>
@@ -35,12 +37,13 @@ abstract class $SessionDataCopyWith<$Res> {
       _$SessionDataCopyWithImpl<$Res, SessionData>;
   @useResult
   $Res call(
-      {String name,
-      Duration studyDuration,
-      Duration shortBreakDuration,
-      Duration longBreakDuration,
-      bool selected,
-      SessionState state});
+      {SessionModel data,
+      int elapsed,
+      StopwatchState stopwatchState,
+      StudyState studyState,
+      int number});
+
+  $SessionModelCopyWith<$Res> get data;
 }
 
 /// @nodoc
@@ -56,39 +59,42 @@ class _$SessionDataCopyWithImpl<$Res, $Val extends SessionData>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? name = null,
-    Object? studyDuration = null,
-    Object? shortBreakDuration = null,
-    Object? longBreakDuration = null,
-    Object? selected = null,
-    Object? state = null,
+    Object? data = null,
+    Object? elapsed = null,
+    Object? stopwatchState = null,
+    Object? studyState = null,
+    Object? number = null,
   }) {
     return _then(_value.copyWith(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      studyDuration: null == studyDuration
-          ? _value.studyDuration
-          : studyDuration // ignore: cast_nullable_to_non_nullable
-              as Duration,
-      shortBreakDuration: null == shortBreakDuration
-          ? _value.shortBreakDuration
-          : shortBreakDuration // ignore: cast_nullable_to_non_nullable
-              as Duration,
-      longBreakDuration: null == longBreakDuration
-          ? _value.longBreakDuration
-          : longBreakDuration // ignore: cast_nullable_to_non_nullable
-              as Duration,
-      selected: null == selected
-          ? _value.selected
-          : selected // ignore: cast_nullable_to_non_nullable
-              as bool,
-      state: null == state
-          ? _value.state
-          : state // ignore: cast_nullable_to_non_nullable
-              as SessionState,
+      data: null == data
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
+              as SessionModel,
+      elapsed: null == elapsed
+          ? _value.elapsed
+          : elapsed // ignore: cast_nullable_to_non_nullable
+              as int,
+      stopwatchState: null == stopwatchState
+          ? _value.stopwatchState
+          : stopwatchState // ignore: cast_nullable_to_non_nullable
+              as StopwatchState,
+      studyState: null == studyState
+          ? _value.studyState
+          : studyState // ignore: cast_nullable_to_non_nullable
+              as StudyState,
+      number: null == number
+          ? _value.number
+          : number // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $SessionModelCopyWith<$Res> get data {
+    return $SessionModelCopyWith<$Res>(_value.data, (value) {
+      return _then(_value.copyWith(data: value) as $Val);
+    });
   }
 }
 
@@ -101,12 +107,14 @@ abstract class _$$_SessionDataCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String name,
-      Duration studyDuration,
-      Duration shortBreakDuration,
-      Duration longBreakDuration,
-      bool selected,
-      SessionState state});
+      {SessionModel data,
+      int elapsed,
+      StopwatchState stopwatchState,
+      StudyState studyState,
+      int number});
+
+  @override
+  $SessionModelCopyWith<$Res> get data;
 }
 
 /// @nodoc
@@ -120,38 +128,33 @@ class __$$_SessionDataCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? name = null,
-    Object? studyDuration = null,
-    Object? shortBreakDuration = null,
-    Object? longBreakDuration = null,
-    Object? selected = null,
-    Object? state = null,
+    Object? data = null,
+    Object? elapsed = null,
+    Object? stopwatchState = null,
+    Object? studyState = null,
+    Object? number = null,
   }) {
     return _then(_$_SessionData(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      studyDuration: null == studyDuration
-          ? _value.studyDuration
-          : studyDuration // ignore: cast_nullable_to_non_nullable
-              as Duration,
-      shortBreakDuration: null == shortBreakDuration
-          ? _value.shortBreakDuration
-          : shortBreakDuration // ignore: cast_nullable_to_non_nullable
-              as Duration,
-      longBreakDuration: null == longBreakDuration
-          ? _value.longBreakDuration
-          : longBreakDuration // ignore: cast_nullable_to_non_nullable
-              as Duration,
-      selected: null == selected
-          ? _value.selected
-          : selected // ignore: cast_nullable_to_non_nullable
-              as bool,
-      state: null == state
-          ? _value.state
-          : state // ignore: cast_nullable_to_non_nullable
-              as SessionState,
+      data: null == data
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
+              as SessionModel,
+      elapsed: null == elapsed
+          ? _value.elapsed
+          : elapsed // ignore: cast_nullable_to_non_nullable
+              as int,
+      stopwatchState: null == stopwatchState
+          ? _value.stopwatchState
+          : stopwatchState // ignore: cast_nullable_to_non_nullable
+              as StopwatchState,
+      studyState: null == studyState
+          ? _value.studyState
+          : studyState // ignore: cast_nullable_to_non_nullable
+              as StudyState,
+      number: null == number
+          ? _value.number
+          : number // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -160,29 +163,29 @@ class __$$_SessionDataCopyWithImpl<$Res>
 
 class _$_SessionData implements _SessionData {
   const _$_SessionData(
-      {required this.name,
-      required this.studyDuration,
-      required this.shortBreakDuration,
-      required this.longBreakDuration,
-      required this.selected,
-      required this.state});
+      {required this.data,
+      required this.elapsed,
+      required this.stopwatchState,
+      required this.studyState,
+      required this.number});
 
   @override
-  final String name;
+  final SessionModel data;
   @override
-  final Duration studyDuration;
+  final int elapsed;
   @override
-  final Duration shortBreakDuration;
+  final StopwatchState stopwatchState;
   @override
-  final Duration longBreakDuration;
+  final StudyState studyState;
+
+  /// Number of current session.
+  /// 0 if not started at all yet
   @override
-  final bool selected;
-  @override
-  final SessionState state;
+  final int number;
 
   @override
   String toString() {
-    return 'SessionData(name: $name, studyDuration: $studyDuration, shortBreakDuration: $shortBreakDuration, longBreakDuration: $longBreakDuration, selected: $selected, state: $state)';
+    return 'SessionData(data: $data, elapsed: $elapsed, stopwatchState: $stopwatchState, studyState: $studyState, number: $number)';
   }
 
   @override
@@ -190,21 +193,18 @@ class _$_SessionData implements _SessionData {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_SessionData &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.studyDuration, studyDuration) ||
-                other.studyDuration == studyDuration) &&
-            (identical(other.shortBreakDuration, shortBreakDuration) ||
-                other.shortBreakDuration == shortBreakDuration) &&
-            (identical(other.longBreakDuration, longBreakDuration) ||
-                other.longBreakDuration == longBreakDuration) &&
-            (identical(other.selected, selected) ||
-                other.selected == selected) &&
-            (identical(other.state, state) || other.state == state));
+            (identical(other.data, data) || other.data == data) &&
+            (identical(other.elapsed, elapsed) || other.elapsed == elapsed) &&
+            (identical(other.stopwatchState, stopwatchState) ||
+                other.stopwatchState == stopwatchState) &&
+            (identical(other.studyState, studyState) ||
+                other.studyState == studyState) &&
+            (identical(other.number, number) || other.number == number));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, name, studyDuration,
-      shortBreakDuration, longBreakDuration, selected, state);
+  int get hashCode => Object.hash(
+      runtimeType, data, elapsed, stopwatchState, studyState, number);
 
   @JsonKey(ignore: true)
   @override
@@ -215,25 +215,25 @@ class _$_SessionData implements _SessionData {
 
 abstract class _SessionData implements SessionData {
   const factory _SessionData(
-      {required final String name,
-      required final Duration studyDuration,
-      required final Duration shortBreakDuration,
-      required final Duration longBreakDuration,
-      required final bool selected,
-      required final SessionState state}) = _$_SessionData;
+      {required final SessionModel data,
+      required final int elapsed,
+      required final StopwatchState stopwatchState,
+      required final StudyState studyState,
+      required final int number}) = _$_SessionData;
 
   @override
-  String get name;
+  SessionModel get data;
   @override
-  Duration get studyDuration;
+  int get elapsed;
   @override
-  Duration get shortBreakDuration;
+  StopwatchState get stopwatchState;
   @override
-  Duration get longBreakDuration;
+  StudyState get studyState;
   @override
-  bool get selected;
-  @override
-  SessionState get state;
+
+  /// Number of current session.
+  /// 0 if not started at all yet
+  int get number;
   @override
   @JsonKey(ignore: true)
   _$$_SessionDataCopyWith<_$_SessionData> get copyWith =>
