@@ -54,28 +54,49 @@ class Session extends _$Session {
     _stopwatch.stop();
   }
 
+  void next() {
+    print(state.number);
+    if (state.number >= 4) {
+      state = state.copyWith(number: 1);
+    } else if (state.number == 0) {
+      state = state.copyWith(number: 2);
+    } else {
+      state = state.copyWith(number: state.number + 1);
+    }
+    updateStudyState();
+    print(state.number);
+  }
+
+  void previous() {
+    if (state.number <= 1) {
+      state = state.copyWith(number: 4);
+    } else {
+      state = state.copyWith(number: state.number - 1);
+    }
+    updateStudyState();
+  }
+
+  void updateStudyState() {
+    switch (state.studyState) {
+      case StudyState.focus:
+        state = state.copyWith(
+          studyState:
+              state.number == 4 ? StudyState.longBreak : StudyState.shortBreak,
+        );
+        break;
+      case StudyState.shortBreak:
+      case StudyState.longBreak:
+        state = state.copyWith(studyState: StudyState.focus);
+        break;
+    }
+    _stopwatch.reset();
+  }
+
   void _tick(Timer timer) {
-    if (_stopwatch.elapsedMilliseconds + 100 >= duration().inMilliseconds) {
-      _stopwatch.reset();
-      switch (state.studyState) {
-        case StudyState.focus:
-          state = state.copyWith(
-            studyState: state.number == 4
-                ? StudyState.longBreak
-                : StudyState.shortBreak,
-          );
-          break;
-        case StudyState.shortBreak:
-        case StudyState.longBreak:
-          state = state.copyWith(studyState: StudyState.focus);
-          break;
-      }
-      if (state.number >= 4) {
-        state = state.copyWith(number: 1);
-      } else {
-        state = state.copyWith(number: state.number + 1);
-      }
-      return;
+    final isSessionDone =
+        _stopwatch.elapsedMilliseconds + 100 >= duration().inMilliseconds;
+    if (isSessionDone) {
+      return next();
     }
     if (_stopwatch.isRunning) {
       state = state.copyWith(elapsed: _stopwatch.elapsedMilliseconds);

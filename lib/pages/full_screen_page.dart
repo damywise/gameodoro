@@ -47,27 +47,48 @@ class FullScreenPage extends HookConsumerWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(selected.name),
-                      const StateText(),
-                      const Expanded(
+                      const Flexible(child: StateText()),
+                      const Flexible(
+                        flex: 2,
                         child: Timer(),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(32),
-                        child: IconButton(
-                          onPressed: () {
-                            if (isRunning) {
-                              sessionNotifier.pause();
-                            } else {
-                              sessionNotifier.start();
-                            }
-                          },
-                          icon: Icon(
-                            size: 48,
-                            isRunning ? Icons.pause : Icons.play_arrow,
+                      Flexible(
+                        child: Padding(
+                          padding: const EdgeInsets.all(32),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              IconButton(
+                                onPressed: sessionNotifier.previous,
+                                icon: const Icon(
+                                  Icons.skip_previous,
+                                  size: 48,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  if (isRunning) {
+                                    sessionNotifier.pause();
+                                  } else {
+                                    sessionNotifier.start();
+                                  }
+                                },
+                                icon: Icon(
+                                  size: 48,
+                                  isRunning ? Icons.pause : Icons.play_arrow,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: sessionNotifier.next,
+                                icon: const Icon(
+                                  Icons.skip_next,
+                                  size: 48,
+                                ),
+                              )
+                            ],
                           ),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),

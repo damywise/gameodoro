@@ -43,88 +43,126 @@ class HomePage extends HookConsumerWidget {
               height: 40,
             ),
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth: radius.toDouble(),
-                  ),
-                  child: AspectRatio(
-                    aspectRatio: 1,
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        return Stack(
-                          children: [
-                            Center(
-                              child: CircularPercentIndicator(
-                                radius: radius / 2,
-                                animation: true,
-                                animationDuration: 100,
-                                animateFromLastPercent: true,
-                                circularStrokeCap: CircularStrokeCap.round,
-                                progressColor:
-                                    Theme.of(context).colorScheme.primary,
-                                backgroundColor: Theme.of(context)
-                                    .colorScheme
-                                    .primaryContainer,
-                                percent: min(
-                                  1,
-                                  ref.watch(
-                                        sessionProvider.select(
-                                          (value) => value.elapsed > 0
-                                              ? value.elapsed + 100
-                                              : 0,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: SizedBox(
+                      width: radius.toDouble(),
+                      height: radius.toDouble(),
+                      child: AspectRatio(
+                        aspectRatio: 1,
+                        child: LayoutBuilder(
+                          builder: (context, constraints) {
+                            return Stack(
+                              children: [
+                                Center(
+                                  child: CircularPercentIndicator(
+                                    radius: radius / 2,
+                                    animation: true,
+                                    animationDuration: 100,
+                                    animateFromLastPercent: true,
+                                    circularStrokeCap: CircularStrokeCap.round,
+                                    progressColor:
+                                        Theme.of(context).colorScheme.primary,
+                                    backgroundColor: Theme.of(context)
+                                        .colorScheme
+                                        .primaryContainer,
+                                    percent: min(
+                                      1,
+                                      ref.watch(
+                                            sessionProvider.select(
+                                              (value) => value.elapsed > 0
+                                                  ? value.elapsed + 100
+                                                  : 0,
+                                            ),
+                                          ) /
+                                          sessionNotifier
+                                              .duration()
+                                              .inMilliseconds,
+                                    ),
+                                    center: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(
+                                          height: Theme.of(context)
+                                                  .textTheme
+                                                  .titleLarge
+                                                  ?.fontSize ??
+                                              32,
                                         ),
-                                      ) /
-                                      sessionNotifier.duration().inMilliseconds,
+                                        const Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 32,
+                                            vertical: 12,
+                                          ),
+                                          child: Timer(),
+                                        ),
+                                        const StateText(),
+                                      ],
+                                    ),
+                                  ),
                                 ),
-                                center: const Padding(
-                                  padding: EdgeInsets.all(32),
-                                  child: Timer(),
-                                ),
-                              ),
-                            ),
-                            Center(
-                              child: Padding(
-                                padding: EdgeInsets.only(top: maxHeight * 2),
-                                child: const StateText(),
-                              ),
-                            )
-                          ],
-                        );
-                      },
+                              ],
+                            );
+                          },
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // Tooltip(
+                      //   message: 'Reset Timer',
+                      //   child: IconButton(
+                      //     onPressed: () {
+                      //       session.streamController().add(0);
+                      //       session.stopwatch().reset();
+                      //     },
+                      //     icon: const Icon(Icons.replay),
+                      //   ),
+                      // ),
+                      Tooltip(
+                        message: 'Previous Session',
+                        child: IconButton(
+                          onPressed: sessionNotifier.previous,
+                          icon: const Icon(Icons.skip_previous),
+                        ),
+                      ),
+                      FilledButton(
+                        onPressed: () {
+                          if (isRunning) {
+                            sessionNotifier.pause();
+                          } else {
+                            sessionNotifier.start();
+                          }
+                        },
+                        child: Text(isRunning ? 'Pause' : 'Start'),
+                      ),
+                      Tooltip(
+                        message: 'Next Session',
+                        child: IconButton(
+                          onPressed: sessionNotifier.next,
+                          icon: const Icon(Icons.skip_next),
+                        ),
+                      ),
+                    ]
+                        .map(
+                          (e) => Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 4),
+                            child: e,
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(
-              height: 40,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Tooltip(
-                //   message: 'Reset Timer',
-                //   child: IconButton(
-                //     onPressed: () {
-                //       session.streamController().add(0);
-                //       session.stopwatch().reset();
-                //     },
-                //     icon: const Icon(Icons.replay),
-                //   ),
-                // ),
-                FilledButton(
-                  onPressed: () {
-                    if (isRunning) {
-                      sessionNotifier.pause();
-                    } else {
-                      sessionNotifier.start();
-                    }
-                  },
-                  child: Text(isRunning ? 'Pause' : 'Start'),
-                ),
-              ],
             ),
             const SizedBox(
               height: 40,
