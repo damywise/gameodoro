@@ -31,8 +31,18 @@ class HomePage extends HookConsumerWidget {
     final isRunning =
         ref.watch(sessionProvider.select((value) => value.stopwatchState)) ==
             StopwatchState.started;
-    final maxHeight = Theme.of(context).textTheme.displayLarge?.fontSize ?? 57;
     final radius = min(MediaQuery.of(context).size.width, 240);
+    final duration = ref.watch(
+      sessionProvider.select(
+        (value) => value.duration.inMilliseconds,
+      ),
+    );
+    final elapsed = ref.watch(
+      sessionProvider.select(
+        (value) => value.elapsed > 0 ? value.elapsed + 100 : 0,
+      ),
+    );
+    final percent = min(1, elapsed / duration);
 
     return Stack(
       children: [
@@ -69,19 +79,7 @@ class HomePage extends HookConsumerWidget {
                                     backgroundColor: Theme.of(context)
                                         .colorScheme
                                         .primaryContainer,
-                                    percent: min(
-                                      1,
-                                      ref.watch(
-                                            sessionProvider.select(
-                                              (value) => value.elapsed > 0
-                                                  ? value.elapsed + 100
-                                                  : 0,
-                                            ),
-                                          ) /
-                                          sessionNotifier
-                                              .duration()
-                                              .inMilliseconds,
-                                    ),
+                                    percent: percent.toDouble(),
                                     center: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,

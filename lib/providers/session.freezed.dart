@@ -17,12 +17,15 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$SessionData {
   SessionModel get data => throw _privateConstructorUsedError;
+
+  /// Milliseconds elapsed since the session started
   int get elapsed => throw _privateConstructorUsedError;
   StopwatchState get stopwatchState => throw _privateConstructorUsedError;
-  StudyState get studyState => throw _privateConstructorUsedError;
+  StudyState get sessionState => throw _privateConstructorUsedError;
+  Duration get duration => throw _privateConstructorUsedError;
 
   /// Number of current session.
-  /// 0 if not started at all yet
+  /// 0 if not yet started any session
   int get number => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -40,7 +43,8 @@ abstract class $SessionDataCopyWith<$Res> {
       {SessionModel data,
       int elapsed,
       StopwatchState stopwatchState,
-      StudyState studyState,
+      StudyState sessionState,
+      Duration duration,
       int number});
 
   $SessionModelCopyWith<$Res> get data;
@@ -62,7 +66,8 @@ class _$SessionDataCopyWithImpl<$Res, $Val extends SessionData>
     Object? data = null,
     Object? elapsed = null,
     Object? stopwatchState = null,
-    Object? studyState = null,
+    Object? sessionState = null,
+    Object? duration = null,
     Object? number = null,
   }) {
     return _then(_value.copyWith(
@@ -78,10 +83,14 @@ class _$SessionDataCopyWithImpl<$Res, $Val extends SessionData>
           ? _value.stopwatchState
           : stopwatchState // ignore: cast_nullable_to_non_nullable
               as StopwatchState,
-      studyState: null == studyState
-          ? _value.studyState
-          : studyState // ignore: cast_nullable_to_non_nullable
+      sessionState: null == sessionState
+          ? _value.sessionState
+          : sessionState // ignore: cast_nullable_to_non_nullable
               as StudyState,
+      duration: null == duration
+          ? _value.duration
+          : duration // ignore: cast_nullable_to_non_nullable
+              as Duration,
       number: null == number
           ? _value.number
           : number // ignore: cast_nullable_to_non_nullable
@@ -110,7 +119,8 @@ abstract class _$$_SessionDataCopyWith<$Res>
       {SessionModel data,
       int elapsed,
       StopwatchState stopwatchState,
-      StudyState studyState,
+      StudyState sessionState,
+      Duration duration,
       int number});
 
   @override
@@ -131,7 +141,8 @@ class __$$_SessionDataCopyWithImpl<$Res>
     Object? data = null,
     Object? elapsed = null,
     Object? stopwatchState = null,
-    Object? studyState = null,
+    Object? sessionState = null,
+    Object? duration = null,
     Object? number = null,
   }) {
     return _then(_$_SessionData(
@@ -147,10 +158,14 @@ class __$$_SessionDataCopyWithImpl<$Res>
           ? _value.stopwatchState
           : stopwatchState // ignore: cast_nullable_to_non_nullable
               as StopwatchState,
-      studyState: null == studyState
-          ? _value.studyState
-          : studyState // ignore: cast_nullable_to_non_nullable
+      sessionState: null == sessionState
+          ? _value.sessionState
+          : sessionState // ignore: cast_nullable_to_non_nullable
               as StudyState,
+      duration: null == duration
+          ? _value.duration
+          : duration // ignore: cast_nullable_to_non_nullable
+              as Duration,
       number: null == number
           ? _value.number
           : number // ignore: cast_nullable_to_non_nullable
@@ -166,26 +181,31 @@ class _$_SessionData implements _SessionData {
       {required this.data,
       required this.elapsed,
       required this.stopwatchState,
-      required this.studyState,
+      required this.sessionState,
+      required this.duration,
       required this.number});
 
   @override
   final SessionModel data;
+
+  /// Milliseconds elapsed since the session started
   @override
   final int elapsed;
   @override
   final StopwatchState stopwatchState;
   @override
-  final StudyState studyState;
+  final StudyState sessionState;
+  @override
+  final Duration duration;
 
   /// Number of current session.
-  /// 0 if not started at all yet
+  /// 0 if not yet started any session
   @override
   final int number;
 
   @override
   String toString() {
-    return 'SessionData(data: $data, elapsed: $elapsed, stopwatchState: $stopwatchState, studyState: $studyState, number: $number)';
+    return 'SessionData(data: $data, elapsed: $elapsed, stopwatchState: $stopwatchState, sessionState: $sessionState, duration: $duration, number: $number)';
   }
 
   @override
@@ -197,14 +217,16 @@ class _$_SessionData implements _SessionData {
             (identical(other.elapsed, elapsed) || other.elapsed == elapsed) &&
             (identical(other.stopwatchState, stopwatchState) ||
                 other.stopwatchState == stopwatchState) &&
-            (identical(other.studyState, studyState) ||
-                other.studyState == studyState) &&
+            (identical(other.sessionState, sessionState) ||
+                other.sessionState == sessionState) &&
+            (identical(other.duration, duration) ||
+                other.duration == duration) &&
             (identical(other.number, number) || other.number == number));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, data, elapsed, stopwatchState, studyState, number);
+  int get hashCode => Object.hash(runtimeType, data, elapsed, stopwatchState,
+      sessionState, duration, number);
 
   @JsonKey(ignore: true)
   @override
@@ -218,21 +240,26 @@ abstract class _SessionData implements SessionData {
       {required final SessionModel data,
       required final int elapsed,
       required final StopwatchState stopwatchState,
-      required final StudyState studyState,
+      required final StudyState sessionState,
+      required final Duration duration,
       required final int number}) = _$_SessionData;
 
   @override
   SessionModel get data;
   @override
+
+  /// Milliseconds elapsed since the session started
   int get elapsed;
   @override
   StopwatchState get stopwatchState;
   @override
-  StudyState get studyState;
+  StudyState get sessionState;
+  @override
+  Duration get duration;
   @override
 
   /// Number of current session.
-  /// 0 if not started at all yet
+  /// 0 if not yet started any session
   int get number;
   @override
   @JsonKey(ignore: true)

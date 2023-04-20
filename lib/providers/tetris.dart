@@ -1,16 +1,17 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:gameodoro/constants.dart';
+import 'package:gameodoro/models/block.dart';
+import 'package:gameodoro/models/tetris_data.dart';
 import 'package:gameodoro/providers/session.dart';
 import 'package:gameodoro/utils.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'tetris.g.dart';
-
-part 'tetris.freezed.dart';
 
 // Todo(damywise): put data in shared references and load when build
 
@@ -27,11 +28,25 @@ class Tetris extends _$Tetris {
     );
   }
 
+  late SharedPreferences _prefs;
+
   void dispose() {
     _timer.cancel();
   }
 
   var _timer = Timer(Duration.zero, () {});
+
+  Future<void> init() async {
+    _prefs = await SharedPreferences.getInstance();
+    final data = TetrisData.fromJson(
+      json.decode(_prefs.getString('tetris') ?? '') as Map<String, dynamic>,
+    );
+    state = data.level.isNotEmpty ? data : state;
+  }
+
+  Future<void> save() async {
+    await _prefs.setString('tetris', state.toJson().toString());
+  }
 
   void start() {
     print('test');
@@ -89,6 +104,8 @@ class Tetris extends _$Tetris {
   }
 
   bool choosePiece() {
+    cleanLines();
+    if (state.currentBlock != null) place(state.currentBlock!, lock: true);
     final level = state.level;
     if (level.first.contains(8)) {
       return false;
@@ -96,13 +113,14 @@ class Tetris extends _$Tetris {
     final index = Random().nextInt(blocks.length);
     // const index = 0;
     final block = blocks[index];
-    final newBlock = copyBlock(block);
+    var newBlock = copyBlock(block);
 
     var i = 0;
     do {
       i++;
       if (index > 0) {
-        newBlock.position = [Random().nextInt(level.first.length - 1), 0];
+        newBlock = newBlock
+            .copyWith(position: [Random().nextInt(level.first.length - 1), 0]);
       }
     } while (!_canPlace(newBlock) && i < level.first.length);
 
@@ -144,9 +162,9 @@ class Tetris extends _$Tetris {
   }
 
   bool move(AxisDirection direction, {bool fall = false, bool noLock = false}) {
-    final studyState =
-        ref.read(sessionProvider.select((value) => value.studyState));
-    final isFocusing = studyState == StudyState.focus;
+    final sessionState =
+        ref.read(sessionProvider.select((value) => value.sessionState));
+    final isFocusing = sessionState == StudyState.focus;
     if ((!state.isPlaying && state.isGameover) || isFocusing) {
       return false;
     }
@@ -159,11 +177,20 @@ class Tetris extends _$Tetris {
       while (move(AxisDirection.down, noLock: true)) {}
       return false;
     }
-    final newBlock = copyBlock(block);
+    var newBlock = copyBlock(block);
 
-    if (direction == AxisDirection.down) newBlock.position[1]++;
-    if (direction == AxisDirection.left) newBlock.position[0]--;
-    if (direction == AxisDirection.right) newBlock.position[0]++;
+    if (direction == AxisDirection.down) {
+      newBlock = newBlock
+          .copyWith(position: [newBlock.position[0], newBlock.position[1] + 1]);
+    }
+    if (direction == AxisDirection.left) {
+      newBlock = newBlock
+          .copyWith(position: [newBlock.position[0] - 1, newBlock.position[1]]);
+    }
+    if (direction == AxisDirection.right) {
+      newBlock = newBlock
+          .copyWith(position: [newBlock.position[0] + 1, newBlock.position[1]]);
+    }
 
     place(block, remove: true);
     if (_canPlace(newBlock)) {
@@ -180,9 +207,9 @@ class Tetris extends _$Tetris {
 
   /// Rotate
   void rotate() {
-    final studyState =
-        ref.read(sessionProvider.select((value) => value.studyState));
-    final isStudying = studyState == StudyState.focus;
+    final sessionState =
+        ref.read(sessionProvider.select((value) => value.sessionState));
+    final isStudying = sessionState == StudyState.focus;
     if (!state.isPlaying ||
         state.isGameover ||
         state.isPaused ||
@@ -191,11 +218,11 @@ class Tetris extends _$Tetris {
       return;
     }
     final block = state.currentBlock!;
-    final newBlock = copyBlock(block);
+    var newBlock = copyBlock(block);
     if (newBlock.rotation == newBlock.coordinates.length - 1) {
-      newBlock.rotation = 0;
+      newBlock = newBlock.copyWith(rotation: 0);
     } else {
-      newBlock.rotation++;
+      newBlock = newBlock.copyWith(rotation: newBlock.rotation + 1);
     }
     place(block, remove: true);
     if (_canPlace(newBlock)) {
@@ -218,31 +245,13 @@ class Tetris extends _$Tetris {
   void _tick(bool isNotStuck, Timer timer) {
     var newNotStuck = isNotStuck;
     print('test');
-    final studyState =
-        ref.read(sessionProvider.select((value) => value.studyState));
-    final isCompleted = studyState == StudyState.focus;
+    final sessionState =
+        ref.read(sessionProvider.select((value) => value.sessionState));
+    final isCompleted = sessionState == StudyState.focus;
 
     if ((!state.isPaused || state.isGameover || !state.isPlaying) &&
         !isCompleted) {
-      var level = [...state.level];
       if (!move(AxisDirection.down)) {
-        /// clear row and fall
-        var i = -1;
-        final cleared = <int>[];
-        for (final row in level) {
-          i++;
-          if (row.every((element) => element == 8)) {
-            cleared.add(i);
-          }
-        }
-        for (final j in cleared) {
-          level.removeAt(j);
-          level = [
-            List.filled(level.first.length, 7),
-            ...level,
-          ];
-        }
-        if (cleared.isNotEmpty) state = state.copyWith(level: level);
         newNotStuck = choosePiece();
         if (!newNotStuck) {
           state = state.copyWith(
@@ -254,15 +263,24 @@ class Tetris extends _$Tetris {
       }
     }
   }
-}
 
-@freezed
-class TetrisData with _$TetrisData {
-  const factory TetrisData({
-    required List<List<int>> level,
-    required Block? currentBlock,
-    required bool isPlaying,
-    required bool isPaused,
-    required bool isGameover,
-  }) = _TetrisData;
+  void cleanLines() {
+    var level = [...state.level];
+    var i = -1;
+    final cleared = <int>[];
+    for (final row in level) {
+      i++;
+      if (row.every((element) => element == 8)) {
+        cleared.add(i);
+      }
+    }
+    for (final j in cleared) {
+      level.removeAt(j);
+      level = [
+        List.filled(level.first.length, 7),
+        ...level,
+      ];
+    }
+    if (cleared.isNotEmpty) state = state.copyWith(level: level);
+  }
 }

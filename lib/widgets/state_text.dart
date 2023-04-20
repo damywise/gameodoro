@@ -9,7 +9,7 @@ class StateText extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sessionState = ref.watch(
-      sessionProvider.select((value) => value.studyState),
+      sessionProvider.select((value) => value.sessionState),
     );
     return Hero(
       tag: 'session state text',

@@ -9,7 +9,8 @@ class Timer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final elapsed = ref.watch(sessionProvider.select((value) => value.elapsed));
-    final duration = ref.watch(sessionProvider.notifier).duration();
+    final duration =
+        ref.watch(sessionProvider.select((value) => value.duration));
 
     var milliseconds =
         duration.inMilliseconds - elapsed + (elapsed > 0 ? 1000 : 0);

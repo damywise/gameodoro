@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'tetris.dart';
+part of 'tetris_data.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,6 +14,10 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
+TetrisData _$TetrisDataFromJson(Map<String, dynamic> json) {
+  return _TetrisData.fromJson(json);
+}
+
 /// @nodoc
 mixin _$TetrisData {
   List<List<int>> get level => throw _privateConstructorUsedError;
@@ -22,6 +26,7 @@ mixin _$TetrisData {
   bool get isPaused => throw _privateConstructorUsedError;
   bool get isGameover => throw _privateConstructorUsedError;
 
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $TetrisDataCopyWith<TetrisData> get copyWith =>
       throw _privateConstructorUsedError;
@@ -39,6 +44,8 @@ abstract class $TetrisDataCopyWith<$Res> {
       bool isPlaying,
       bool isPaused,
       bool isGameover});
+
+  $BlockCopyWith<$Res>? get currentBlock;
 }
 
 /// @nodoc
@@ -83,6 +90,18 @@ class _$TetrisDataCopyWithImpl<$Res, $Val extends TetrisData>
               as bool,
     ) as $Val);
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $BlockCopyWith<$Res>? get currentBlock {
+    if (_value.currentBlock == null) {
+      return null;
+    }
+
+    return $BlockCopyWith<$Res>(_value.currentBlock!, (value) {
+      return _then(_value.copyWith(currentBlock: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -99,6 +118,9 @@ abstract class _$$_TetrisDataCopyWith<$Res>
       bool isPlaying,
       bool isPaused,
       bool isGameover});
+
+  @override
+  $BlockCopyWith<$Res>? get currentBlock;
 }
 
 /// @nodoc
@@ -144,7 +166,7 @@ class __$$_TetrisDataCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
+@JsonSerializable()
 class _$_TetrisData implements _TetrisData {
   const _$_TetrisData(
       {required final List<List<int>> level,
@@ -153,6 +175,9 @@ class _$_TetrisData implements _TetrisData {
       required this.isPaused,
       required this.isGameover})
       : _level = level;
+
+  factory _$_TetrisData.fromJson(Map<String, dynamic> json) =>
+      _$$_TetrisDataFromJson(json);
 
   final List<List<int>> _level;
   @override
@@ -192,6 +217,7 @@ class _$_TetrisData implements _TetrisData {
                 other.isGameover == isGameover));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -206,6 +232,13 @@ class _$_TetrisData implements _TetrisData {
   @pragma('vm:prefer-inline')
   _$$_TetrisDataCopyWith<_$_TetrisData> get copyWith =>
       __$$_TetrisDataCopyWithImpl<_$_TetrisData>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$_TetrisDataToJson(
+      this,
+    );
+  }
 }
 
 abstract class _TetrisData implements TetrisData {
@@ -215,6 +248,9 @@ abstract class _TetrisData implements TetrisData {
       required final bool isPlaying,
       required final bool isPaused,
       required final bool isGameover}) = _$_TetrisData;
+
+  factory _TetrisData.fromJson(Map<String, dynamic> json) =
+      _$_TetrisData.fromJson;
 
   @override
   List<List<int>> get level;

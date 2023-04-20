@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:gameodoro/models/block.dart';
 import 'package:gameodoro/providers/session.dart';
 
-String getStudyStateName(StudyState studyState) {
-  switch (studyState) {
+String getStudyStateName(StudyState sessionState) {
+  switch (sessionState) {
     case StudyState.focus:
       return 'Focus';
     case StudyState.shortBreak:
@@ -12,19 +13,13 @@ String getStudyStateName(StudyState studyState) {
   }
 }
 
-class Block {
-  Block(this.coordinates, this.index);
-
-  List<int> position = [0, 0];
-  final List<List<List<int>>> coordinates;
-  final int index;
-  int rotation = 0;
-}
-
 Block copyBlock(Block block) {
-  final newBlock = Block(block.coordinates, block.index)
-    ..rotation = block.rotation
-    ..position = [...block.position];
+  final newBlock = Block(
+    block.coordinates,
+    block.index,
+    [...block.position],
+    block.rotation,
+  );
   return newBlock;
 }
 

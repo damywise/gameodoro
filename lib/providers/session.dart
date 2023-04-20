@@ -14,26 +14,32 @@ class Session extends _$Session {
   SessionData build() {
     _stopwatch = Stopwatch();
     Timer.periodic(const Duration(milliseconds: 100), _tick);
+    final data = ref.watch(
+      sessionListProvider
+          .select((value) => value.firstWhere((element) => element.selected)),
+    );
+    final duration = data.studyDuration;
     return SessionData(
-      data: ref.watch(
-        sessionListProvider
-            .select((value) => value.firstWhere((element) => element.selected)),
-      ),
+      data: data,
       elapsed: 0,
       stopwatchState: StopwatchState.stopped,
-      studyState: StudyState.focus,
+      sessionState: StudyState.focus,
       number: 0,
+      duration: duration,
     );
   }
 
-  Duration duration() {
-    switch (state.studyState) {
+  void _updateDuration() {
+    switch (state.sessionState) {
       case StudyState.focus:
-        return state.data.studyDuration;
+        state = state.copyWith(duration: state.data.studyDuration);
+        break;
       case StudyState.shortBreak:
-        return state.data.shortBreakDuration;
+        state = state.copyWith(duration: state.data.shortBreakDuration);
+        break;
       case StudyState.longBreak:
-        return state.data.longBreakDuration;
+        state = state.copyWith(duration: state.data.longBreakDuration);
+        break;
     }
   }
 
@@ -63,7 +69,7 @@ class Session extends _$Session {
     } else {
       state = state.copyWith(number: state.number + 1);
     }
-    updateStudyState();
+    _updateStudyState();
     print(state.number);
   }
 
@@ -73,28 +79,30 @@ class Session extends _$Session {
     } else {
       state = state.copyWith(number: state.number - 1);
     }
-    updateStudyState();
+    _updateStudyState();
   }
 
-  void updateStudyState() {
-    switch (state.studyState) {
+  void _updateStudyState() {
+    _stopwatch.reset();
+    switch (state.sessionState) {
       case StudyState.focus:
         state = state.copyWith(
-          studyState:
+          sessionState:
               state.number == 4 ? StudyState.longBreak : StudyState.shortBreak,
+          elapsed: 0,
         );
         break;
       case StudyState.shortBreak:
       case StudyState.longBreak:
-        state = state.copyWith(studyState: StudyState.focus);
+        state = state.copyWith(sessionState: StudyState.focus, elapsed: 0);
         break;
     }
-    _stopwatch.reset();
+    _updateDuration();
   }
 
   void _tick(Timer timer) {
     final isSessionDone =
-        _stopwatch.elapsedMilliseconds + 100 >= duration().inMilliseconds;
+        _stopwatch.elapsedMilliseconds + 100 >= state.duration.inMilliseconds;
     if (isSessionDone) {
       return next();
     }
@@ -112,10 +120,11 @@ class SessionData with _$SessionData {
     /// Milliseconds elapsed since the session started
     required int elapsed,
     required StopwatchState stopwatchState,
-    required StudyState studyState,
+    required StudyState sessionState,
+    required Duration duration,
 
     /// Number of current session.
-    /// 0 if not started at all yet
+    /// 0 if not yet started any session
     required int number,
   }) = _SessionData;
 }

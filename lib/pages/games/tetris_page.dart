@@ -12,9 +12,9 @@ class TetrisPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // final colors = getColors();
-    final studyState =
-        ref.watch(sessionProvider.select((value) => value.studyState));
-    final isFocusing = studyState == StudyState.focus;
+    final sessionState =
+        ref.watch(sessionProvider.select((value) => value.sessionState));
+    final isFocusing = sessionState == StudyState.focus;
     final isPlaying =
         ref.watch(tetrisProvider.select((value) => value.isPlaying));
     final isPaused =
@@ -25,7 +25,7 @@ class TetrisPage extends HookConsumerWidget {
 
     final isDialogShowing = useState(false);
 
-    ref.listen(sessionProvider.select((value) => value.studyState),
+    ref.listen(sessionProvider.select((value) => value.sessionState),
         (previous, next) {
       if (next == StudyState.focus) {
         if (!isDialogShowing.value) {
@@ -174,6 +174,7 @@ class TetrisPage extends HookConsumerWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 FloatingActionButton(
+                                  heroTag: 'start',
                                   isExtended: true,
                                   onPressed: () {
                                     final game =
@@ -264,6 +265,7 @@ Widget _buildControls(WidgetRef ref) {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           FloatingActionButton(
+            heroTag: '1',
             onPressed: ref.watch(tetrisProvider.notifier).rotate,
             child: const Icon(Icons.rotate_right),
           ),
@@ -273,11 +275,13 @@ Widget _buildControls(WidgetRef ref) {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           FloatingActionButton(
+            heroTag: '2',
             onPressed: () =>
                 ref.watch(tetrisProvider.notifier).move(AxisDirection.left),
             child: const Icon(Icons.arrow_left),
           ),
           FloatingActionButton(
+            heroTag: '3',
             onPressed: () =>
                 ref.watch(tetrisProvider.notifier).move(AxisDirection.right),
             child: const Icon(Icons.arrow_right),
@@ -288,6 +292,7 @@ Widget _buildControls(WidgetRef ref) {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           FloatingActionButton(
+            heroTag: '4',
             onPressed: () => ref
                 .watch(tetrisProvider.notifier)
                 .move(AxisDirection.down, fall: true),

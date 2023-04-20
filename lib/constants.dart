@@ -1,4 +1,4 @@
-import 'package:gameodoro/utils.dart';
+import 'package:gameodoro/models/block.dart';
 
 const sessionMessages = [
   "Let's get started! Focus for the next 25 minutes and make the most of your study session",
@@ -12,7 +12,7 @@ const focusSessionMessages = [
 ];
 
 /// Use guideline SRS https://harddrop.com/wiki/SRS#Wall_Kicks
-final List<Block> blocks = [
+const List<Block> blocks = [
   Block(
     [
       [
