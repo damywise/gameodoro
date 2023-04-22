@@ -90,145 +90,137 @@ class TetrisPage extends HookConsumerWidget {
           game.move(AxisDirection.down, fall: true);
         }
       },
-      child: Stack(
-        children: [
-          Scaffold(
-            backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
-            body: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: AspectRatio(
-                            aspectRatio: 10 / 18,
-                            child: LayoutBuilder(
-                              builder: (context, constraints) {
-                                return Card(
-                                  color: Theme.of(context).cardColor,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8),
-                                    child: LayoutBuilder(
-                                      builder: (context, constraints) {
-                                        return Stack(
-                                          alignment: Alignment.center,
-                                          children: [
-                                            LayoutBuilder(
-                                              builder: (context, constraints) {
-                                                return Column(
-                                                  children: buildTiles(level),
-                                                );
-                                              },
+      child: Scaffold(
+        appBar: AppBar(backgroundColor: Colors.transparent),
+        extendBodyBehindAppBar: true,
+        backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+        body: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: AspectRatio(
+                        aspectRatio: 10 / 18,
+                        child: LayoutBuilder(
+                          builder: (context, constraints) {
+                            return Card(
+                              color: Theme.of(context).cardColor,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: LayoutBuilder(
+                                  builder: (context, constraints) {
+                                    return Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        LayoutBuilder(
+                                          builder: (context, constraints) {
+                                            return Column(
+                                              children: buildTiles(level),
+                                            );
+                                          },
+                                        ),
+                                        if (isGameover && !isPlaying) ...[
+                                          Center(
+                                            child: Text(
+                                              'Game Over',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headlineLarge
+                                                  ?.copyWith(
+                                                    foreground: Paint()
+                                                      ..color = Theme.of(
+                                                                context,
+                                                              ).brightness ==
+                                                              Brightness.dark
+                                                          ? Colors.black
+                                                          : Colors.white
+                                                      ..style =
+                                                          PaintingStyle
+                                                              .stroke
+                                                      ..strokeWidth = 2.0,
+                                                  ),
                                             ),
-                                            if (isGameover && !isPlaying) ...[
-                                              Center(
-                                                child: Text(
-                                                  'Game Over',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headlineLarge
-                                                      ?.copyWith(
-                                                        foreground: Paint()
-                                                          ..color = Theme.of(
-                                                                    context,
-                                                                  ).brightness ==
-                                                                  Brightness.dark
-                                                              ? Colors.black
-                                                              : Colors.white
-                                                          ..style =
-                                                              PaintingStyle
-                                                                  .stroke
-                                                          ..strokeWidth = 2.0,
-                                                      ),
-                                                ),
-                                              ),
-                                              Center(
-                                                child: Text(
-                                                  'Game Over',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headlineLarge,
-                                                ),
-                                              ),
-                                            ]
-                                          ],
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 32,
-                        ),
-                        FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: SizedBox(
-                            width: 240,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                FloatingActionButton(
-                                  heroTag: 'start',
-                                  isExtended: true,
-                                  onPressed: () {
-                                    final game =
-                                        ref.watch(tetrisProvider.notifier);
-                                    if (isPaused) {
-                                      game.play();
-                                    } else if (isPlaying) {
-                                      game.pause();
-                                    } else {
-                                      game.start();
-                                    }
+                                          ),
+                                          Center(
+                                            child: Text(
+                                              'Game Over',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headlineLarge,
+                                            ),
+                                          ),
+                                        ]
+                                      ],
+                                    );
                                   },
-                                  child: Text(
-                                    isGameover
-                                        ? 'Restart'
-                                        : isPaused
-                                            ? 'Play'
-                                            : isPlaying
-                                                ? 'Pause'
-                                                : 'Start',
-                                  ),
                                 ),
-                                const SizedBox(
-                                  width: 12,
-                                ),
-                                SizedBox(
-                                  width: 56 * 3,
-                                  child: AspectRatio(
-                                    aspectRatio: 1,
-                                    child: _buildControls(ref),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
                     ),
-                  ),
-                ],
+                    const SizedBox(
+                      height: 32,
+                    ),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: SizedBox(
+                        width: 240,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            FloatingActionButton(
+                              heroTag: 'start',
+                              isExtended: true,
+                              onPressed: () => handleStartButton(ref, isPaused, isPlaying),
+                              child: Text(
+                                isGameover
+                                    ? 'Restart'
+                                    : isPaused
+                                        ? 'Play'
+                                        : isPlaying
+                                            ? 'Pause'
+                                            : 'Start',
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 12,
+                            ),
+                            SizedBox(
+                              width: 56 * 3,
+                              child: AspectRatio(
+                                aspectRatio: 1,
+                                child: _buildControls(ref),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ),
+            ],
           ),
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: BackButton(
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
+  }
+
+  void handleStartButton(WidgetRef ref, bool isPaused, bool isPlaying) {
+    final game =
+        ref.watch(tetrisProvider.notifier);
+    if (isPaused) {
+      game.play();
+    } else if (isPlaying) {
+      game.pause();
+    } else {
+      game.start();
+    }
   }
 }
 
@@ -246,6 +238,14 @@ class AlertDialogWIdget extends StatelessWidget {
       title: const Text('Break is Over'),
       content: const Text('Time to continue your study'),
       actions: [
+        TextButton(
+          onPressed: () {
+            isDialogShowing.value = false;
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+          },
+          child: const Text('Go back'),
+        ),
         FilledButton(
           onPressed: () {
             isDialogShowing.value = false;

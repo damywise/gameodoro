@@ -58,11 +58,14 @@ class FullScreenPage extends HookConsumerWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              IconButton(
-                                onPressed: sessionNotifier.previous,
-                                icon: const Icon(
-                                  Icons.skip_previous,
-                                  size: 48,
+                              Hero(
+                                tag: 'button-previous',
+                                child: IconButton(
+                                  onPressed: sessionNotifier.previous,
+                                  icon: const Icon(
+                                    Icons.skip_previous,
+                                    size: 48,
+                                  ),
                                 ),
                               ),
                               IconButton(
@@ -78,11 +81,14 @@ class FullScreenPage extends HookConsumerWidget {
                                   isRunning ? Icons.pause : Icons.play_arrow,
                                 ),
                               ),
-                              IconButton(
-                                onPressed: sessionNotifier.next,
-                                icon: const Icon(
-                                  Icons.skip_next,
-                                  size: 48,
+                              Hero(
+                                tag: 'button-next',
+                                child: IconButton(
+                                  onPressed: sessionNotifier.next,
+                                  icon: const Icon(
+                                    Icons.skip_next,
+                                    size: 48,
+                                  ),
                                 ),
                               )
                             ],

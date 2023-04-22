@@ -61,7 +61,6 @@ class Session extends _$Session {
   }
 
   void next() {
-    print(state.number);
     if (state.number >= 4) {
       state = state.copyWith(number: 1);
     } else if (state.number == 0) {
@@ -70,7 +69,6 @@ class Session extends _$Session {
       state = state.copyWith(number: state.number + 1);
     }
     _updateStudyState();
-    print(state.number);
   }
 
   void previous() {

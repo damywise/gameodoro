@@ -4,32 +4,47 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gameodoro/pages/main_page.dart';
+import 'package:gameodoro/utils.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  final prefs = await SharedPreferences.getInstance();
 
   if (Platform.isAndroid) {
     await SystemChrome.setEnabledSystemUIMode(
       SystemUiMode.immersiveSticky,
     );
   }
-  runApp(const ProviderScope(child: Main()));
+  runApp(
+    ProviderScope(
+      overrides: [sharedPreferences.overrideWithValue(prefs)],
+      child: const Main(),
+    ),
+  );
 }
 
 ///
-class Main extends HookWidget {
+class Main extends HookConsumerWidget {
   ///
   const Main({super.key});
 
+  Future<void> asyncInit(WidgetRef ref) async {}
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    useEffect(() {
+      asyncInit(ref);
+      return null;
+    });
     return MaterialApp(
       title: 'Gameodoro',
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blueAccent,
+          seedColor: Colors.redAccent,
           brightness: usePlatformBrightness(),
         ),
       ),

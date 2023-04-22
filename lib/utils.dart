@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gameodoro/models/block.dart';
 import 'package:gameodoro/providers/session.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+final sharedPreferences =
+    Provider<SharedPreferences>((_) => throw UnimplementedError());
 
 String getStudyStateName(StudyState sessionState) {
   switch (sessionState) {

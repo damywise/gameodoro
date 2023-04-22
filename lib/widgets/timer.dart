@@ -29,21 +29,25 @@ class Timer extends ConsumerWidget {
 
     return Hero(
       tag: 'timer',
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            child: AutoSizeText(
-              '${minutes < 10 ? '0' : ''}$minutes : ${seconds < 10 ? '0' : ''}$seconds',
-              textAlign: TextAlign.center,
-              maxLines: 1,
-              style: Theme.of(context)
-                  .textTheme
-                  .displayLarge
-                  ?.copyWith(fontSize: 1000),
+      child: AnimatedSize(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOutCubic,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: AutoSizeText(
+                '${minutes < 10 ? '0' : ''}$minutes : ${seconds < 10 ? '0' : ''}$seconds',
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                style: Theme.of(context)
+                    .textTheme
+                    .displayLarge
+                    ?.copyWith(fontSize: 1000),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

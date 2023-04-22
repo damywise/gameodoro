@@ -19,6 +19,7 @@ part 'tetris.g.dart';
 class Tetris extends _$Tetris {
   @override
   TetrisData build() {
+    _prefs = ref.read(sharedPreferences);
     return TetrisData(
       level: List.filled(18, List.filled(10, blocks.length)),
       currentBlock: null,
@@ -49,7 +50,6 @@ class Tetris extends _$Tetris {
   }
 
   void start() {
-    print('test');
     state = state.copyWith(
       level: List.filled(18, List.filled(10, blocks.length)),
       isPlaying: true,
@@ -244,7 +244,6 @@ class Tetris extends _$Tetris {
 
   void _tick(bool isNotStuck, Timer timer) {
     var newNotStuck = isNotStuck;
-    print('test');
     final sessionState =
         ref.read(sessionProvider.select((value) => value.sessionState));
     final isCompleted = sessionState == StudyState.focus;
