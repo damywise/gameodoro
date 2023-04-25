@@ -8,9 +8,11 @@ part of 'block.dart';
 
 _$_Block _$$_BlockFromJson(Map<String, dynamic> json) => _$_Block(
       (json['coordinates'] as List<dynamic>)
-          .map((e) => (e as List<dynamic>)
-              .map((e) => (e as List<dynamic>).map((e) => e as int).toList())
-              .toList())
+          .map(
+            (e) => (e as List<dynamic>)
+                .map((e) => (e as List<dynamic>).map((e) => e as int).toList())
+                .toList(),
+          )
           .toList(),
       json['index'] as int,
       (json['position'] as List<dynamic>?)?.map((e) => e as int).toList() ??

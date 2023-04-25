@@ -65,50 +65,47 @@ class ToDoListPage extends HookConsumerWidget {
             ),
             Flexible(
               child: ReorderableListView.builder(
+                padding: const EdgeInsets.only(right: 12),
+                proxyDecorator: (child, index, animation) => child,
                 scrollController: todoScrollController,
-                proxyDecorator: (child, index, animation) => ClipRRect(
-                  borderRadius: BorderRadius.circular(6),
-                  child: Material(child: child),
-                ),
                 itemBuilder: (context, index) {
                   final task = tasksTodo[index];
-                  return ClipRRect(
+                  return Card(
                     key: Key('${task.id}'),
-                    borderRadius: BorderRadius.circular(8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.all(1),
-                      child: ColoredBox(
-                        color: Theme.of(context).colorScheme.onSecondary,
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 16),
-                          child: ListTile(
-                            leading: Checkbox(
-                              value: false,
-                              onChanged: (done) => taskNotifier.toggle(task.id),
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 16),
+                        child: ListTile(
+                          leading: Checkbox(
+                            value: false,
+                            onChanged: (done) => taskNotifier.toggle(task.id),
+                          ),
+                          trailing: IconButton(
+                            onPressed: () => taskNotifier.remove(task.id),
+                            icon: const Icon(Icons.delete),
+                          ),
+                          title: TextFormField(
+                            controller: controllersTodo[index],
+                            keyboardType: TextInputType.multiline,
+                            maxLines: null,
+                            decoration: const InputDecoration(
+                              hintText: 'Input your task here',
                             ),
-                            trailing: IconButton(
-                              onPressed: () => taskNotifier.remove(task.id),
-                              icon: const Icon(Icons.delete),
+                            onTapOutside: (_) => taskNotifier.edit(
+                              task.id,
+                              controllersTodo[index].text,
                             ),
-                            title: TextFormField(
-                              controller: controllersTodo[index],
-                              keyboardType: TextInputType.multiline,
-                              maxLines: null,
-                              decoration: const InputDecoration(
-                                hintText: 'Input your task here',
-                              ),
-                              onTapOutside: (_) => taskNotifier.edit(
-                                task.id,
-                                controllersTodo[index].text,
-                              ),
-                              onEditingComplete: () => taskNotifier.edit(
-                                task.id,
-                                controllersTodo[index].text,
-                              ),
-                              onSaved: (_) => taskNotifier.edit(
-                                task.id,
-                                controllersTodo[index].text,
-                              ),
+                            onEditingComplete: () => taskNotifier.edit(
+                              task.id,
+                              controllersTodo[index].text,
+                            ),
+                            onSaved: (_) => taskNotifier.edit(
+                              task.id,
+                              controllersTodo[index].text,
                             ),
                           ),
                         ),
@@ -130,52 +127,49 @@ class ToDoListPage extends HookConsumerWidget {
             ),
             Flexible(
               child: ReorderableListView.builder(
-                proxyDecorator: (child, index, animation) => ClipRRect(
-                  borderRadius: BorderRadius.circular(6),
-                  child: Material(child: child),
-                ),
+                padding: const EdgeInsets.only(right: 12),
+                proxyDecorator: (child, index, animation) => child,
                 itemBuilder: (context, index) {
                   final task = tasksDone[index];
-                  return ClipRRect(
+                  return Card(
                     key: Key('${task.id}'),
-                    borderRadius: BorderRadius.circular(8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.all(1),
-                      child: ColoredBox(
-                        color: Theme.of(context).colorScheme.onSecondary,
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 16),
-                          child: ListTile(
-                            leading: Checkbox(
-                              value: true,
-                              onChanged: (done) => taskNotifier.toggle(task.id),
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 16),
+                        child: ListTile(
+                          leading: Checkbox(
+                            value: true,
+                            onChanged: (done) => taskNotifier.toggle(task.id),
+                          ),
+                          trailing: IconButton(
+                            onPressed: () => taskNotifier.remove(task.id),
+                            icon: const Icon(Icons.delete),
+                          ),
+                          title: TextFormField(
+                            controller: controllersDone[index],
+                            keyboardType: TextInputType.multiline,
+                            maxLines: null,
+                            style: const TextStyle(
+                              decoration: TextDecoration.lineThrough,
                             ),
-                            trailing: IconButton(
-                              onPressed: () => taskNotifier.remove(task.id),
-                              icon: const Icon(Icons.delete),
+                            decoration: const InputDecoration(
+                              hintText: 'Input your task here',
                             ),
-                            title: TextFormField(
-                              controller: controllersDone[index],
-                              keyboardType: TextInputType.multiline,
-                              maxLines: null,
-                              style: const TextStyle(
-                                decoration: TextDecoration.lineThrough,
-                              ),
-                              decoration: const InputDecoration(
-                                hintText: 'Input your task here',
-                              ),
-                              onTapOutside: (_) => taskNotifier.edit(
-                                task.id,
-                                controllersDone[index].text,
-                              ),
-                              onEditingComplete: () => taskNotifier.edit(
-                                task.id,
-                                controllersDone[index].text,
-                              ),
-                              onSaved: (_) => taskNotifier.edit(
-                                task.id,
-                                controllersDone[index].text,
-                              ),
+                            onTapOutside: (_) => taskNotifier.edit(
+                              task.id,
+                              controllersDone[index].text,
+                            ),
+                            onEditingComplete: () => taskNotifier.edit(
+                              task.id,
+                              controllersDone[index].text,
+                            ),
+                            onSaved: (_) => taskNotifier.edit(
+                              task.id,
+                              controllersDone[index].text,
                             ),
                           ),
                         ),

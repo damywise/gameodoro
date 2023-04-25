@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gameodoro/pages/full_screen_page.dart';
 import 'package:gameodoro/pages/games_page.dart';
+import 'package:gameodoro/pages/settings_page.dart';
 import 'package:gameodoro/pages/to_do_list_page.dart';
 import 'package:gameodoro/providers/session.dart';
 import 'package:gameodoro/widgets/state_text.dart';
@@ -13,7 +14,7 @@ import 'package:gameodoro/widgets/timer.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
-class HomePage extends HookConsumerWidget {
+class HomePage extends HookConsumerWidget with RouteAware {
   const HomePage({super.key});
 
   @override
@@ -64,28 +65,33 @@ class HomePage extends HookConsumerWidget {
                 animateFromLastPercent: true,
                 circularStrokeCap: CircularStrokeCap.round,
                 progressColor: Theme.of(context).colorScheme.primary,
-                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                backgroundColor: Theme.of(context).colorScheme.onPrimary,
                 percent: percent.toDouble(),
-                center: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const StateText(),
-                    // SizedBox(
-                    //   height: Theme.of(context)
-                    //           .textTheme
-                    //           .titleLarge
-                    //           ?.fontSize ??
-                    //       32,
-                    // ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 32,
-                        vertical: 12,
+                center: Card(
+                  margin: const EdgeInsets.all(5),
+                  elevation: 24,
+                  shape: const CircleBorder(),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const StateText(),
+                      // SizedBox(
+                      //   height: Theme.of(context)
+                      //           .textTheme
+                      //           .titleLarge
+                      //           ?.fontSize ??
+                      //       32,
+                      // ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 32,
+                          vertical: 12,
+                        ),
+                        child: Timer(),
                       ),
-                      child: Timer(),
-                    ),
-                    buildButtons(sessionNotifier, isRunning),
-                  ],
+                      buildButtons(sessionNotifier, isRunning),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -152,12 +158,12 @@ class HomePage extends HookConsumerWidget {
           child: Padding(
             padding: const EdgeInsets.all(8),
             child: Tooltip(
-              message: 'Setting',
+              message: 'Settings',
               child: IconButton(
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute<Widget>(
-                      builder: (context) => const GamesPage(),
+                      builder: (context) => const SettingsPage(),
                     ),
                   );
                 },
@@ -208,7 +214,7 @@ class HomePage extends HookConsumerWidget {
           duration: const Duration(milliseconds: 100),
           curve: Curves.easeInOut,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+            padding: const EdgeInsets.symmetric(horizontal: 4),
             child: FilledButton(
               onPressed: () {
                 if (isRunning) {
@@ -244,7 +250,7 @@ class HomePage extends HookConsumerWidget {
 }
 
 class _TuneWidget extends StatelessWidget {
-  const _TuneWidget({super.key});
+  const _TuneWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -271,7 +277,7 @@ class _TuneWidget extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 48.0),
+              padding: const EdgeInsets.only(top: 48),
               child: Column(
                 children: [
                   Expanded(

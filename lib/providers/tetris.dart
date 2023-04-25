@@ -46,7 +46,7 @@ class Tetris extends _$Tetris {
   }
 
   Future<void> save() async {
-    await _prefs.setString('tetris', state.toJson().toString());
+    await _prefs.setString('tetris', json.encode(state.toJson()));
   }
 
   void start() {

@@ -17,7 +17,6 @@ class ToDoList extends _$ToDoList {
     final data = ToDoListData.fromJson(
       json.decode(dataRaw ?? '{}') as Map<String, dynamic>,
     );
-    print(data);
     return data;
   }
 

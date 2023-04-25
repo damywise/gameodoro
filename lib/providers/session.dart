@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:gameodoro/providers/session_list.dart';
+import 'package:gameodoro/utils.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'session.g.dart';
 
@@ -14,9 +16,10 @@ class Session extends _$Session {
   SessionData build() {
     _stopwatch = Stopwatch();
     Timer.periodic(const Duration(milliseconds: 100), _tick);
-    final data = ref.watch(
-      sessionListProvider
-          .select((value) => value.firstWhere((element) => element.selected)),
+    _prefs = ref.read(sharedPreferences);
+    final dataRaw = _prefs.getString('sessionData');
+    final data = SessionModel.fromJson(
+      json.decode(dataRaw ?? '{}') as Map<String, dynamic>,
     );
     final duration = data.studyDuration;
     return SessionData(
@@ -28,6 +31,8 @@ class Session extends _$Session {
       duration: duration,
     );
   }
+
+  late SharedPreferences _prefs;
 
   void _updateDuration() {
     switch (state.sessionState) {
@@ -58,6 +63,22 @@ class Session extends _$Session {
   void finish() {
     state = state.copyWith(stopwatchState: StopwatchState.started, number: 0);
     _stopwatch.stop();
+  }
+
+  void edit({
+    Duration? studyDuration,
+    Duration? shortBreakDuration,
+    Duration? longBreakDuration,
+  }) {
+    final data = state.data;
+    final newData = data.copyWith(
+      studyDuration: studyDuration ?? data.studyDuration,
+      shortBreakDuration: shortBreakDuration ?? data.shortBreakDuration,
+      longBreakDuration: longBreakDuration ?? data.longBreakDuration,
+    );
+    state = state.copyWith(data: newData);
+    _updateStudyState();
+    saveData();
   }
 
   void next() {
@@ -108,6 +129,10 @@ class Session extends _$Session {
       state = state.copyWith(elapsed: _stopwatch.elapsedMilliseconds);
     }
   }
+
+  void saveData() {
+    _prefs.setString('sessionData', json.encode(state.data.toJson()));
+  }
 }
 
 @freezed
@@ -125,6 +150,9 @@ class SessionData with _$SessionData {
     /// 0 if not yet started any session
     required int number,
   }) = _SessionData;
+
+  factory SessionData.fromJson(Map<String, dynamic> json) =>
+      _$SessionDataFromJson(json);
 }
 
 enum StopwatchState {
@@ -133,3 +161,25 @@ enum StopwatchState {
 }
 
 enum StudyState { focus, shortBreak, longBreak }
+
+/// Contains custom pomodoro session data:
+/// Session name,
+/// Study duration,
+/// Short break duration, and
+/// Long break duration
+@freezed
+class SessionModel with _$SessionModel {
+  /// Contains custom pomodoro session data:
+  /// Session name,
+  /// Study duration,
+  /// Short break duration, and
+  /// Long break duration
+  const factory SessionModel({
+    @Default(Duration(minutes: 25)) Duration studyDuration,
+    @Default(Duration(minutes: 5)) Duration shortBreakDuration,
+    @Default(Duration(minutes: 15)) Duration longBreakDuration,
+  }) = _SessionModel;
+
+  factory SessionModel.fromJson(Map<String, dynamic> json) =>
+      _$SessionModelFromJson(json);
+}

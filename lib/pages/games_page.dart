@@ -42,7 +42,7 @@ class GamesPage extends StatelessWidget {
                       child: PhysicalModel(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                         borderRadius: BorderRadius.circular(8),
-                        elevation: 2,
+                        elevation: 12,
                         child: Stack(
                           alignment: Alignment.bottomCenter,
                           children: [
@@ -73,7 +73,7 @@ class GamesPage extends StatelessWidget {
                                   color: Theme.of(context)
                                       .colorScheme
                                       .secondaryContainer,
-                                  borderRadius: BorderRadius.circular(6),
+                                  borderRadius: BorderRadius.circular(9),
                                 ),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(6),
@@ -84,7 +84,7 @@ class GamesPage extends StatelessWidget {
                                     fit: BoxFit.fitWidth,
                                     errorBuilder:
                                         (context, error, stackTrace) =>
-                                            SizedBox.shrink(),
+                                            const SizedBox.shrink(),
                                   ),
                                 ),
                               ),
