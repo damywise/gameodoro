@@ -20,7 +20,8 @@ ToDoListData _$ToDoListDataFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ToDoListData {
-  List<Task> get tasks => throw _privateConstructorUsedError;
+  List<Task> get tasksTodo => throw _privateConstructorUsedError;
+  List<Task> get tasksDone => throw _privateConstructorUsedError;
   int get length => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -35,7 +36,7 @@ abstract class $ToDoListDataCopyWith<$Res> {
           ToDoListData value, $Res Function(ToDoListData) then) =
       _$ToDoListDataCopyWithImpl<$Res, ToDoListData>;
   @useResult
-  $Res call({List<Task> tasks, int length});
+  $Res call({List<Task> tasksTodo, List<Task> tasksDone, int length});
 }
 
 /// @nodoc
@@ -51,13 +52,18 @@ class _$ToDoListDataCopyWithImpl<$Res, $Val extends ToDoListData>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? tasks = null,
+    Object? tasksTodo = null,
+    Object? tasksDone = null,
     Object? length = null,
   }) {
     return _then(_value.copyWith(
-      tasks: null == tasks
-          ? _value.tasks
-          : tasks // ignore: cast_nullable_to_non_nullable
+      tasksTodo: null == tasksTodo
+          ? _value.tasksTodo
+          : tasksTodo // ignore: cast_nullable_to_non_nullable
+              as List<Task>,
+      tasksDone: null == tasksDone
+          ? _value.tasksDone
+          : tasksDone // ignore: cast_nullable_to_non_nullable
               as List<Task>,
       length: null == length
           ? _value.length
@@ -75,7 +81,7 @@ abstract class _$$_ToDoListDataCopyWith<$Res>
       __$$_ToDoListDataCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<Task> tasks, int length});
+  $Res call({List<Task> tasksTodo, List<Task> tasksDone, int length});
 }
 
 /// @nodoc
@@ -89,13 +95,18 @@ class __$$_ToDoListDataCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? tasks = null,
+    Object? tasksTodo = null,
+    Object? tasksDone = null,
     Object? length = null,
   }) {
     return _then(_$_ToDoListData(
-      null == tasks
-          ? _value._tasks
-          : tasks // ignore: cast_nullable_to_non_nullable
+      null == tasksTodo
+          ? _value._tasksTodo
+          : tasksTodo // ignore: cast_nullable_to_non_nullable
+              as List<Task>,
+      null == tasksDone
+          ? _value._tasksDone
+          : tasksDone // ignore: cast_nullable_to_non_nullable
               as List<Task>,
       null == length
           ? _value.length
@@ -108,19 +119,32 @@ class __$$_ToDoListDataCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_ToDoListData implements _ToDoListData {
-  _$_ToDoListData([final List<Task> tasks = const [], this.length = 0])
-      : _tasks = tasks;
+  _$_ToDoListData(
+      [final List<Task> tasksTodo = const [],
+      final List<Task> tasksDone = const [],
+      this.length = 0])
+      : _tasksTodo = tasksTodo,
+        _tasksDone = tasksDone;
 
   factory _$_ToDoListData.fromJson(Map<String, dynamic> json) =>
       _$$_ToDoListDataFromJson(json);
 
-  final List<Task> _tasks;
+  final List<Task> _tasksTodo;
   @override
   @JsonKey()
-  List<Task> get tasks {
-    if (_tasks is EqualUnmodifiableListView) return _tasks;
+  List<Task> get tasksTodo {
+    if (_tasksTodo is EqualUnmodifiableListView) return _tasksTodo;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_tasks);
+    return EqualUnmodifiableListView(_tasksTodo);
+  }
+
+  final List<Task> _tasksDone;
+  @override
+  @JsonKey()
+  List<Task> get tasksDone {
+    if (_tasksDone is EqualUnmodifiableListView) return _tasksDone;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_tasksDone);
   }
 
   @override
@@ -129,7 +153,7 @@ class _$_ToDoListData implements _ToDoListData {
 
   @override
   String toString() {
-    return 'ToDoListData(tasks: $tasks, length: $length)';
+    return 'ToDoListData(tasksTodo: $tasksTodo, tasksDone: $tasksDone, length: $length)';
   }
 
   @override
@@ -137,14 +161,20 @@ class _$_ToDoListData implements _ToDoListData {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_ToDoListData &&
-            const DeepCollectionEquality().equals(other._tasks, _tasks) &&
+            const DeepCollectionEquality()
+                .equals(other._tasksTodo, _tasksTodo) &&
+            const DeepCollectionEquality()
+                .equals(other._tasksDone, _tasksDone) &&
             (identical(other.length, length) || other.length == length));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(_tasks), length);
+      runtimeType,
+      const DeepCollectionEquality().hash(_tasksTodo),
+      const DeepCollectionEquality().hash(_tasksDone),
+      length);
 
   @JsonKey(ignore: true)
   @override
@@ -161,14 +191,18 @@ class _$_ToDoListData implements _ToDoListData {
 }
 
 abstract class _ToDoListData implements ToDoListData {
-  factory _ToDoListData([final List<Task> tasks, final int length]) =
-      _$_ToDoListData;
+  factory _ToDoListData(
+      [final List<Task> tasksTodo,
+      final List<Task> tasksDone,
+      final int length]) = _$_ToDoListData;
 
   factory _ToDoListData.fromJson(Map<String, dynamic> json) =
       _$_ToDoListData.fromJson;
 
   @override
-  List<Task> get tasks;
+  List<Task> get tasksTodo;
+  @override
+  List<Task> get tasksDone;
   @override
   int get length;
   @override
@@ -185,7 +219,6 @@ Task _$TaskFromJson(Map<String, dynamic> json) {
 mixin _$Task {
   int get id => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
-  bool get done => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -197,7 +230,7 @@ abstract class $TaskCopyWith<$Res> {
   factory $TaskCopyWith(Task value, $Res Function(Task) then) =
       _$TaskCopyWithImpl<$Res, Task>;
   @useResult
-  $Res call({int id, String content, bool done});
+  $Res call({int id, String content});
 }
 
 /// @nodoc
@@ -215,7 +248,6 @@ class _$TaskCopyWithImpl<$Res, $Val extends Task>
   $Res call({
     Object? id = null,
     Object? content = null,
-    Object? done = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -226,10 +258,6 @@ class _$TaskCopyWithImpl<$Res, $Val extends Task>
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
               as String,
-      done: null == done
-          ? _value.done
-          : done // ignore: cast_nullable_to_non_nullable
-              as bool,
     ) as $Val);
   }
 }
@@ -240,7 +268,7 @@ abstract class _$$_TaskCopyWith<$Res> implements $TaskCopyWith<$Res> {
       __$$_TaskCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int id, String content, bool done});
+  $Res call({int id, String content});
 }
 
 /// @nodoc
@@ -254,7 +282,6 @@ class __$$_TaskCopyWithImpl<$Res> extends _$TaskCopyWithImpl<$Res, _$_Task>
   $Res call({
     Object? id = null,
     Object? content = null,
-    Object? done = null,
   }) {
     return _then(_$_Task(
       null == id
@@ -265,10 +292,6 @@ class __$$_TaskCopyWithImpl<$Res> extends _$TaskCopyWithImpl<$Res, _$_Task>
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
               as String,
-      done: null == done
-          ? _value.done
-          : done // ignore: cast_nullable_to_non_nullable
-              as bool,
     ));
   }
 }
@@ -276,7 +299,7 @@ class __$$_TaskCopyWithImpl<$Res> extends _$TaskCopyWithImpl<$Res, _$_Task>
 /// @nodoc
 @JsonSerializable()
 class _$_Task implements _Task {
-  _$_Task(this.id, this.content, {this.done = false});
+  _$_Task(this.id, this.content);
 
   factory _$_Task.fromJson(Map<String, dynamic> json) => _$$_TaskFromJson(json);
 
@@ -284,13 +307,10 @@ class _$_Task implements _Task {
   final int id;
   @override
   final String content;
-  @override
-  @JsonKey()
-  final bool done;
 
   @override
   String toString() {
-    return 'Task(id: $id, content: $content, done: $done)';
+    return 'Task(id: $id, content: $content)';
   }
 
   @override
@@ -299,13 +319,12 @@ class _$_Task implements _Task {
         (other.runtimeType == runtimeType &&
             other is _$_Task &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.content, content) || other.content == content) &&
-            (identical(other.done, done) || other.done == done));
+            (identical(other.content, content) || other.content == content));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, content, done);
+  int get hashCode => Object.hash(runtimeType, id, content);
 
   @JsonKey(ignore: true)
   @override
@@ -322,8 +341,7 @@ class _$_Task implements _Task {
 }
 
 abstract class _Task implements Task {
-  factory _Task(final int id, final String content, {final bool done}) =
-      _$_Task;
+  factory _Task(final int id, final String content) = _$_Task;
 
   factory _Task.fromJson(Map<String, dynamic> json) = _$_Task.fromJson;
 
@@ -331,8 +349,6 @@ abstract class _Task implements Task {
   int get id;
   @override
   String get content;
-  @override
-  bool get done;
   @override
   @JsonKey(ignore: true)
   _$$_TaskCopyWith<_$_Task> get copyWith => throw _privateConstructorUsedError;

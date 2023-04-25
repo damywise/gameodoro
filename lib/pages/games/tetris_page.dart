@@ -32,19 +32,8 @@ class TetrisPage extends HookConsumerWidget {
           isDialogShowing.value = true;
           showDialog<Widget>(
             context: context,
-            builder: (context) => AlertDialog(
-              title: const Text("Time's Up"),
-              content: const Text("It's study time!"),
-              actions: [
-                FilledButton(
-                  onPressed: () {
-                    isDialogShowing.value = false;
-                    Navigator.of(context).popUntil((route) => route.isFirst);
-                  },
-                  child: const Text("Let's go!"),
-                ),
-              ],
-            ),
+            builder: (context) =>
+                AlertDialogWIdget(isDialogShowing: isDialogShowing),
             barrierDismissible: false,
           );
         }
@@ -138,8 +127,7 @@ class TetrisPage extends HookConsumerWidget {
                                                           ? Colors.black
                                                           : Colors.white
                                                       ..style =
-                                                          PaintingStyle
-                                                              .stroke
+                                                          PaintingStyle.stroke
                                                       ..strokeWidth = 2.0,
                                                   ),
                                             ),
@@ -176,7 +164,8 @@ class TetrisPage extends HookConsumerWidget {
                             FloatingActionButton(
                               heroTag: 'start',
                               isExtended: true,
-                              onPressed: () => handleStartButton(ref, isPaused, isPlaying),
+                              onPressed: () =>
+                                  handleStartButton(ref, isPaused, isPlaying),
                               child: Text(
                                 isGameover
                                     ? 'Restart'
@@ -212,8 +201,7 @@ class TetrisPage extends HookConsumerWidget {
   }
 
   void handleStartButton(WidgetRef ref, bool isPaused, bool isPlaying) {
-    final game =
-        ref.watch(tetrisProvider.notifier);
+    final game = ref.watch(tetrisProvider.notifier);
     if (isPaused) {
       game.play();
     } else if (isPlaying) {

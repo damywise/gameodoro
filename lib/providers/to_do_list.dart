@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:gameodoro/models/to_do_list_data.dart';
 import 'package:gameodoro/utils.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -16,6 +17,7 @@ class ToDoList extends _$ToDoList {
     final data = ToDoListData.fromJson(
       json.decode(dataRaw ?? '{}') as Map<String, dynamic>,
     );
+    print(data);
     return data;
   }
 
@@ -24,40 +26,78 @@ class ToDoList extends _$ToDoList {
   void add() {
     final newLength = state.length + 1;
     state = state.copyWith(
-      tasks: [...state.tasks, Task(newLength, '')],
+      tasksTodo: [
+        Task(newLength, ''),
+        ...state.tasksTodo,
+      ],
       length: newLength,
     );
     save();
   }
 
   void remove(int id) {
-    final newTasks = [...state.tasks]
+    final newTasks = [...state.tasksTodo]
       ..removeWhere((element) => element.id == id);
-    state = state.copyWith(tasks: newTasks);
+    final newDone = [...state.tasksDone]
+      ..removeWhere((element) => element.id == id);
+    state = state.copyWith(tasksTodo: newTasks, tasksDone: newDone);
     save();
   }
 
-  void reorder(int oldIndex, int newIndex) {
-    final newTasks = [...state.tasks];
+  void reorderTodo(int oldIndex, int newIndex) {
+    final newTasks = [...state.tasksTodo];
     newTasks.insert(
       newIndex > oldIndex ? newIndex - 1 : newIndex,
       newTasks.removeAt(oldIndex),
     );
 
-    state = state.copyWith(tasks: newTasks);
+    state = state.copyWith(tasksTodo: newTasks);
     save();
   }
 
-  void edit(int id, {String? content, bool? done}) {
-    final newTasks = [...state.tasks];
-    final index = newTasks.indexWhere((element) => element.id == id);
-    final task = newTasks[index];
-    final newTask = task.copyWith(
-      content: content ?? task.content,
-      done: done ?? task.done,
+  void reorderDone(int oldIndex, int newIndex) {
+    final newTasks = [...state.tasksDone];
+    newTasks.insert(
+      newIndex > oldIndex ? newIndex - 1 : newIndex,
+      newTasks.removeAt(oldIndex),
     );
-    newTasks[index] = newTask;
-    state = state.copyWith(tasks: newTasks);
+
+    state = state.copyWith(tasksDone: newTasks);
+    save();
+  }
+
+  void toggle(int id) {
+    final newTasks = [...state.tasksTodo];
+    final newDone = [...state.tasksDone];
+    final taskTodo = newTasks.firstWhereOrNull((element) => element.id == id);
+    final taskDone = newDone.firstWhereOrNull((element) => element.id == id);
+    if (taskTodo != null) {
+      newTasks.remove(taskTodo);
+      newDone.add(taskTodo);
+    } else if (taskDone != null) {
+      newDone.remove(taskDone);
+      newTasks.add(taskDone);
+    }
+    state = state.copyWith(tasksTodo: newTasks, tasksDone: newDone);
+    save();
+  }
+
+  void edit(int id, String? content) {
+    final newTasksTodo = [...state.tasksTodo];
+    final newTasksDone = [...state.tasksDone];
+    if (content != null) {
+      final indexTodo = newTasksTodo.indexWhere((element) => element.id == id);
+      final indexDone = newTasksDone.indexWhere((element) => element.id == id);
+      if (indexTodo > -1) {
+        newTasksTodo[indexTodo] =
+            newTasksTodo[indexTodo].copyWith(content: content);
+      }
+      if (indexDone > -1) {
+        newTasksDone[indexDone] =
+            newTasksDone[indexDone].copyWith(content: content);
+      }
+    }
+    state = state.copyWith(tasksTodo: newTasksTodo, tasksDone: newTasksDone);
     save();
   }
 
