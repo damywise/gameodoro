@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gameodoro/pages/main_page.dart';
+import 'package:gameodoro/pages/onboarding_page.dart';
 import 'package:gameodoro/utils.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -48,7 +49,8 @@ class Main extends HookConsumerWidget {
           brightness: usePlatformBrightness(),
         ),
       ),
-      home: const MainPage(title: 'Gameodoro'),
+      // home: const MainPage(title: 'Gameodoro'),
+      home: const OnboardingPage(),
     );
   }
 }

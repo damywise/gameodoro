@@ -103,6 +103,14 @@ class HomePage extends HookConsumerWidget with RouteAware {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Tooltip(
+                      message: 'Notification Sound',
+                      child: IconButton(
+                        onPressed: () => handleTuneButton(context),
+                        icon: const Icon(Icons.music_note),
+                      ),
+                    ),
+                    buildVerticalDivider(),
+                    Tooltip(
                       message: 'Fullscreen',
                       child: IconButton(
                         onPressed: () => Navigator.of(context).push(
@@ -111,14 +119,6 @@ class HomePage extends HookConsumerWidget with RouteAware {
                           ),
                         ),
                         icon: const Icon(Icons.fullscreen),
-                      ),
-                    ),
-                    buildVerticalDivider(),
-                    Tooltip(
-                      message: 'Notification Sound',
-                      child: IconButton(
-                        onPressed: () => handleTuneButton(context),
-                        icon: const Icon(Icons.music_note),
                       ),
                     ),
                     buildVerticalDivider(),
@@ -176,7 +176,7 @@ class HomePage extends HookConsumerWidget with RouteAware {
     );
   }
 
-  Padding buildVerticalDivider() {
+  Widget buildVerticalDivider() {
     return const Padding(
       padding: EdgeInsets.symmetric(horizontal: 8),
       child: ColoredBox(

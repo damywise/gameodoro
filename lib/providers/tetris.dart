@@ -104,8 +104,8 @@ class Tetris extends _$Tetris {
   }
 
   bool choosePiece() {
-    cleanLines();
     if (state.currentBlock != null) place(state.currentBlock!, lock: true);
+    cleanLines();
     final level = state.level;
     if (level.first.contains(8)) {
       return false;

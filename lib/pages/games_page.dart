@@ -82,6 +82,18 @@ class GamesPage extends StatelessWidget {
                                     width: cardWidth,
                                     height: cardHeight,
                                     fit: BoxFit.fitWidth,
+                                    frameBuilder: (
+                                      context,
+                                      child,
+                                      frame,
+                                      wasSynchronouslyLoaded,
+                                    ) =>
+                                        frame != null
+                                            ? child
+                                            : const Align(
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              ),
                                     errorBuilder:
                                         (context, error, stackTrace) =>
                                             const SizedBox.shrink(),
