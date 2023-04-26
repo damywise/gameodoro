@@ -40,6 +40,7 @@ class Main extends HookConsumerWidget {
       asyncInit(ref);
       return null;
     });
+    final firstTimeOpen = ref.read(sharedPreferences).getBool('firstopen');
     return MaterialApp(
       title: 'Gameodoro',
       theme: ThemeData(
@@ -50,7 +51,9 @@ class Main extends HookConsumerWidget {
         ),
       ),
       // home: const MainPage(title: 'Gameodoro'),
-      home: const OnboardingPage(),
+      home: firstTimeOpen ?? true
+          ? const OnboardingPage()
+          : const MainPage(title: 'Gameodoro'),
     );
   }
 }

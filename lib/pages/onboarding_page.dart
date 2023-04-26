@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:gameodoro/pages/home_page.dart';
 import 'package:gameodoro/pages/main_page.dart';
+import 'package:gameodoro/utils.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class OnboardingPage extends HookWidget {
+class OnboardingPage extends HookConsumerWidget {
   const OnboardingPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final prefs = ref.read(sharedPreferences);
     final controller = usePageController();
     final buttonText = useState('Next');
     final index = useState(0);
@@ -64,11 +66,14 @@ class OnboardingPage extends HookWidget {
           ),
           Align(
             alignment: Alignment.topLeft,
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Image.asset(
-                'assets/logo.png',
-                height: 48,
+            child: Tooltip(
+              message: 'Gameodoro',
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Image.asset(
+                  'assets/logo.png',
+                  height: 48,
+                ),
               ),
             ),
           ),
@@ -99,6 +104,7 @@ class OnboardingPage extends HookWidget {
                       curve: Curves.easeOutCubic,
                     );
                   } else {
+                    prefs.setBool('firstopen', false);
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute<Widget>(
                         builder: (context) =>

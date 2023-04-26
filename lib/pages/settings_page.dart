@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:gameodoro/pages/onboarding_page.dart';
 import 'package:gameodoro/providers/session.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -49,6 +50,22 @@ class SettingsPage extends ConsumerWidget {
             edit,
             'Long Break',
             state: false,
+          ),
+          const SizedBox(
+            height: 32,
+          ),
+          Align(
+            child: FilledButton.tonalIcon(
+              onPressed: () => Navigator.of(context)
+                ..pop()
+                ..pushReplacement(
+                  MaterialPageRoute<Widget>(
+                    builder: (context) => const OnboardingPage(),
+                  ),
+                ),
+              icon: const Icon(Icons.start),
+              label: const Text('Go back to Onboarding'),
+            ),
           ),
         ],
       ),
