@@ -14,7 +14,7 @@ class TetrisPage extends HookConsumerWidget {
     // final colors = getColors();
     final sessionState =
         ref.watch(sessionProvider.select((value) => value.sessionState));
-    final isFocusing = sessionState == StudyState.focus;
+    final isFocusing = sessionState == SessionState.focus;
     final isPlaying =
         ref.watch(tetrisProvider.select((value) => value.isPlaying));
     final isPaused =
@@ -27,7 +27,7 @@ class TetrisPage extends HookConsumerWidget {
 
     ref.listen(sessionProvider.select((value) => value.sessionState),
         (previous, next) {
-      if (next == StudyState.focus) {
+      if (next == SessionState.focus) {
         if (!isDialogShowing.value) {
           isDialogShowing.value = true;
           showDialog<Widget>(

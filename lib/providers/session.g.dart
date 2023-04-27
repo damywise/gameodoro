@@ -12,7 +12,7 @@ _$_SessionData _$$_SessionDataFromJson(Map<String, dynamic> json) =>
       elapsed: json['elapsed'] as int,
       stopwatchState:
           $enumDecode(_$StopwatchStateEnumMap, json['stopwatchState']),
-      sessionState: $enumDecode(_$StudyStateEnumMap, json['sessionState']),
+      sessionState: $enumDecode(_$SessionStateEnumMap, json['sessionState']),
       duration: Duration(microseconds: json['duration'] as int),
       number: json['number'] as int,
     );
@@ -22,7 +22,7 @@ Map<String, dynamic> _$$_SessionDataToJson(_$_SessionData instance) =>
       'data': instance.data,
       'elapsed': instance.elapsed,
       'stopwatchState': _$StopwatchStateEnumMap[instance.stopwatchState]!,
-      'sessionState': _$StudyStateEnumMap[instance.sessionState]!,
+      'sessionState': _$SessionStateEnumMap[instance.sessionState]!,
       'duration': instance.duration.inMicroseconds,
       'number': instance.number,
     };
@@ -32,10 +32,10 @@ const _$StopwatchStateEnumMap = {
   StopwatchState.stopped: 'stopped',
 };
 
-const _$StudyStateEnumMap = {
-  StudyState.focus: 'focus',
-  StudyState.shortBreak: 'shortBreak',
-  StudyState.longBreak: 'longBreak',
+const _$SessionStateEnumMap = {
+  SessionState.focus: 'focus',
+  SessionState.shortBreak: 'shortBreak',
+  SessionState.longBreak: 'longBreak',
 };
 
 _$_SessionModel _$$_SessionModelFromJson(Map<String, dynamic> json) =>
@@ -62,7 +62,7 @@ Map<String, dynamic> _$$_SessionModelToJson(_$_SessionModel instance) =>
 // RiverpodGenerator
 // **************************************************************************
 
-String _$sessionHash() => r'aed8eba2d5d9fba0748a6a9102b2715fc4c24a8e';
+String _$sessionHash() => r'59376ac9c0b6a50d14bef29f823089c7e39304a4';
 
 /// See also [Session].
 @ProviderFor(Session)

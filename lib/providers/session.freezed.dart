@@ -25,7 +25,7 @@ mixin _$SessionData {
   /// Milliseconds elapsed since the session started
   int get elapsed => throw _privateConstructorUsedError;
   StopwatchState get stopwatchState => throw _privateConstructorUsedError;
-  StudyState get sessionState => throw _privateConstructorUsedError;
+  SessionState get sessionState => throw _privateConstructorUsedError;
   Duration get duration => throw _privateConstructorUsedError;
 
   /// Number of current session.
@@ -48,7 +48,7 @@ abstract class $SessionDataCopyWith<$Res> {
       {SessionModel data,
       int elapsed,
       StopwatchState stopwatchState,
-      StudyState sessionState,
+      SessionState sessionState,
       Duration duration,
       int number});
 
@@ -91,7 +91,7 @@ class _$SessionDataCopyWithImpl<$Res, $Val extends SessionData>
       sessionState: null == sessionState
           ? _value.sessionState
           : sessionState // ignore: cast_nullable_to_non_nullable
-              as StudyState,
+              as SessionState,
       duration: null == duration
           ? _value.duration
           : duration // ignore: cast_nullable_to_non_nullable
@@ -124,7 +124,7 @@ abstract class _$$_SessionDataCopyWith<$Res>
       {SessionModel data,
       int elapsed,
       StopwatchState stopwatchState,
-      StudyState sessionState,
+      SessionState sessionState,
       Duration duration,
       int number});
 
@@ -166,7 +166,7 @@ class __$$_SessionDataCopyWithImpl<$Res>
       sessionState: null == sessionState
           ? _value.sessionState
           : sessionState // ignore: cast_nullable_to_non_nullable
-              as StudyState,
+              as SessionState,
       duration: null == duration
           ? _value.duration
           : duration // ignore: cast_nullable_to_non_nullable
@@ -202,7 +202,7 @@ class _$_SessionData implements _SessionData {
   @override
   final StopwatchState stopwatchState;
   @override
-  final StudyState sessionState;
+  final SessionState sessionState;
   @override
   final Duration duration;
 
@@ -256,7 +256,7 @@ abstract class _SessionData implements SessionData {
       {required final SessionModel data,
       required final int elapsed,
       required final StopwatchState stopwatchState,
-      required final StudyState sessionState,
+      required final SessionState sessionState,
       required final Duration duration,
       required final int number}) = _$_SessionData;
 
@@ -272,7 +272,7 @@ abstract class _SessionData implements SessionData {
   @override
   StopwatchState get stopwatchState;
   @override
-  StudyState get sessionState;
+  SessionState get sessionState;
   @override
   Duration get duration;
   @override

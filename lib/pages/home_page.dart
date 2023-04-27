@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +10,7 @@ import 'package:gameodoro/pages/games_page.dart';
 import 'package:gameodoro/pages/settings_page.dart';
 import 'package:gameodoro/pages/to_do_list_page.dart';
 import 'package:gameodoro/providers/session.dart';
+import 'package:gameodoro/providers/tune.dart';
 import 'package:gameodoro/widgets/state_text.dart';
 import 'package:gameodoro/widgets/timer.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -249,11 +251,14 @@ class HomePage extends HookConsumerWidget with RouteAware {
   }
 }
 
-class _TuneWidget extends StatelessWidget {
+class _TuneWidget extends HookConsumerWidget {
   const _TuneWidget();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final tunes = ref.watch(tuneProvider);
+    final tunesNotifier = ref.watch(tuneProvider.notifier);
+    final player = useMemoized(AudioPlayer.new);
     return Dialog(
       child: Padding(
         padding: const EdgeInsets.all(8),
@@ -283,42 +288,28 @@ class _TuneWidget extends StatelessWidget {
                   Expanded(
                     child: ListView.builder(
                       itemBuilder: (context, index) {
-                        if (index == 0) {
-                          return ListTile(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            onTap: () {},
-                            leading: IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.play_arrow),
-                            ),
-                            trailing: Radio(
-                              value: false,
-                              groupValue: true,
-                              onChanged: (value) {},
-                            ),
-                            title: const Text('Select custom sound...'),
-                          );
-                        }
                         return ListTile(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          onTap: () {},
+                          onTap: () => tunesNotifier.select(index),
                           leading: IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              player.play(
+                                AssetSource(tunes[index].path),
+                              );
+                            },
                             icon: const Icon(Icons.play_arrow),
                           ),
                           trailing: Radio(
-                            value: true,
+                            value: tunes[index].selected,
                             groupValue: true,
-                            onChanged: (value) {},
+                            onChanged: (value) => tunesNotifier.select(index),
                           ),
-                          title: const Text('Tune title'),
+                          title: Text(tunes[index].title),
                         );
                       },
-                      itemCount: 1 + 1,
+                      itemCount: tunes.length,
                     ),
                   ),
                 ],

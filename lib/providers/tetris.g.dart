@@ -6,7 +6,7 @@ part of 'tetris.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$tetrisHash() => r'c81489f0bb856fc0957ad0f7592f9bf716d1789c';
+String _$tetrisHash() => r'682d9561b60bd00f29a1056f25d5fb36873828b1';
 
 /// See also [Tetris].
 @ProviderFor(Tetris)

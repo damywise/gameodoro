@@ -7,13 +7,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 final sharedPreferences =
     Provider<SharedPreferences>((_) => throw UnimplementedError());
 
-String getStudyStateName(StudyState sessionState) {
+String getStudyStateName(SessionState sessionState) {
   switch (sessionState) {
-    case StudyState.focus:
+    case SessionState.focus:
       return 'Focus';
-    case StudyState.shortBreak:
+    case SessionState.shortBreak:
       return 'Short Break';
-    case StudyState.longBreak:
+    case SessionState.longBreak:
       return 'Long Break';
   }
 }

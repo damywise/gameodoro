@@ -26,7 +26,7 @@ class Session extends _$Session {
       data: data,
       elapsed: 0,
       stopwatchState: StopwatchState.stopped,
-      sessionState: StudyState.focus,
+      sessionState: SessionState.focus,
       number: 0,
       duration: duration,
     );
@@ -36,13 +36,13 @@ class Session extends _$Session {
 
   void _updateDuration() {
     switch (state.sessionState) {
-      case StudyState.focus:
+      case SessionState.focus:
         state = state.copyWith(duration: state.data.studyDuration);
         break;
-      case StudyState.shortBreak:
+      case SessionState.shortBreak:
         state = state.copyWith(duration: state.data.shortBreakDuration);
         break;
-      case StudyState.longBreak:
+      case SessionState.longBreak:
         state = state.copyWith(duration: state.data.longBreakDuration);
         break;
     }
@@ -104,16 +104,16 @@ class Session extends _$Session {
   void _updateStudyState() {
     _stopwatch.reset();
     switch (state.sessionState) {
-      case StudyState.focus:
+      case SessionState.focus:
         state = state.copyWith(
           sessionState:
-              state.number == 4 ? StudyState.longBreak : StudyState.shortBreak,
+              state.number == 4 ? SessionState.longBreak : SessionState.shortBreak,
           elapsed: 0,
         );
         break;
-      case StudyState.shortBreak:
-      case StudyState.longBreak:
-        state = state.copyWith(sessionState: StudyState.focus, elapsed: 0);
+      case SessionState.shortBreak:
+      case SessionState.longBreak:
+        state = state.copyWith(sessionState: SessionState.focus, elapsed: 0);
         break;
     }
     _updateDuration();
@@ -143,7 +143,7 @@ class SessionData with _$SessionData {
     /// Milliseconds elapsed since the session started
     required int elapsed,
     required StopwatchState stopwatchState,
-    required StudyState sessionState,
+    required SessionState sessionState,
     required Duration duration,
 
     /// Number of current session.
@@ -160,7 +160,7 @@ enum StopwatchState {
   stopped,
 }
 
-enum StudyState { focus, shortBreak, longBreak }
+enum SessionState { focus, shortBreak, longBreak }
 
 /// Contains custom pomodoro session data:
 /// Session name,

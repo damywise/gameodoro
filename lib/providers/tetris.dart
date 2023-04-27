@@ -164,7 +164,7 @@ class Tetris extends _$Tetris {
   bool move(AxisDirection direction, {bool fall = false, bool noLock = false}) {
     final sessionState =
         ref.read(sessionProvider.select((value) => value.sessionState));
-    final isFocusing = sessionState == StudyState.focus;
+    final isFocusing = sessionState == SessionState.focus;
     if ((!state.isPlaying && state.isGameover) || isFocusing) {
       return false;
     }
@@ -209,7 +209,7 @@ class Tetris extends _$Tetris {
   void rotate() {
     final sessionState =
         ref.read(sessionProvider.select((value) => value.sessionState));
-    final isStudying = sessionState == StudyState.focus;
+    final isStudying = sessionState == SessionState.focus;
     if (!state.isPlaying ||
         state.isGameover ||
         state.isPaused ||
@@ -246,7 +246,7 @@ class Tetris extends _$Tetris {
     var newNotStuck = isNotStuck;
     final sessionState =
         ref.read(sessionProvider.select((value) => value.sessionState));
-    final isCompleted = sessionState == StudyState.focus;
+    final isCompleted = sessionState == SessionState.focus;
 
     if ((!state.isPaused || state.isGameover || !state.isPlaying) &&
         !isCompleted) {
