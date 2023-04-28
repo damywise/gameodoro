@@ -159,12 +159,11 @@ class OnboardingPage extends HookConsumerWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 8, top: 6),
+                  padding: const EdgeInsets.only(left: 32, top: 12),
                   child: Image.asset(
                     imagePath,
-                    height: cardSize,
-                    width: cardSize,
-                    filterQuality: FilterQuality.none,
+                    height: cardSize - 24,
+                    width: cardSize - 56,
                   ),
                 ),
               ],
