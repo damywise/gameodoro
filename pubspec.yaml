@@ -42,6 +42,7 @@ dev_dependencies:
   freezed: ^2.3.2
   json_serializable: ^6.6.1
   flutter_launcher_icons: "^0.13.1"
+  dart_code_metrics: ^5.7.2
 
 flutter_launcher_icons:
 #  android: "launcher_icon"
@@ -64,4 +65,12 @@ flutter_launcher_icons:
 flutter:
   uses-material-design: true
   assets:
-    - assets/
+    - assets/img1.png
+    - assets/img2.png
+    - assets/img3.png
+    - assets/logo.png
+    - assets/sound001_positive_notification.wav
+    - assets/sound002_notification.mp3
+    - assets/sound003_full_alert.mp3
+    - assets/sound004_cullingham.mp3
+    - assets/sound005_beep_beep.mp3

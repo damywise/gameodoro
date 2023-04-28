@@ -17,22 +17,24 @@ class FullScreenPage extends HookConsumerWidget {
           DeviceOrientation.landscapeLeft,
           DeviceOrientation.landscapeRight,
         ]);
+
         return null;
       },
       [],
     );
 
-    final selected = ref.watch(sessionProvider.select((value) => value.data));
     final sessionNotifier = ref.watch(sessionProvider.notifier);
     final isRunning =
         ref.watch(sessionProvider.select((value) => value.stopwatchState)) ==
             StopwatchState.started;
+
     return WillPopScope(
       onWillPop: () async {
         await SystemChrome.setPreferredOrientations([
           DeviceOrientation.portraitDown,
           DeviceOrientation.portraitUp,
         ]);
+
         return true;
       },
       child: Theme(
@@ -90,7 +92,7 @@ class FullScreenPage extends HookConsumerWidget {
                                     size: 48,
                                   ),
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),

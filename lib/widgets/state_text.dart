@@ -11,11 +11,12 @@ class StateText extends HookConsumerWidget {
     final sessionState = ref.watch(
       sessionProvider.select((value) => value.sessionState),
     );
+
     return Hero(
       tag: 'session state text',
       child: Text(
         getStudyStateName(sessionState),
-        style: Theme.of(context).textTheme.titleLarge,
+        style: context.textTheme.titleLarge,
       ),
     );
   }

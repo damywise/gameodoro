@@ -11,6 +11,7 @@ import 'package:gameodoro/pages/settings_page.dart';
 import 'package:gameodoro/pages/to_do_list_page.dart';
 import 'package:gameodoro/providers/session.dart';
 import 'package:gameodoro/providers/tune.dart';
+import 'package:gameodoro/utils.dart';
 import 'package:gameodoro/widgets/state_text.dart';
 import 'package:gameodoro/widgets/timer.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -27,6 +28,7 @@ class HomePage extends HookConsumerWidget with RouteAware {
           DeviceOrientation.portraitDown,
           DeviceOrientation.portraitUp,
         ]);
+
         return null;
       },
       [],
@@ -54,6 +56,10 @@ class HomePage extends HookConsumerWidget with RouteAware {
     );
     final percent = min(1, elapsed / duration);
 
+    final divider = SizedBox(
+      height: context.textTheme.titleLarge?.fontSize ?? 32,
+    );
+
     return Stack(
       children: [
         Column(
@@ -66,32 +72,34 @@ class HomePage extends HookConsumerWidget with RouteAware {
                 animationDuration: 100,
                 animateFromLastPercent: true,
                 circularStrokeCap: CircularStrokeCap.round,
-                progressColor: Theme.of(context).colorScheme.primary,
-                backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                progressColor: context.colorScheme.primary,
+                backgroundColor: context.colorScheme.onPrimary,
                 percent: percent.toDouble(),
                 center: Card(
                   margin: const EdgeInsets.all(5),
                   elevation: 24,
                   shape: const CircleBorder(),
+                  clipBehavior: Clip.antiAlias,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      divider,
+                      divider,
                       const StateText(),
-                      // SizedBox(
-                      //   height: Theme.of(context)
-                      //           .textTheme
-                      //           .titleLarge
-                      //           ?.fontSize ??
-                      //       32,
-                      // ),
                       const Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: 32,
-                          vertical: 12,
                         ),
                         child: Timer(),
                       ),
-                      buildButtons(sessionNotifier, isRunning),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 24),
+                        child: buildButtons(
+                          context,
+                          sessionNotifier,
+                          isRunning: isRunning,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -104,14 +112,6 @@ class HomePage extends HookConsumerWidget with RouteAware {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Tooltip(
-                      message: 'Notification Sound',
-                      child: IconButton(
-                        onPressed: () => handleTuneButton(context),
-                        icon: const Icon(Icons.music_note),
-                      ),
-                    ),
-                    buildVerticalDivider(),
                     Tooltip(
                       message: 'Fullscreen',
                       child: IconButton(
@@ -148,11 +148,11 @@ class HomePage extends HookConsumerWidget with RouteAware {
                         },
                         icon: const Icon(Icons.videogame_asset),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
-            )
+            ),
           ],
         ),
         Align(
@@ -188,36 +188,26 @@ class HomePage extends HookConsumerWidget with RouteAware {
     );
   }
 
-  Row buildButtons(Session sessionNotifier, bool isRunning) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+  Widget buildButtons(BuildContext context, Session sessionNotifier, {required bool isRunning}) {
+    return Column(
       children: [
-        // Tooltip(
-        //   message: 'Reset Timer',
-        //   child: IconButton(
-        //     onPressed: () {
-        //       session.streamController().add(0);
-        //       session.stopwatch().reset();
-        //     },
-        //     icon: const Icon(Icons.replay),
-        //   ),
-        // ),
-        Tooltip(
-          message: 'Previous Session',
-          child: Hero(
-            tag: 'button-previous',
-            child: IconButton(
-              onPressed: sessionNotifier.previous,
-              icon: const Icon(Icons.skip_previous),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Tooltip(
+              message: 'Previous Session',
+              child: Hero(
+                tag: 'button-previous',
+                child: IconButton(
+                  onPressed: sessionNotifier.previous,
+                  icon: const Icon(
+                    Icons.skip_previous,
+                    size: 32,
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
-        AnimatedSize(
-          duration: const Duration(milliseconds: 100),
-          curve: Curves.easeInOut,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: FilledButton(
+            FilledButton(
               onPressed: () {
                 if (isRunning) {
                   sessionNotifier.pause();
@@ -225,19 +215,48 @@ class HomePage extends HookConsumerWidget with RouteAware {
                   sessionNotifier.start();
                 }
               },
-              child: Text(isRunning ? 'Pause' : 'Start'),
+              child: AnimatedSize(
+                duration: const Duration(milliseconds: 100),
+                curve: Curves.easeInOut,
+                child: Text(isRunning ? 'Pause' : 'Start'),
+              ),
             ),
-          ),
+            Tooltip(
+              message: 'Next Session',
+              child: Hero(
+                tag: 'button-next',
+                child: IconButton(
+                  onPressed: sessionNotifier.next,
+                  icon: const Icon(
+                    Icons.skip_next,
+                    size: 32,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
-        Tooltip(
-          message: 'Next Session',
-          child: Hero(
-            tag: 'button-next',
-            child: IconButton(
-              onPressed: sessionNotifier.next,
-              icon: const Icon(Icons.skip_next),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Tooltip(
+              message: 'Reset Timer',
+              child: IconButton(
+                onPressed: () {
+                  sessionNotifier.reset();
+                },
+                icon: const Icon(Icons.replay),
+              ),
             ),
-          ),
+            buildVerticalDivider(),
+            Tooltip(
+              message: 'Notification Sound',
+              child: IconButton(
+                onPressed: () => handleTuneButton(context),
+                icon: const Icon(Icons.music_note),
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -251,6 +270,7 @@ class HomePage extends HookConsumerWidget with RouteAware {
   }
 }
 
+/// This is a separate class for easier debugging (hot reload)
 class _TuneWidget extends HookConsumerWidget {
   const _TuneWidget();
 
@@ -259,6 +279,7 @@ class _TuneWidget extends HookConsumerWidget {
     final tunes = ref.watch(tuneProvider);
     final tunesNotifier = ref.watch(tuneProvider.notifier);
     final player = useMemoized(AudioPlayer.new);
+
     return Dialog(
       child: Padding(
         padding: const EdgeInsets.all(8),
@@ -277,7 +298,7 @@ class _TuneWidget extends HookConsumerWidget {
                 alignment: Alignment.topCenter,
                 child: Text(
                   'Tune',
-                  style: Theme.of(context).textTheme.titleLarge,
+                  style: context.textTheme.titleLarge,
                 ),
               ),
             ),
@@ -293,14 +314,16 @@ class _TuneWidget extends HookConsumerWidget {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           onTap: () => tunesNotifier.select(index),
-                          leading: IconButton(
-                            onPressed: () {
-                              player.play(
-                                AssetSource(tunes[index].path),
-                              );
-                            },
-                            icon: const Icon(Icons.play_arrow),
-                          ),
+                          leading: tunes[index].path.isEmpty
+                              ? null
+                              : IconButton(
+                                  onPressed: () {
+                                    player.play(
+                                      AssetSource(tunes[index].path),
+                                    );
+                                  },
+                                  icon: const Icon(Icons.play_arrow),
+                                ),
                           trailing: Radio(
                             value: tunes[index].selected,
                             groupValue: true,

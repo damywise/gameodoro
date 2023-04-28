@@ -25,15 +25,17 @@ class TetrisPage extends HookConsumerWidget {
 
     final isDialogShowing = useState(false);
 
-    ref.listen(sessionProvider.select((value) => value.sessionState),
-        (previous, next) {
+    ref.listen(sessionProvider.select((value) => value.sessionState), (
+      previous,
+      next,
+    ) {
       if (next == SessionState.focus) {
         if (!isDialogShowing.value) {
           isDialogShowing.value = true;
           showDialog<Widget>(
             context: context,
             builder: (context) =>
-                AlertDialogWIdget(isDialogShowing: isDialogShowing),
+                AlertDialogWidget(isDialogShowing: isDialogShowing),
             barrierDismissible: false,
           );
         }
@@ -51,7 +53,7 @@ class TetrisPage extends HookConsumerWidget {
             showDialog<Widget>(
               context: context,
               builder: (context) =>
-                  AlertDialogWIdget(isDialogShowing: isDialogShowing),
+                  AlertDialogWidget(isDialogShowing: isDialogShowing),
               barrierDismissible: false,
             );
           }
@@ -82,7 +84,7 @@ class TetrisPage extends HookConsumerWidget {
       child: Scaffold(
         appBar: AppBar(backgroundColor: Colors.transparent),
         extendBodyBehindAppBar: true,
-        backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+        backgroundColor: context.colorScheme.surfaceVariant,
         body: Padding(
           padding: const EdgeInsets.all(8),
           child: Row(
@@ -115,32 +117,29 @@ class TetrisPage extends HookConsumerWidget {
                                           Center(
                                             child: Text(
                                               'Game Over',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headlineLarge
+                                              style: context
+                                                  .textTheme.headlineLarge
                                                   ?.copyWith(
-                                                    foreground: Paint()
-                                                      ..color = Theme.of(
-                                                                context,
-                                                              ).brightness ==
-                                                              Brightness.dark
-                                                          ? Colors.black
-                                                          : Colors.white
-                                                      ..style =
-                                                          PaintingStyle.stroke
-                                                      ..strokeWidth = 2.0,
-                                                  ),
+                                                foreground: Paint()
+                                                  ..color = Theme.of(
+                                                            context,
+                                                          ).brightness ==
+                                                          Brightness.dark
+                                                      ? Colors.black
+                                                      : Colors.white
+                                                  ..style = PaintingStyle.stroke
+                                                  ..strokeWidth = 2.0,
+                                              ),
                                             ),
                                           ),
                                           Center(
                                             child: Text(
                                               'Game Over',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headlineLarge,
+                                              style: context
+                                                  .textTheme.headlineLarge,
                                             ),
                                           ),
-                                        ]
+                                        ],
                                       ],
                                     );
                                   },
@@ -164,16 +163,17 @@ class TetrisPage extends HookConsumerWidget {
                             FloatingActionButton(
                               heroTag: 'start',
                               isExtended: true,
-                              onPressed: () =>
-                                  handleStartButton(ref, isPaused, isPlaying),
+                              onPressed: () => handleStartButton(
+                                ref,
+                                isPaused: isPaused,
+                                isPlaying: isPlaying,
+                              ),
                               child: Text(
-                                isGameover
-                                    ? 'Restart'
-                                    : isPaused
-                                        ? 'Play'
-                                        : isPlaying
-                                            ? 'Pause'
-                                            : 'Start',
+                                getStartButtonText(
+                                  isGameover: isGameover,
+                                  isPaused: isPaused,
+                                  isPlaying: isPlaying,
+                                ),
                               ),
                             ),
                             const SizedBox(
@@ -189,7 +189,7 @@ class TetrisPage extends HookConsumerWidget {
                           ],
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -200,7 +200,23 @@ class TetrisPage extends HookConsumerWidget {
     );
   }
 
-  void handleStartButton(WidgetRef ref, bool isPaused, bool isPlaying) {
+  String getStartButtonText({
+    required bool isGameover,
+    required bool isPaused,
+    required bool isPlaying,
+  }) {
+    if (isGameover) return 'Restart';
+    if (isPaused) return 'Play';
+    if (isPlaying) return 'Pause';
+
+    return 'Start';
+  }
+
+  void handleStartButton(
+    WidgetRef ref, {
+    required bool isPaused,
+    required bool isPlaying,
+  }) {
     final game = ref.watch(tetrisProvider.notifier);
     if (isPaused) {
       game.play();
@@ -212,10 +228,10 @@ class TetrisPage extends HookConsumerWidget {
   }
 }
 
-class AlertDialogWIdget extends StatelessWidget {
-  const AlertDialogWIdget({
-    super.key,
+class AlertDialogWidget extends StatelessWidget {
+  const AlertDialogWidget({
     required this.isDialogShowing,
+    super.key,
   });
 
   final ValueNotifier<bool> isDialogShowing;

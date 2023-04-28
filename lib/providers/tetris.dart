@@ -13,13 +13,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 part 'tetris.g.dart';
 
-// Todo(damywise): put data in shared references and load when build
+// TODO(damywise): put data in shared references and load when build
 
 @riverpod
 class Tetris extends _$Tetris {
   @override
   TetrisData build() {
     _prefs = ref.read(sharedPreferences);
+
     return TetrisData(
       level: List.filled(18, List.filled(10, blocks.length)),
       currentBlock: null,
@@ -35,7 +36,9 @@ class Tetris extends _$Tetris {
     _timer.cancel();
   }
 
-  var _timer = Timer(Duration.zero, () {});
+  var _timer = Timer(Duration.zero, () {
+    return;
+  });
 
   Future<void> init() async {
     _prefs = await SharedPreferences.getInstance();
@@ -92,11 +95,13 @@ class Tetris extends _$Tetris {
         final posY = block.position[0] + j;
 
         final levelY = [...newLevel[posX]];
-        levelY[posY] = remove
-            ? 7
-            : lock
-                ? 8
-                : block.index;
+        if (remove) {
+          levelY[posY] = 7;
+        } else if (lock) {
+          levelY[posY] = 8;
+        } else {
+          levelY[posY] = block.index;
+        }
         newLevel[posX] = levelY;
       }
     }
@@ -128,6 +133,7 @@ class Tetris extends _$Tetris {
       place(newBlock);
     }
     state = state.copyWith(currentBlock: newBlock);
+
     return true;
   }
 
@@ -158,6 +164,7 @@ class Tetris extends _$Tetris {
     if (!allTrues.contains(false)) {
       return true;
     }
+
     return false;
   }
 
@@ -174,7 +181,10 @@ class Tetris extends _$Tetris {
     if (state.currentBlock == null) return false;
     final block = state.currentBlock!;
     if (fall) {
-      while (move(AxisDirection.down, noLock: true)) {}
+      do {
+        move(AxisDirection.down, noLock: true);
+      } while (move(AxisDirection.down, noLock: true));
+
       return false;
     }
     var newBlock = copyBlock(block);
@@ -196,12 +206,14 @@ class Tetris extends _$Tetris {
     if (_canPlace(newBlock)) {
       place(newBlock);
       state = state.copyWith(currentBlock: newBlock);
+
       return true;
     } else if (direction == AxisDirection.down) {
       place(block, lock: !noLock);
     } else {
       place(block);
     }
+
     return false;
   }
 
@@ -219,11 +231,11 @@ class Tetris extends _$Tetris {
     }
     final block = state.currentBlock!;
     var newBlock = copyBlock(block);
-    if (newBlock.rotation == newBlock.coordinates.length - 1) {
-      newBlock = newBlock.copyWith(rotation: 0);
-    } else {
-      newBlock = newBlock.copyWith(rotation: newBlock.rotation + 1);
-    }
+    newBlock = newBlock.copyWith(
+      rotation: newBlock.rotation == newBlock.coordinates.length - 1
+          ? 0
+          : newBlock.rotation + 1,
+    );
     place(block, remove: true);
     if (_canPlace(newBlock)) {
       state = state.copyWith(currentBlock: newBlock);

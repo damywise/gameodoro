@@ -1,13 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gameodoro/pages/games/tetris_page.dart';
-
-class GameInfo {
-  GameInfo(this.title, this.imgUrl, this.page);
-
-  final String title;
-  final String imgUrl;
-  final Widget page;
-}
+import 'package:gameodoro/utils.dart';
 
 /// Contains a curated selection of games
 class GamesPage extends StatelessWidget {
@@ -29,7 +22,7 @@ class GamesPage extends StatelessWidget {
         backgroundColor: Colors.transparent,
         title: const Text('Games'),
       ),
-      backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+      backgroundColor: context.colorScheme.surfaceVariant,
       body: Padding(
         padding: const EdgeInsets.all(8),
         child: Column(
@@ -40,7 +33,7 @@ class GamesPage extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(8),
                       child: PhysicalModel(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        color: context.colorScheme.onSurfaceVariant,
                         borderRadius: BorderRadius.circular(8),
                         elevation: 12,
                         child: Stack(
@@ -53,7 +46,7 @@ class GamesPage extends StatelessWidget {
                                   colors: [
                                     Colors.white,
                                     Colors.white.withOpacity(.8),
-                                    Colors.transparent
+                                    Colors.transparent,
                                   ],
                                   begin: Alignment.topCenter,
                                   end: Alignment.bottomCenter,
@@ -66,13 +59,9 @@ class GamesPage extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                     width: 2,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurfaceVariant,
+                                    color: context.colorScheme.onSurfaceVariant,
                                   ),
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .secondaryContainer,
+                                  color: context.colorScheme.secondaryContainer,
                                   borderRadius: BorderRadius.circular(9),
                                 ),
                                 child: ClipRRect(
@@ -135,7 +124,7 @@ class GamesPage extends StatelessWidget {
                           ],
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               )
@@ -144,4 +133,12 @@ class GamesPage extends StatelessWidget {
       ),
     );
   }
+}
+
+class GameInfo {
+  GameInfo(this.title, this.imgUrl, this.page);
+
+  final String title;
+  final String imgUrl;
+  final Widget page;
 }

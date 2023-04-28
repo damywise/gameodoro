@@ -19,6 +19,7 @@ class OnboardingPage extends HookConsumerWidget {
           index.value = (controller.page ?? 0).round();
           buttonText.value = index.value < 2 ? 'Next' : 'Take me to Gameodoro!';
         });
+
         return null;
       },
       [],
@@ -35,6 +36,7 @@ class OnboardingPage extends HookConsumerWidget {
       'assets/img3.png',
     ];
     final topMargin = MediaQuery.of(context).size.height / 2 - cardSize;
+
     return Scaffold(
       body: Stack(
         children: [
@@ -133,7 +135,7 @@ class OnboardingPage extends HookConsumerWidget {
     String imagePath,
   ) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+      backgroundColor: context.colorScheme.surfaceVariant,
       body: SizedBox.expand(
         child: Column(
           children: [
@@ -143,10 +145,10 @@ class OnboardingPage extends HookConsumerWidget {
             Stack(
               children: [
                 Card(
-                  color: Theme.of(context).colorScheme.primary,
+                  color: context.colorScheme.primary,
                   shape: CircleBorder(
                     side: BorderSide(
-                      color: Theme.of(context).colorScheme.primaryContainer,
+                      color: context.colorScheme.primaryContainer,
                       width: 4,
                     ),
                   ),

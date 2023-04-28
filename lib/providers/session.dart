@@ -22,6 +22,7 @@ class Session extends _$Session {
       json.decode(dataRaw ?? '{}') as Map<String, dynamic>,
     );
     final duration = data.studyDuration;
+
     return SessionData(
       data: data,
       elapsed: 0,
@@ -60,9 +61,9 @@ class Session extends _$Session {
     _stopwatch.stop();
   }
 
-  void finish() {
-    state = state.copyWith(stopwatchState: StopwatchState.started, number: 0);
-    _stopwatch.stop();
+  void reset() {
+    _stopwatch.reset();
+    state = state.copyWith(elapsed: 0);
   }
 
   void edit({
@@ -93,11 +94,7 @@ class Session extends _$Session {
   }
 
   void previous() {
-    if (state.number <= 1) {
-      state = state.copyWith(number: 4);
-    } else {
-      state = state.copyWith(number: state.number - 1);
-    }
+    state = state.copyWith(number: state.number <= 1 ? 4 : state.number - 1);
     _updateStudyState();
   }
 
@@ -106,8 +103,9 @@ class Session extends _$Session {
     switch (state.sessionState) {
       case SessionState.focus:
         state = state.copyWith(
-          sessionState:
-              state.number == 4 ? SessionState.longBreak : SessionState.shortBreak,
+          sessionState: state.number == 4
+              ? SessionState.longBreak
+              : SessionState.shortBreak,
           elapsed: 0,
         );
         break;

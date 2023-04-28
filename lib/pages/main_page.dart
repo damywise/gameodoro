@@ -6,11 +6,15 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gameodoro/pages/home_page.dart';
 import 'package:gameodoro/providers/session.dart';
 import 'package:gameodoro/providers/tune.dart';
+import 'package:gameodoro/utils.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:in_app_notification/in_app_notification.dart';
 
 class MainPage extends HookConsumerWidget {
-  const MainPage({super.key, required this.title});
+  const MainPage({
+    required this.title,
+    super.key,
+  });
 
   final String title;
 
@@ -33,27 +37,27 @@ class MainPage extends HookConsumerWidget {
     ref.listen(sessionProvider, (previous, next) {
       if (next.sessionState != previous?.sessionState) {
         player.stop();
-        final tune = ref.read(tuneProvider
-            .select((value) => value.firstWhere((element) => element.selected)));
-        player.play(AssetSource(tune.path));
+        final tune = ref.read(
+          tuneProvider.select(
+            (value) => value.firstWhere((element) => element.selected),
+          ),
+        );
+        if (tune.path.isNotEmpty) {
+          player.play(AssetSource(tune.path));
+        }
         InAppNotification.show(
-          child: Center(
-            child: SizedBox(
-              width: 480,
-              child: Dismissible(
-                key: Key(Random.secure().nextInt(100).toString()),
-                child: NotificationWidget(
-                    title: titles[next.sessionState]!,
-                    text: texts[next.sessionState]!),
-              ),
-            ),
+          child: NotificationWidget(
+          key: Key(Random.secure().nextInt(100000).toString()),
+            title: titles[next.sessionState]!,
+            text: texts[next.sessionState]!,
           ),
           context: context,
         );
       }
     });
+
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+      backgroundColor: context.colorScheme.surfaceVariant,
       body: const HomePage(),
     );
   }
@@ -71,11 +75,18 @@ class NotificationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 24,
-      child: ListTile(
-        title: Text(title, style: Theme.of(context).textTheme.titleMedium),
-        subtitle: Text(text, style: Theme.of(context).textTheme.bodyMedium),
+    final textTheme = context.textTheme;
+
+    return Center(
+      child: SizedBox(
+        width: 480,
+        child: Card(
+          elevation: 24,
+          child: ListTile(
+            title: Text(title, style: textTheme.titleMedium),
+            subtitle: Text(text, style: textTheme.bodyMedium),
+          ),
+        ),
       ),
     );
   }

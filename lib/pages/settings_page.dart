@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:gameodoro/pages/onboarding_page.dart';
 import 'package:gameodoro/providers/session.dart';
+import 'package:gameodoro/utils.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class SettingsPage extends ConsumerWidget {
@@ -22,7 +23,7 @@ class SettingsPage extends ConsumerWidget {
     final edit = ref.watch(sessionProvider.notifier).edit;
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+      backgroundColor: context.colorScheme.surfaceVariant,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: const Text('Settings'),
@@ -93,7 +94,7 @@ class SettingsPage extends ConsumerWidget {
             children: [
               Text(
                 title,
-                style: Theme.of(context).textTheme.titleLarge,
+                style: context.textTheme.titleLarge,
                 textAlign: TextAlign.center,
               ),
               Card(
@@ -104,7 +105,7 @@ class SettingsPage extends ConsumerWidget {
                     '${getMinutes(duration) < 10 ? '0' : ''}${getMinutes(
                       duration,
                     )} : ${getSeconds(duration) < 10 ? '0' : ''}${getSeconds(duration)}',
-                    style: Theme.of(context).textTheme.titleMedium,
+                    style: context.textTheme.titleMedium,
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -122,11 +123,11 @@ class SettingsPage extends ConsumerWidget {
                   children: [
                     Text(
                       'Minutes',
-                      style: Theme.of(context).textTheme.labelLarge,
+                      style: context.textTheme.labelLarge,
                     ),
                     Expanded(
                       child: Slider(
-                        inactiveColor: Theme.of(context).colorScheme.onPrimary,
+                        inactiveColor: context.colorScheme.onPrimary,
                         max: 60,
                         value: min(59, max(0, getMinutes(duration).toDouble())),
                         divisions: 60,
@@ -156,11 +157,11 @@ class SettingsPage extends ConsumerWidget {
                   children: [
                     Text(
                       'Seconds',
-                      style: Theme.of(context).textTheme.labelLarge,
+                      style: context.textTheme.labelLarge,
                     ),
                     Expanded(
                       child: Slider(
-                        inactiveColor: Theme.of(context).colorScheme.onPrimary,
+                        inactiveColor: context.colorScheme.onPrimary,
                         max: 60,
                         value: min(60, max(0, getSeconds(duration).toDouble())),
                         divisions: 60,
@@ -195,12 +196,14 @@ class SettingsPage extends ConsumerWidget {
   }
 
   int getMinutes(Duration focusDuration) {
-    final minutes = (focusDuration.inMinutes % 61).truncate();
+    final minutes = focusDuration.inMinutes % 61;
+
     return minutes;
   }
 
   int getSeconds(Duration focusDuration) {
-    final seconds = (focusDuration.inSeconds % 60).truncate();
+    final seconds = focusDuration.inSeconds % 60;
+
     return seconds;
   }
 }

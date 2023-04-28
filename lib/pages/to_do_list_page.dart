@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gameodoro/providers/to_do_list.dart';
+import 'package:gameodoro/utils.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ToDoListPage extends HookConsumerWidget {
@@ -35,7 +36,7 @@ class ToDoListPage extends HookConsumerWidget {
     final taskNotifier = ref.watch(toDoListProvider.notifier);
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+      backgroundColor: context.colorScheme.surfaceVariant,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: const Text('To Do List'),
@@ -60,7 +61,7 @@ class ToDoListPage extends HookConsumerWidget {
               padding: const EdgeInsets.only(left: 12, bottom: 8),
               child: Text(
                 'Ongoing',
-                style: Theme.of(context).textTheme.titleLarge,
+                style: context.textTheme.titleLarge,
               ),
             ),
             Flexible(
@@ -70,6 +71,7 @@ class ToDoListPage extends HookConsumerWidget {
                 scrollController: todoScrollController,
                 itemBuilder: (context, index) {
                   final task = tasksTodo[index];
+
                   return Card(
                     key: Key('${task.id}'),
                     shape: RoundedRectangleBorder(
@@ -122,7 +124,7 @@ class ToDoListPage extends HookConsumerWidget {
               padding: const EdgeInsets.only(left: 12, bottom: 8),
               child: Text(
                 'Finished',
-                style: Theme.of(context).textTheme.titleLarge,
+                style: context.textTheme.titleLarge,
               ),
             ),
             Flexible(
@@ -131,6 +133,7 @@ class ToDoListPage extends HookConsumerWidget {
                 proxyDecorator: (child, index, animation) => child,
                 itemBuilder: (context, index) {
                   final task = tasksDone[index];
+
                   return Card(
                     key: Key('${task.id}'),
                     shape: RoundedRectangleBorder(

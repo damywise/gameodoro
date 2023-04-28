@@ -25,6 +25,7 @@ Block copyBlock(Block block) {
     [...block.position],
     block.rotation,
   );
+
   return newBlock;
 }
 
@@ -40,4 +41,9 @@ List<Color> getColors() {
     Colors.grey.withOpacity(.2),
     Colors.grey.shade700,
   ];
+}
+
+extension ContextExtension on BuildContext {
+  ColorScheme get colorScheme => Theme.of(this).colorScheme;
+  TextTheme get textTheme => Theme.of(this).textTheme;
 }
