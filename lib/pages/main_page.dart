@@ -8,7 +8,7 @@ import 'package:gameodoro/providers/session.dart';
 import 'package:gameodoro/providers/tune.dart';
 import 'package:gameodoro/utils.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:in_app_notification/in_app_notification.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class MainPage extends HookConsumerWidget {
   const MainPage({
@@ -45,13 +45,18 @@ class MainPage extends HookConsumerWidget {
         if (tune.path.isNotEmpty) {
           player.play(AssetSource(tune.path));
         }
-        InAppNotification.show(
-          child: NotificationWidget(
-          key: Key(Random.secure().nextInt(100000).toString()),
+        showTopSnackBar(
+          Overlay.of(context),
+          NotificationWidget(
+            key: Key(Random.secure().nextInt(100000).toString()),
             title: titles[next.sessionState]!,
             text: texts[next.sessionState]!,
           ),
-          context: context,
+          dismissDirection: const [
+            DismissDirection.up,
+            DismissDirection.horizontal
+          ],
+          dismissType: DismissType.onSwipe,
         );
       }
     });

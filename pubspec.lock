@@ -382,6 +382,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.13.1"
+  flutter_native_splash:
+    dependency: "direct dev"
+    description:
+      name: flutter_native_splash
+      sha256: af665ef80a213a9ed502845a3d7a61b9acca4100ee7e9f067a7440bc3acd6730
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.19"
   flutter_riverpod:
     dependency: transitive
     description:
@@ -496,14 +504,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.15"
-  in_app_notification:
-    dependency: "direct main"
-    description:
-      name: in_app_notification
-      sha256: e2e09df02efa66ed3e95edcd8332d47898a5e8c59fa32c022880d8471b261a94
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.2"
   io:
     dependency: transitive
     description:
@@ -941,6 +941,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
+  top_snackbar_flutter:
+    dependency: "direct main"
+    description:
+      name: top_snackbar_flutter
+      sha256: "7d4aa8f0031ad4a597c02487b4bb9b0dbb6a8d76ce1ab6e13e9565f865c1b70c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0+1"
   typed_data:
     dependency: transitive
     description:
@@ -949,6 +957,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.1"
+  universal_io:
+    dependency: transitive
+    description:
+      name: universal_io
+      sha256: "06866290206d196064fd61df4c7aea1ffe9a4e7c4ccaa8fcded42dd41948005d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.0"
   uuid:
     dependency: transitive
     description:
