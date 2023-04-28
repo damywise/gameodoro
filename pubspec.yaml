@@ -25,11 +25,11 @@ dependencies:
   # UI/UX
   auto_size_text: ^3.0.0
   percent_indicator: ^4.2.3
+  top_snackbar_flutter: ^3.0.0+1
 
   # misc
   shared_preferences: ^2.1.0
   audioplayers: ^4.0.1
-  top_snackbar_flutter: ^3.0.0+1
 
 dev_dependencies:
   flutter_test:
@@ -42,7 +42,6 @@ dev_dependencies:
   freezed: ^2.3.2
   json_serializable: ^6.6.1
   flutter_launcher_icons: "^0.13.1"
-  dart_code_metrics: ^5.7.2
   flutter_native_splash: ^2.2.19
 
 flutter_launcher_icons:
