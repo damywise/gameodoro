@@ -48,9 +48,9 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: android-apk
-          path: build/app/outputs/bundle/release/app-release.aab
+          path: build/app/outputs/flutter-apk/app-release.apk
       - name: Upload Android AAB Release
         uses: actions/upload-artifact@v2
         with:
           name: android-aab
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: build/app/outputs/bundle/release/app-release.aab
