@@ -44,10 +44,13 @@ jobs:
         run: flutter build apk
       - name: Build appbundle
         run: flutter build appbundle
-      - name: Upload Android Release
+      - name: Upload Android APK Release
         uses: actions/upload-artifact@v2
         with:
-          name: android-release
-          path: |
-            build/app/outputs/bundle/release/app-release.aab
-            build/app/outputs/flutter-apk/app-release.apk
+          name: android-apk
+          path: build/app/outputs/bundle/release/app-release.aab
+      - name: Upload Android AAB Release
+        uses: actions/upload-artifact@v2
+        with:
+          name: android-aab
+          path: build/app/outputs/flutter-apk/app-release.apk
