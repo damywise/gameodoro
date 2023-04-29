@@ -40,9 +40,10 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Start release build
-      - run: flutter build apk
-      - run: flutter build appbundle
+      - name: Build apk
+        run: flutter build apk
+      - name: Build appbundle
+        run: flutter build appbundle
       - name: Upload Android Release
         uses: actions/upload-artifact@v2
         with:
