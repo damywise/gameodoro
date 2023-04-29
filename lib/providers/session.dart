@@ -99,21 +99,17 @@ class Session extends _$Session {
   }
 
   void _updateStudyState() {
-    _stopwatch.reset();
-    switch (state.sessionState) {
-      case SessionState.focus:
-        state = state.copyWith(
-          sessionState: state.number == 4
-              ? SessionState.longBreak
-              : SessionState.shortBreak,
-          elapsed: 0,
-        );
-        break;
-      case SessionState.shortBreak:
-      case SessionState.longBreak:
-        state = state.copyWith(sessionState: SessionState.focus, elapsed: 0);
-        break;
-    }
+    const sessionStates = [
+      SessionState.focus,
+      SessionState.focus,
+      SessionState.shortBreak,
+      SessionState.focus,
+      SessionState.longBreak,
+    ];
+    state = state.copyWith(
+      sessionState: sessionStates[state.number],
+    );
+    reset();
     _updateDuration();
   }
 
