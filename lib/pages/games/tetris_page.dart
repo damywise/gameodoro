@@ -85,115 +85,117 @@ class TetrisPage extends HookConsumerWidget {
         appBar: AppBar(backgroundColor: Colors.transparent),
         extendBodyBehindAppBar: true,
         backgroundColor: context.colorScheme.surfaceVariant,
-        body: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: AspectRatio(
-                        aspectRatio: 10 / 18,
-                        child: LayoutBuilder(
-                          builder: (context, constraints) {
-                            return Card(
-                              color: Theme.of(context).cardColor,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8),
-                                child: LayoutBuilder(
-                                  builder: (context, constraints) {
-                                    return Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        LayoutBuilder(
-                                          builder: (context, constraints) {
-                                            return Column(
-                                              children: buildTiles(level),
-                                            );
-                                          },
-                                        ),
-                                        if (isGameover && !isPlaying) ...[
-                                          Center(
-                                            child: Text(
-                                              'Game Over',
-                                              style: context
-                                                  .textTheme.headlineLarge
-                                                  ?.copyWith(
-                                                foreground: Paint()
-                                                  ..color = Theme.of(
-                                                            context,
-                                                          ).brightness ==
-                                                          Brightness.dark
-                                                      ? Colors.black
-                                                      : Colors.white
-                                                  ..style = PaintingStyle.stroke
-                                                  ..strokeWidth = 2.0,
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: AspectRatio(
+                          aspectRatio: 10 / 18,
+                          child: LayoutBuilder(
+                            builder: (context, constraints) {
+                              return Card(
+                                color: Theme.of(context).cardColor,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: LayoutBuilder(
+                                    builder: (context, constraints) {
+                                      return Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          LayoutBuilder(
+                                            builder: (context, constraints) {
+                                              return Column(
+                                                children: buildTiles(level),
+                                              );
+                                            },
+                                          ),
+                                          if (isGameover && !isPlaying) ...[
+                                            Center(
+                                              child: Text(
+                                                'Game Over',
+                                                style: context
+                                                    .textTheme.headlineLarge
+                                                    ?.copyWith(
+                                                  foreground: Paint()
+                                                    ..color = Theme.of(
+                                                              context,
+                                                            ).brightness ==
+                                                            Brightness.dark
+                                                        ? Colors.black
+                                                        : Colors.white
+                                                    ..style = PaintingStyle.stroke
+                                                    ..strokeWidth = 2.0,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          Center(
-                                            child: Text(
-                                              'Game Over',
-                                              style: context
-                                                  .textTheme.headlineLarge,
+                                            Center(
+                                              child: Text(
+                                                'Game Over',
+                                                style: context
+                                                    .textTheme.headlineLarge,
+                                              ),
                                             ),
-                                          ),
+                                          ],
                                         ],
-                                      ],
-                                    );
-                                  },
+                                      );
+                                    },
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 32,
-                    ),
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: SizedBox(
-                        width: 240,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            FloatingActionButton(
-                              heroTag: 'start',
-                              isExtended: true,
-                              onPressed: () => handleStartButton(
-                                ref,
-                                isPaused: isPaused,
-                                isPlaying: isPlaying,
-                              ),
-                              child: Text(
-                                getStartButtonText(
-                                  isGameover: isGameover,
+                      const SizedBox(
+                        height: 32,
+                      ),
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: SizedBox(
+                          width: 240,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              FloatingActionButton(
+                                heroTag: 'start',
+                                isExtended: true,
+                                onPressed: () => handleStartButton(
+                                  ref,
                                   isPaused: isPaused,
                                   isPlaying: isPlaying,
                                 ),
+                                child: Text(
+                                  getStartButtonText(
+                                    isGameover: isGameover,
+                                    isPaused: isPaused,
+                                    isPlaying: isPlaying,
+                                  ),
+                                ),
                               ),
-                            ),
-                            const SizedBox(
-                              width: 12,
-                            ),
-                            SizedBox(
-                              width: 56 * 3,
-                              child: AspectRatio(
-                                aspectRatio: 1,
-                                child: _buildControls(ref),
+                              const SizedBox(
+                                width: 12,
                               ),
-                            ),
-                          ],
+                              SizedBox(
+                                width: 56 * 3,
+                                child: AspectRatio(
+                                  aspectRatio: 1,
+                                  child: _buildControls(ref),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
