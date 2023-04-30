@@ -63,7 +63,7 @@ class MainPage extends HookConsumerWidget {
 
     return Scaffold(
       backgroundColor: context.colorScheme.surfaceVariant,
-      body: const HomePage(),
+      body: const SafeArea(child: HomePage()),
     );
   }
 }
