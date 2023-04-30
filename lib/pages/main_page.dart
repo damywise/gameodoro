@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:gameodoro/constants.dart';
 import 'package:gameodoro/pages/home_page.dart';
 import 'package:gameodoro/providers/session.dart';
 import 'package:gameodoro/providers/tune.dart';
@@ -63,7 +64,10 @@ class MainPage extends HookConsumerWidget {
 
     return Scaffold(
       backgroundColor: context.colorScheme.surfaceVariant,
-      body: const SafeArea(child: HomePage()),
+      body: const SafeArea(
+        minimum: safeAreaMinimumEdgeInsets,
+        child: HomePage(),
+      ),
     );
   }
 }

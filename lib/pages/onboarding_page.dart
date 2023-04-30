@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:gameodoro/constants.dart';
 import 'package:gameodoro/pages/main_page.dart';
 import 'package:gameodoro/utils.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -40,6 +41,7 @@ class OnboardingPage extends HookConsumerWidget {
     return Scaffold(
       backgroundColor: context.colorScheme.surfaceVariant,
       body: SafeArea(
+        minimum: safeAreaMinimumEdgeInsets,
         child: Stack(
           children: [
             PageView(
