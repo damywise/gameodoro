@@ -188,7 +188,11 @@ class HomePage extends HookConsumerWidget with RouteAware {
     );
   }
 
-  Widget buildButtons(BuildContext context, Session sessionNotifier, {required bool isRunning}) {
+  Widget buildButtons(
+    BuildContext context,
+    Session sessionNotifier, {
+    required bool isRunning,
+  }) {
     return Column(
       children: [
         Row(

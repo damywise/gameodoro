@@ -128,7 +128,8 @@ class TetrisPage extends HookConsumerWidget {
                                                             Brightness.dark
                                                         ? Colors.black
                                                         : Colors.white
-                                                    ..style = PaintingStyle.stroke
+                                                    ..style =
+                                                        PaintingStyle.stroke
                                                     ..strokeWidth = 2.0,
                                                 ),
                                               ),

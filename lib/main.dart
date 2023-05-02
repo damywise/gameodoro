@@ -17,9 +17,7 @@ void main() async {
   if (Platform.isAndroid) {
     await SystemChrome.setEnabledSystemUIMode(
       SystemUiMode.immersiveSticky,
-      overlays: [
-        SystemUiOverlay.top
-      ],
+      overlays: [SystemUiOverlay.top],
     );
   }
   runApp(

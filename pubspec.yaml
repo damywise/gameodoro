@@ -208,7 +208,7 @@ flutter:
     - assets/img2.png
     - assets/img3.png
     - assets/logo.png
-    - assets/sound001_positive_notification.wav
+    - assets/sound001_positive_notification.mp3
     - assets/sound002_notification.mp3
     - assets/sound003_full_alert.mp3
     - assets/sound004_cullingham.mp3

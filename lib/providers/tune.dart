@@ -11,7 +11,7 @@ part 'tune.freezed.dart';
 
 const tunes = <String, String>{
   '': 'Disabled',
-  'sound001_positive_notification.wav': 'Positive Notification',
+  'sound001_positive_notification.mp3': 'Positive Notification',
   'sound002_notification.mp3': 'Notification',
   'sound003_full_alert.mp3': 'Full Alert',
   'sound004_cullingham.mp3': 'Cullingham',
