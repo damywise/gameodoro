@@ -83,13 +83,13 @@ class Session extends _$Session {
   }
 
   void next() {
-    if (state.number >= 4) {
-      state = state.copyWith(number: 1);
-    } else if (state.number == 0) {
-      state = state.copyWith(number: 2);
-    } else {
-      state = state.copyWith(number: state.number + 1);
-    }
+    state = state.copyWith(
+      number: switch (state.number) {
+        >= 4 => 1,
+        == 0 => 2,
+        _ => state.number + 1,
+      },
+    );
     _updateStudyState();
   }
 

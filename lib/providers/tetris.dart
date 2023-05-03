@@ -94,14 +94,16 @@ class Tetris extends _$Tetris {
         final posX = block.position[1] + i;
         final posY = block.position[0] + j;
 
+        /// changes the block accordingly
+        /// if removed, change to 7 (background)
+        /// if locked, change to 8 (static blocks)
+        /// else (is moving), change to the current block
         final levelY = [...newLevel[posX]];
-        if (remove) {
-          levelY[posY] = 7;
-        } else if (lock) {
-          levelY[posY] = 8;
-        } else {
-          levelY[posY] = block.index;
-        }
+        levelY[posY] = switch ((remove, lock)) {
+          (true, _) => 7,
+          (false, true) => 8,
+          (_, _) => block.index
+        };
         newLevel[posX] = levelY;
       }
     }
@@ -261,16 +263,15 @@ class Tetris extends _$Tetris {
     final isCompleted = sessionState == SessionState.focus;
 
     if ((!state.isPaused || state.isGameover || !state.isPlaying) &&
-        !isCompleted) {
-      if (!move(AxisDirection.down)) {
-        newNotStuck = choosePiece();
-        if (!newNotStuck) {
-          state = state.copyWith(
-            isPlaying: false,
-            isGameover: true,
-          );
-          timer.cancel();
-        }
+        !isCompleted &&
+        !move(AxisDirection.down)) {
+      newNotStuck = choosePiece();
+      if (!newNotStuck) {
+        state = state.copyWith(
+          isPlaying: false,
+          isGameover: true,
+        );
+        timer.cancel();
       }
     }
   }
