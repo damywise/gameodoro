@@ -113,12 +113,11 @@ class ToDoListPage extends HookConsumerWidget {
     List<TextEditingController> controllers,
     void Function(int oldIndex, int newIndex) reorder,
   ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Stack(
       children: [
         Flexible(
           child: ReorderableListView.builder(
-            padding: const EdgeInsets.only(right: 12),
+            padding: const EdgeInsets.only(right: 12, bottom: 72 + 16),
             proxyDecorator: (child, index, animation) => child,
             scrollController: todoScrollController,
             itemBuilder: (context, index) {
@@ -171,9 +170,6 @@ class ToDoListPage extends HookConsumerWidget {
             onReorderStart: (_) => FocusScope.of(context).unfocus(),
             onReorder: reorder,
           ),
-        ),
-        const SizedBox(
-          height: 72 + 16,
         ),
       ],
     );

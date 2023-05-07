@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:gameodoro/constants.dart';
 import 'package:gameodoro/pages/home_page.dart';
 import 'package:gameodoro/providers/session.dart';
 import 'package:gameodoro/providers/tune.dart';
@@ -46,10 +47,13 @@ class MainPage extends HookConsumerWidget {
         }
         showTopSnackBar(
           Overlay.of(context),
-          NotificationWidget(
-            key: Key(Random.secure().nextInt(100000).toString()),
-            title: titles[next.sessionState]!,
-            text: texts[next.sessionState]!,
+          SafeArea(
+            minimum: safeAreaMinimumEdgeInsets,
+            child: NotificationWidget(
+              key: Key(Random.secure().nextInt(100000).toString()),
+              title: titles[next.sessionState]!,
+              text: texts[next.sessionState]!,
+            ),
           ),
           dismissDirection: const [
             DismissDirection.up,
