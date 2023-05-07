@@ -52,6 +52,7 @@ class ToDoListPage extends HookConsumerWidget {
             title: const Text('To Do List'),
           ),
           floatingActionButton: FloatingActionButton(
+            backgroundColor: Theme.of(context).buttonTheme.colorScheme?.primary,
             onPressed: () {
               todoScrollController.animateTo(
                 0,
@@ -60,7 +61,12 @@ class ToDoListPage extends HookConsumerWidget {
               );
               taskNotifier.add();
             },
-            child: const Tooltip(message: 'Add task', child: Icon(Icons.add)),
+            child: Tooltip(
+                message: 'Add task',
+                child: Icon(
+                  Icons.add,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                )),
           ),
           body: Column(
             children: [

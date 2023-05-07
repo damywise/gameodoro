@@ -192,7 +192,7 @@ class TetrisPage extends HookConsumerWidget {
                                       3,
                                   child: AspectRatio(
                                     aspectRatio: 1,
-                                    child: _buildControls(ref),
+                                    child: _buildControls(ref, context),
                                   ),
                                 ),
                               ],
@@ -273,16 +273,20 @@ class AlertDialogWidget extends StatelessWidget {
   }
 }
 
-Widget _buildControls(WidgetRef ref) {
+Widget _buildControls(WidgetRef ref, BuildContext context) {
   return Column(
     children: [
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           FloatingActionButton.large(
+            backgroundColor: Theme.of(context).buttonTheme.colorScheme?.primary,
             heroTag: '1',
             onPressed: ref.watch(tetrisProvider.notifier).rotate,
-            child: const Icon(Icons.rotate_right),
+            child: Icon(
+              Icons.rotate_right,
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
           ),
         ],
       ),
@@ -290,16 +294,24 @@ Widget _buildControls(WidgetRef ref) {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           FloatingActionButton.large(
+            backgroundColor: Theme.of(context).buttonTheme.colorScheme?.primary,
             heroTag: '2',
             onPressed: () =>
                 ref.watch(tetrisProvider.notifier).move(AxisDirection.left),
-            child: const Icon(Icons.arrow_left),
+            child: Icon(
+              Icons.arrow_left,
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
           ),
           FloatingActionButton.large(
+            backgroundColor: Theme.of(context).buttonTheme.colorScheme?.primary,
             heroTag: '3',
             onPressed: () =>
                 ref.watch(tetrisProvider.notifier).move(AxisDirection.right),
-            child: const Icon(Icons.arrow_right),
+            child: Icon(
+              Icons.arrow_right,
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
           ),
         ],
       ),
@@ -307,11 +319,15 @@ Widget _buildControls(WidgetRef ref) {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           FloatingActionButton.large(
+            backgroundColor: Theme.of(context).buttonTheme.colorScheme?.primary,
             heroTag: '4',
             onPressed: () => ref
                 .watch(tetrisProvider.notifier)
                 .move(AxisDirection.down, fall: true),
-            child: const Icon(Icons.arrow_drop_down),
+            child: Icon(
+              Icons.arrow_drop_down,
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
           ),
         ],
       ),
