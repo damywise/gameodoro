@@ -1,10 +1,10 @@
 import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:gameodoro/constants.dart';
 import 'package:gameodoro/pages/full_screen_page.dart';
 import 'package:gameodoro/pages/games_page.dart';
 import 'package:gameodoro/pages/settings_page.dart';
@@ -17,7 +17,7 @@ import 'package:gameodoro/widgets/timer.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
-class HomePage extends HookConsumerWidget with RouteAware {
+class HomePage extends HookConsumerWidget {
   const HomePage({super.key});
 
   @override
@@ -60,121 +60,119 @@ class HomePage extends HookConsumerWidget with RouteAware {
       height: context.textTheme.titleLarge?.fontSize ?? 32,
     );
 
-    return Stack(
-      children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Expanded(
-              child: CircularPercentIndicator(
-                radius: radius.toDouble() / 2,
-                animation: true,
-                animationDuration: 100,
-                animateFromLastPercent: true,
-                circularStrokeCap: CircularStrokeCap.round,
-                progressColor: context.colorScheme.primary,
-                backgroundColor: context.colorScheme.onPrimary,
-                percent: percent.toDouble(),
-                center: Card(
-                  margin: const EdgeInsets.all(5),
-                  elevation: 24,
-                  shape: const CircleBorder(),
-                  clipBehavior: Clip.antiAlias,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      divider,
-                      divider,
-                      const StateText(),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 32,
-                        ),
-                        child: Timer(),
+    return Scaffold(
+      backgroundColor: context.colorScheme.surfaceVariant,
+      body: SafeArea(
+        minimum: safeAreaMinimumEdgeInsets,
+        child: Stack(
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Expanded(
+                  child: CircularPercentIndicator(
+                    radius: radius.toDouble() / 2,
+                    animation: true,
+                    animationDuration: 100,
+                    animateFromLastPercent: true,
+                    circularStrokeCap: CircularStrokeCap.round,
+                    progressColor: context.colorScheme.primary,
+                    backgroundColor: context.colorScheme.onPrimary,
+                    percent: percent.toDouble(),
+                    center: Card(
+                      margin: const EdgeInsets.all(5),
+                      elevation: 24,
+                      shape: const CircleBorder(),
+                      clipBehavior: Clip.antiAlias,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          divider,
+                          divider,
+                          const StateText(),
+                          const Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 32,
+                            ),
+                            child: Timer(),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 24),
+                            child: buildButtons(
+                              context,
+                              sessionNotifier,
+                              isRunning: isRunning,
+                            ),
+                          ),
+                        ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 24),
-                        child: buildButtons(
-                          context,
-                          sessionNotifier,
-                          isRunning: isRunning,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 32),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Tooltip(
+                          message: 'Fullscreen',
+                          child: IconButton(
+                            onPressed: () => Navigator.of(context).pushNamed(
+                              FullScreenPage.route,
+                            ),
+                            icon: const Icon(Icons.fullscreen),
+                          ),
+                        ),
+                        buildVerticalDivider(),
+                        Tooltip(
+                          message: 'To Do List',
+                          child: IconButton(
+                            onPressed: () => Navigator.of(context).pushNamed(
+                              ToDoListPage.route,
+                            ),
+                            icon: const Icon(Icons.edit_note),
+                          ),
+                        ),
+                        buildVerticalDivider(),
+                        Tooltip(
+                          message: 'Games',
+                          child: IconButton(
+                            onPressed: () {
+                              Navigator.of(context).pushNamed(
+                                GamesPage.route,
+                              );
+                            },
+                            icon: const Icon(Icons.videogame_asset),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
             Align(
-              alignment: Alignment.bottomCenter,
+              alignment: Alignment.topLeft,
               child: Padding(
-                padding: const EdgeInsets.only(bottom: 32),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Tooltip(
-                      message: 'Fullscreen',
-                      child: IconButton(
-                        onPressed: () => Navigator.of(context).push(
-                          CupertinoPageRoute<Widget>(
-                            builder: (context) => const FullScreenPage(),
-                          ),
-                        ),
-                        icon: const Icon(Icons.fullscreen),
-                      ),
-                    ),
-                    buildVerticalDivider(),
-                    Tooltip(
-                      message: 'To Do List',
-                      child: IconButton(
-                        onPressed: () => Navigator.of(context).push(
-                          CupertinoPageRoute<Widget>(
-                            builder: (context) => const ToDoListPage(),
-                          ),
-                        ),
-                        icon: const Icon(Icons.edit_note),
-                      ),
-                    ),
-                    buildVerticalDivider(),
-                    Tooltip(
-                      message: 'Games',
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute<Widget>(
-                              builder: (context) => const GamesPage(),
-                            ),
-                          );
-                        },
-                        icon: const Icon(Icons.videogame_asset),
-                      ),
-                    ),
-                  ],
+                padding: const EdgeInsets.all(8),
+                child: Tooltip(
+                  message: 'Settings',
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(
+                        SettingsPage.route,
+                      );
+                    },
+                    icon: const Icon(Icons.settings),
+                  ),
                 ),
               ),
             ),
           ],
         ),
-        Align(
-          alignment: Alignment.topLeft,
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Tooltip(
-              message: 'Settings',
-              child: IconButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute<Widget>(
-                      builder: (context) => const SettingsPage(),
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.settings),
-              ),
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 
@@ -283,6 +281,15 @@ class _TuneWidget extends HookConsumerWidget {
     final tunes = ref.watch(tuneProvider);
     final tunesNotifier = ref.watch(tuneProvider.notifier);
     final player = useMemoized(AudioPlayer.new);
+    final playingIndex = useState(-1);
+    useEffect(
+      () {
+        player.onPlayerComplete.listen((_) {
+          playingIndex.value = -1;
+        });
+      },
+      [],
+    );
 
     return Dialog(
       child: Padding(
@@ -320,14 +327,23 @@ class _TuneWidget extends HookConsumerWidget {
                           onTap: () => tunesNotifier.select(index),
                           leading: tunes[index].path.isEmpty
                               ? null
-                              : IconButton(
-                                  onPressed: () {
-                                    player.play(
-                                      AssetSource(tunes[index].path),
-                                    );
-                                  },
-                                  icon: const Icon(Icons.play_arrow),
-                                ),
+                              : playingIndex.value == index
+                                  ? IconButton(
+                                      onPressed: () {
+                                        playingIndex.value = -1;
+                                        player.stop();
+                                      },
+                                      icon: const Icon(Icons.stop),
+                                    )
+                                  : IconButton(
+                                      onPressed: () async {
+                                        playingIndex.value = index;
+                                        await player.play(
+                                          AssetSource(tunes[index].path),
+                                        );
+                                      },
+                                      icon: const Icon(Icons.play_arrow),
+                                    ),
                           trailing: Radio(
                             value: tunes[index].selected,
                             groupValue: true,

@@ -5,9 +5,9 @@ import 'package:gameodoro/utils.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-part 'tune.g.dart';
-
 part 'tune.freezed.dart';
+
+part 'tune.g.dart';
 
 const tunes = <String, String>{
   '': 'Disabled',

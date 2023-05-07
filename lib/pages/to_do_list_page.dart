@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:gameodoro/constants.dart';
+import 'package:gameodoro/models/to_do_list_data.dart';
 import 'package:gameodoro/providers/to_do_list.dart';
 import 'package:gameodoro/utils.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ToDoListPage extends HookConsumerWidget {
   const ToDoListPage({super.key});
+
+  static const route = '/todolist';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,162 +39,137 @@ class ToDoListPage extends HookConsumerWidget {
 
     final taskNotifier = ref.watch(toDoListProvider.notifier);
 
+    final tabController = useTabController(initialLength: 2);
+
     return Scaffold(
       backgroundColor: context.colorScheme.surfaceVariant,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: const Text('To Do List'),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          todoScrollController.animateTo(
-            0,
-            duration: const Duration(milliseconds: 200),
-            curve: Curves.easeInOut,
-          );
-          taskNotifier.add();
-        },
-        child: const Tooltip(message: 'Add task', child: Icon(Icons.add)),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 12, bottom: 8),
-              child: Text(
-                'Ongoing',
-                style: context.textTheme.titleLarge,
+      body: SafeArea(
+        minimum: safeAreaMinimumEdgeInsets,
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            title: const Text('To Do List'),
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              todoScrollController.animateTo(
+                0,
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeInOut,
+              );
+              taskNotifier.add();
+            },
+            child: const Tooltip(message: 'Add task', child: Icon(Icons.add)),
+          ),
+          body: Column(
+            children: [
+              TabBar(
+                tabs: const [
+                  Text('Ongoing'),
+                  Text('Finished'),
+                ],
+                controller: tabController,
               ),
-            ),
-            Flexible(
-              child: ReorderableListView.builder(
-                padding: const EdgeInsets.only(right: 12),
-                proxyDecorator: (child, index, animation) => child,
-                scrollController: todoScrollController,
-                itemBuilder: (context, index) {
-                  final task = tasksTodo[index];
-
-                  return Card(
-                    key: Key('${task.id}'),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(1),
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 16),
-                        child: ListTile(
-                          leading: Checkbox(
-                            value: false,
-                            onChanged: (done) => taskNotifier.toggle(task.id),
-                          ),
-                          trailing: IconButton(
-                            onPressed: () => taskNotifier.remove(task.id),
-                            icon: const Icon(Icons.delete),
-                          ),
-                          title: TextFormField(
-                            controller: controllersTodo[index],
-                            keyboardType: TextInputType.multiline,
-                            maxLines: null,
-                            decoration: const InputDecoration(
-                              hintText: 'Input your task here',
-                            ),
-                            onTapOutside: (_) => taskNotifier.edit(
-                              task.id,
-                              controllersTodo[index].text,
-                            ),
-                            onEditingComplete: () => taskNotifier.edit(
-                              task.id,
-                              controllersTodo[index].text,
-                            ),
-                            onSaved: (_) => taskNotifier.edit(
-                              task.id,
-                              controllersTodo[index].text,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-                itemCount: tasksTodo.length,
-                onReorderStart: (_) => FocusScope.of(context).unfocus(),
-                onReorder: taskNotifier.reorderTodo,
+              Expanded(
+                child: TabBarView(
+                  controller: tabController,
+                  children: [
+                    (tasksTodo, controllersTodo, taskNotifier.reorderTodo),
+                    (tasksDone, controllersDone, taskNotifier.reorderDone),
+                  ].map<Widget>(
+                    (element) {
+                      final (tasks, controllers, reorder) = element;
+                      return _buildPage(
+                        context,
+                        todoScrollController,
+                        tasks,
+                        taskNotifier,
+                        controllers,
+                        reorder,
+                      );
+                    },
+                  ).toList(),
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 12, bottom: 8),
-              child: Text(
-                'Finished',
-                style: context.textTheme.titleLarge,
-              ),
-            ),
-            Flexible(
-              child: ReorderableListView.builder(
-                padding: const EdgeInsets.only(right: 12),
-                proxyDecorator: (child, index, animation) => child,
-                itemBuilder: (context, index) {
-                  final task = tasksDone[index];
-
-                  return Card(
-                    key: Key('${task.id}'),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(1),
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 16),
-                        child: ListTile(
-                          leading: Checkbox(
-                            value: true,
-                            onChanged: (done) => taskNotifier.toggle(task.id),
-                          ),
-                          trailing: IconButton(
-                            onPressed: () => taskNotifier.remove(task.id),
-                            icon: const Icon(Icons.delete),
-                          ),
-                          title: TextFormField(
-                            controller: controllersDone[index],
-                            keyboardType: TextInputType.multiline,
-                            maxLines: null,
-                            style: const TextStyle(
-                              decoration: TextDecoration.lineThrough,
-                            ),
-                            decoration: const InputDecoration(
-                              hintText: 'Input your task here',
-                            ),
-                            onTapOutside: (_) => taskNotifier.edit(
-                              task.id,
-                              controllersDone[index].text,
-                            ),
-                            onEditingComplete: () => taskNotifier.edit(
-                              task.id,
-                              controllersDone[index].text,
-                            ),
-                            onSaved: (_) => taskNotifier.edit(
-                              task.id,
-                              controllersDone[index].text,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-                itemCount: tasksDone.length,
-                onReorderStart: (_) => FocusScope.of(context).unfocus(),
-                onReorder: taskNotifier.reorderDone,
-              ),
-            ),
-            const SizedBox(
-              height: 72,
-            ),
-          ],
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget _buildPage(
+    BuildContext context,
+    ScrollController todoScrollController,
+    List<Task> tasks,
+    ToDoList taskNotifier,
+    List<TextEditingController> controllers,
+    void Function(int oldIndex, int newIndex) reorder,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Flexible(
+          child: ReorderableListView.builder(
+            padding: const EdgeInsets.only(right: 12),
+            proxyDecorator: (child, index, animation) => child,
+            scrollController: todoScrollController,
+            itemBuilder: (context, index) {
+              final task = tasks[index];
+
+              return Card(
+                key: Key('${task.id}'),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(1),
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: ListTile(
+                      leading: Checkbox(
+                        value: false,
+                        onChanged: (done) => taskNotifier.toggle(task.id),
+                      ),
+                      trailing: IconButton(
+                        onPressed: () => taskNotifier.remove(task.id),
+                        icon: const Icon(Icons.delete),
+                      ),
+                      title: TextFormField(
+                        controller: controllers[index],
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
+                        decoration: const InputDecoration(
+                          hintText: 'Input your task here',
+                        ),
+                        onTapOutside: (_) => taskNotifier.edit(
+                          task.id,
+                          controllers[index].text,
+                        ),
+                        onEditingComplete: () => taskNotifier.edit(
+                          task.id,
+                          controllers[index].text,
+                        ),
+                        onSaved: (_) => taskNotifier.edit(
+                          task.id,
+                          controllers[index].text,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+            itemCount: tasks.length,
+            onReorderStart: (_) => FocusScope.of(context).unfocus(),
+            onReorder: reorder,
+          ),
+        ),
+        const SizedBox(
+          height: 72 + 16,
+        ),
+      ],
     );
   }
 }

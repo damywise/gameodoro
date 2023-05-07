@@ -6,9 +6,9 @@ import 'package:gameodoro/utils.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-part 'session.g.dart';
-
 part 'session.freezed.dart';
+
+part 'session.g.dart';
 
 @Riverpod(keepAlive: true)
 class Session extends _$Session {
@@ -67,16 +67,23 @@ class Session extends _$Session {
   }
 
   void edit({
-    Duration? studyDuration,
+    Duration? focusDuration,
     Duration? shortBreakDuration,
     Duration? longBreakDuration,
   }) {
     final data = state.data;
     final newData = data.copyWith(
-      studyDuration: studyDuration ?? data.studyDuration,
-      shortBreakDuration: shortBreakDuration ?? data.shortBreakDuration,
-      longBreakDuration: longBreakDuration ?? data.longBreakDuration,
+      studyDuration: focusDuration?.inSeconds == 0
+          ? const Duration(seconds: 1)
+          : focusDuration ?? data.studyDuration,
+      shortBreakDuration: shortBreakDuration?.inSeconds == 0
+          ? const Duration(seconds: 1)
+          : shortBreakDuration ?? data.shortBreakDuration,
+      longBreakDuration: longBreakDuration?.inSeconds == 0
+          ? const Duration(seconds: 1)
+          : longBreakDuration ?? data.longBreakDuration,
     );
+    if (newData.studyDuration.inSeconds == 1) {}
     state = state.copyWith(data: newData);
     _updateStudyState();
     saveData();
@@ -114,12 +121,12 @@ class Session extends _$Session {
   }
 
   void _tick(Timer timer) {
-    final isSessionDone =
-        _stopwatch.elapsedMilliseconds + 100 >= state.duration.inMilliseconds;
-    if (isSessionDone) {
-      return next();
-    }
     if (_stopwatch.isRunning) {
+      final isSessionDone =
+          _stopwatch.elapsedMilliseconds + 100 >= state.duration.inMilliseconds;
+      if (isSessionDone) {
+        return next();
+      }
       state = state.copyWith(elapsed: _stopwatch.elapsedMilliseconds);
     }
   }

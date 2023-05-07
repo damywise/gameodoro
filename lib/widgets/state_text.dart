@@ -4,7 +4,9 @@ import 'package:gameodoro/utils.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class StateText extends HookConsumerWidget {
-  const StateText({super.key});
+  const StateText({super.key, this.large = false});
+
+  final bool large;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -16,7 +18,9 @@ class StateText extends HookConsumerWidget {
       tag: 'session state text',
       child: Text(
         getStudyStateName(sessionState),
-        style: context.textTheme.titleLarge,
+        style: large
+            ? context.textTheme.headlineLarge
+            : context.textTheme.titleLarge,
       ),
     );
   }

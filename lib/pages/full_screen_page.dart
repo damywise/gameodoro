@@ -9,6 +9,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 class FullScreenPage extends HookConsumerWidget {
   const FullScreenPage({super.key});
 
+  static const route = '/fullscreen';
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     useEffect(
@@ -49,7 +51,12 @@ class FullScreenPage extends HookConsumerWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Flexible(child: StateText()),
+                      const Flexible(
+                        flex: 2,
+                        child: StateText(
+                          large: true,
+                        ),
+                      ),
                       const Flexible(
                         flex: 2,
                         child: Timer(),

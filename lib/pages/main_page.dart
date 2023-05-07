@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:gameodoro/constants.dart';
 import 'package:gameodoro/pages/home_page.dart';
 import 'package:gameodoro/providers/session.dart';
 import 'package:gameodoro/providers/tune.dart';
@@ -13,11 +12,10 @@ import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class MainPage extends HookConsumerWidget {
   const MainPage({
-    required this.title,
     super.key,
   });
 
-  final String title;
+  static const route = '/home';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -62,13 +60,7 @@ class MainPage extends HookConsumerWidget {
       }
     });
 
-    return Scaffold(
-      backgroundColor: context.colorScheme.surfaceVariant,
-      body: const SafeArea(
-        minimum: safeAreaMinimumEdgeInsets,
-        child: HomePage(),
-      ),
-    );
+    return const HomePage();
   }
 }
 

@@ -1,13 +1,16 @@
-import 'dart:math';
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:gameodoro/constants.dart';
 import 'package:gameodoro/pages/onboarding_page.dart';
 import 'package:gameodoro/providers/session.dart';
 import 'package:gameodoro/utils.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class SettingsPage extends ConsumerWidget {
+class SettingsPage extends HookConsumerWidget {
   const SettingsPage({super.key});
+
+  static const route = '/settings';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,177 +25,97 @@ class SettingsPage extends ConsumerWidget {
     );
     final edit = ref.watch(sessionProvider.notifier).edit;
 
+    final tabController = useTabController(initialLength: 3);
+
     return Scaffold(
       backgroundColor: context.colorScheme.surfaceVariant,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: const Text('Settings'),
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(16).copyWith(top: 0),
-        children: [
-          buildSlider(
-            context,
-            focusDuration,
-            edit,
-            'Focus',
-            state: null,
+      body: SafeArea(
+        minimum: safeAreaMinimumEdgeInsets,
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            title: const Text('Settings'),
           ),
-          buildSlider(
-            context,
-            shortBreakDuration,
-            edit,
-            'Short Break',
-            state: true,
-          ),
-          buildSlider(
-            context,
-            longBreakDuration,
-            edit,
-            'Long Break',
-            state: false,
-          ),
-          const SizedBox(
-            height: 32,
-          ),
-          Align(
-            child: FilledButton.tonalIcon(
-              onPressed: () => Navigator.of(context)
-                ..pop()
-                ..pushReplacement(
-                  MaterialPageRoute<Widget>(
-                    builder: (context) => const OnboardingPage(),
-                  ),
-                ),
-              icon: const Icon(Icons.start),
-              label: const Text('Go back to Onboarding'),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget buildSlider(
-    BuildContext context,
-    Duration duration,
-    void Function({
-      Duration? longBreakDuration,
-      Duration? shortBreakDuration,
-      Duration? studyDuration,
-    })
-        edit,
-    String title, {
-    required bool? state,
-  }) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16).copyWith(left: 0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          body: ListView(
+            padding: const EdgeInsets.all(16).copyWith(top: 0),
             children: [
-              Text(
-                title,
-                style: context.textTheme.titleLarge,
-                textAlign: TextAlign.center,
+              TabBar(
+                tabs: const [
+                  Text('Focus'),
+                  Text('Short Break'),
+                  Text('Long Break'),
+                ],
+                controller: tabController,
               ),
-              Card(
-                elevation: 12,
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Text(
-                    '${getMinutes(duration) < 10 ? '0' : ''}${getMinutes(
+              SizedBox(
+                height: 240,
+                child: TabBarView(
+                  controller: tabController,
+                  children: [
+                    (null, 'Focus', focusDuration),
+                    (true, 'Short Break', shortBreakDuration),
+                    (false, 'Long Break', longBreakDuration)
+                  ].map((e) {
+                    final (state, title, duration) = e;
+                    return buildTimerPicker(
+                      context,
                       duration,
-                    )} : ${getSeconds(duration) < 10 ? '0' : ''}${getSeconds(duration)}',
-                    style: context.textTheme.titleMedium,
-                    textAlign: TextAlign.center,
-                  ),
+                      edit,
+                      title,
+                      state: state,
+                    );
+                  }).toList(),
+                ),
+              ),
+              const SizedBox(
+                height: 32,
+              ),
+              Align(
+                child: FilledButton.tonalIcon(
+                  onPressed: () => Navigator.of(context)
+                    ..pop()
+                    ..pushReplacementNamed(
+                      OnboardingPage.route,
+                    ),
+                  icon: const Icon(Icons.start),
+                  label: const Text('Go back to Onboarding'),
                 ),
               ),
             ],
           ),
         ),
-        Card(
-          elevation: 4,
-          child: Padding(
-            padding: const EdgeInsets.all(8).copyWith(left: 16),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      'Minutes',
-                      style: context.textTheme.labelLarge,
-                    ),
-                    Expanded(
-                      child: Slider(
-                        inactiveColor: context.colorScheme.onPrimary,
-                        max: 60,
-                        value: min(59, max(0, getMinutes(duration).toDouble())),
-                        divisions: 60,
-                        label: '${getMinutes(duration)} minutes',
-                        onChanged: (value) {
-                          final newDuration = Duration(
-                            minutes: min(59, max(0, value.round())),
-                            seconds: getSeconds(duration),
-                          );
-                          switch (state) {
-                            case null:
-                              edit(studyDuration: newDuration);
-                              break;
-                            case true:
-                              edit(shortBreakDuration: newDuration);
-                              break;
-                            case false:
-                              edit(longBreakDuration: newDuration);
-                              break;
-                          }
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Text(
-                      'Seconds',
-                      style: context.textTheme.labelLarge,
-                    ),
-                    Expanded(
-                      child: Slider(
-                        inactiveColor: context.colorScheme.onPrimary,
-                        max: 60,
-                        value: min(60, max(0, getSeconds(duration).toDouble())),
-                        divisions: 60,
-                        label: '${getSeconds(duration)} seconds',
-                        onChanged: (value) {
-                          final newDuration = Duration(
-                            minutes: getMinutes(duration),
-                            seconds: min(59, max(0, value.round())),
-                          );
-                          switch (state) {
-                            case null:
-                              edit(studyDuration: newDuration);
-                              break;
-                            case true:
-                              edit(shortBreakDuration: newDuration);
-                              break;
-                            case false:
-                              edit(longBreakDuration: newDuration);
-                              break;
-                          }
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
+      ),
     );
+  }
+
+  Widget buildTimerPicker(
+    BuildContext context,
+    Duration duration,
+    void Function({
+      Duration? longBreakDuration,
+      Duration? shortBreakDuration,
+      Duration? focusDuration,
+    }) edit,
+    String title, {
+    required bool? state,
+  }) {
+    return CupertinoTimerPicker(
+      initialTimerDuration: duration,
+      onTimerDurationChanged: (value) {
+        edit(
+          focusDuration: state == null ? value : null,
+          shortBreakDuration: state ?? false ? value : null,
+          longBreakDuration: state == false ? value : null,
+        );
+      },
+    );
+  }
+
+  int getHours(Duration focusDuration) {
+    final minutes = focusDuration.inHours;
+
+    return minutes;
   }
 
   int getMinutes(Duration focusDuration) {

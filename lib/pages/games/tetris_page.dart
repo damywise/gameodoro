@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:gameodoro/constants.dart';
+import 'package:gameodoro/pages/games_page.dart';
 import 'package:gameodoro/providers/session.dart';
 import 'package:gameodoro/providers/tetris.dart';
 import 'package:gameodoro/utils.dart';
@@ -8,6 +10,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class TetrisPage extends HookConsumerWidget {
   const TetrisPage({super.key});
+
+  static const route = '${GamesPage.route}/tetris';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -82,120 +86,124 @@ class TetrisPage extends HookConsumerWidget {
         }
       },
       child: Scaffold(
-        appBar: AppBar(backgroundColor: Colors.transparent),
-        extendBodyBehindAppBar: true,
         backgroundColor: context.colorScheme.surfaceVariant,
         body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: AspectRatio(
-                          aspectRatio: 10 / 18,
-                          child: LayoutBuilder(
-                            builder: (context, constraints) {
-                              return Card(
-                                color: Theme.of(context).cardColor,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8),
-                                  child: LayoutBuilder(
-                                    builder: (context, constraints) {
-                                      return Stack(
-                                        alignment: Alignment.center,
-                                        children: [
-                                          LayoutBuilder(
-                                            builder: (context, constraints) {
-                                              return Column(
-                                                children: buildTiles(level),
-                                              );
-                                            },
-                                          ),
-                                          if (isGameover && !isPlaying) ...[
-                                            Center(
-                                              child: Text(
-                                                'Game Over',
-                                                style: context
-                                                    .textTheme.headlineLarge
-                                                    ?.copyWith(
-                                                  foreground: Paint()
-                                                    ..color = Theme.of(
-                                                              context,
-                                                            ).brightness ==
-                                                            Brightness.dark
-                                                        ? Colors.black
-                                                        : Colors.white
-                                                    ..style =
-                                                        PaintingStyle.stroke
-                                                    ..strokeWidth = 2.0,
+          minimum: safeAreaMinimumEdgeInsets,
+          child: Scaffold(
+            appBar: AppBar(backgroundColor: Colors.transparent),
+            extendBodyBehindAppBar: true,
+            backgroundColor: Colors.transparent,
+            body: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: AspectRatio(
+                            aspectRatio: 10 / 18,
+                            child: LayoutBuilder(
+                              builder: (context, constraints) {
+                                return Card(
+                                  color: Theme.of(context).cardColor,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8),
+                                    child: LayoutBuilder(
+                                      builder: (context, constraints) {
+                                        return Stack(
+                                          alignment: Alignment.center,
+                                          children: [
+                                            LayoutBuilder(
+                                              builder: (context, constraints) {
+                                                return Column(
+                                                  children: buildTiles(level),
+                                                );
+                                              },
+                                            ),
+                                            if (isGameover && !isPlaying) ...[
+                                              Center(
+                                                child: Text(
+                                                  'Game Over',
+                                                  style: context
+                                                      .textTheme.headlineLarge
+                                                      ?.copyWith(
+                                                    foreground: Paint()
+                                                      ..color = Theme.of(
+                                                                context,
+                                                              ).brightness ==
+                                                              Brightness.dark
+                                                          ? Colors.black
+                                                          : Colors.white
+                                                      ..style =
+                                                          PaintingStyle.stroke
+                                                      ..strokeWidth = 2.0,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                            Center(
-                                              child: Text(
-                                                'Game Over',
-                                                style: context
-                                                    .textTheme.headlineLarge,
+                                              Center(
+                                                child: Text(
+                                                  'Game Over',
+                                                  style: context
+                                                      .textTheme.headlineLarge,
+                                                ),
                                               ),
-                                            ),
+                                            ],
                                           ],
-                                        ],
-                                      );
-                                    },
+                                        );
+                                      },
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
+                                );
+                              },
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 32,
-                      ),
-                      FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: SizedBox(
-                          width: 240,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              FloatingActionButton(
-                                heroTag: 'start',
-                                isExtended: true,
-                                onPressed: () => handleStartButton(
-                                  ref,
-                                  isPaused: isPaused,
-                                  isPlaying: isPlaying,
-                                ),
-                                child: Text(
-                                  getStartButtonText(
-                                    isGameover: isGameover,
-                                    isPaused: isPaused,
-                                    isPlaying: isPlaying,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 12,
-                              ),
-                              SizedBox(
-                                width: 56 * 3,
-                                child: AspectRatio(
-                                  aspectRatio: 1,
-                                  child: _buildControls(ref),
-                                ),
-                              ),
-                            ],
+                        FilledButton(
+                          onPressed: () => handleStartButton(
+                            ref,
+                            isPaused: isPaused,
+                            isPlaying: isPlaying,
+                          ),
+                          child: Text(
+                            getStartButtonText(
+                              isGameover: isGameover,
+                              isPaused: isPaused,
+                              isPlaying: isPlaying,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(
+                          height: 32,
+                        ),
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: SizedBox(
+                            width: 240 + 48,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width: (Theme.of(context)
+                                              .floatingActionButtonTheme
+                                              .largeSizeConstraints
+                                              ?.maxWidth ??
+                                          96) *
+                                      3,
+                                  child: AspectRatio(
+                                    aspectRatio: 1,
+                                    child: _buildControls(ref),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -271,7 +279,7 @@ Widget _buildControls(WidgetRef ref) {
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          FloatingActionButton(
+          FloatingActionButton.large(
             heroTag: '1',
             onPressed: ref.watch(tetrisProvider.notifier).rotate,
             child: const Icon(Icons.rotate_right),
@@ -281,13 +289,13 @@ Widget _buildControls(WidgetRef ref) {
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          FloatingActionButton(
+          FloatingActionButton.large(
             heroTag: '2',
             onPressed: () =>
                 ref.watch(tetrisProvider.notifier).move(AxisDirection.left),
             child: const Icon(Icons.arrow_left),
           ),
-          FloatingActionButton(
+          FloatingActionButton.large(
             heroTag: '3',
             onPressed: () =>
                 ref.watch(tetrisProvider.notifier).move(AxisDirection.right),
@@ -298,7 +306,7 @@ Widget _buildControls(WidgetRef ref) {
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          FloatingActionButton(
+          FloatingActionButton.large(
             heroTag: '4',
             onPressed: () => ref
                 .watch(tetrisProvider.notifier)

@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:gameodoro/models/block.dart';
 
-const safeAreaMinimumEdgeInsets = EdgeInsets.only(top: 32);
+final safeAreaMinimumEdgeInsets =
+    Platform.isAndroid ? const EdgeInsets.only(top: 32) : EdgeInsets.zero;
 
 const sessionMessages = [
   "Let's get started! Focus for the next 25 minutes and make the most of your study session",

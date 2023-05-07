@@ -8,6 +8,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 class OnboardingPage extends HookConsumerWidget {
   const OnboardingPage({super.key});
 
+  static const route = '/onboarding';
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final prefs = ref.read(sharedPreferences);
@@ -111,11 +113,8 @@ class OnboardingPage extends HookConsumerWidget {
                       );
                     } else {
                       prefs.setBool('firstopen', false);
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute<Widget>(
-                          builder: (context) =>
-                              const MainPage(title: 'Gameodoro'),
-                        ),
+                      Navigator.of(context).pushReplacementNamed(
+                        MainPage.route,
                       );
                     }
                   },
