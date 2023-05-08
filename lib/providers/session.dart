@@ -5,6 +5,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:gameodoro/utils.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wakelock/wakelock.dart';
 
 part 'session.freezed.dart';
 
@@ -52,11 +53,13 @@ class Session extends _$Session {
   late Stopwatch _stopwatch;
 
   void start() {
+    Wakelock.enable();
     state = state.copyWith(stopwatchState: StopwatchState.started, number: 1);
     _stopwatch.start();
   }
 
   void pause() {
+    Wakelock.disable();
     state = state.copyWith(stopwatchState: StopwatchState.stopped);
     _stopwatch.stop();
   }
@@ -64,6 +67,14 @@ class Session extends _$Session {
   void reset() {
     _stopwatch.reset();
     state = state.copyWith(elapsed: 0);
+  }
+
+  void stop() {
+    pause();
+    state = state.copyWith(
+      number: 0,
+      sessionState: SessionState.focus,
+    );
   }
 
   void edit({

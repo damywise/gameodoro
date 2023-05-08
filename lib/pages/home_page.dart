@@ -90,17 +90,20 @@ class HomePage extends HookConsumerWidget {
                           context: context,
                           builder: (context) {
                             return const Dialog(
-                              child: Stack(
-                                children: [
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: CloseButton(),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 32.0),
-                                    child: TimerPicker(),
-                                  ),
-                                ],
+                              child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Stack(
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: CloseButton(),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 32.0),
+                                      child: TimerPicker(),
+                                    ),
+                                  ],
+                                ),
                               ),
                             );
                           },
@@ -309,6 +312,7 @@ class _TuneWidget extends HookConsumerWidget {
         player.onPlayerComplete.listen((_) {
           playingIndex.value = -1;
         });
+        return null;
       },
       [],
     );
