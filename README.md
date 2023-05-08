@@ -8,6 +8,6 @@ Pomodoro + Game, made with Flutter
 - Tetris
 
 ## Team
-- [damywise](github.com/damywise) - Code
-- [dennis](github.com/Dennis9980) - UI
-- [sadri](github.com/muhammadsadri19)
+- [damywise](https://github.com/damywise) - Code
+- [dennis](https://github.com/Dennis9980) - UI
+- [sadri](https://github.com/muhammadsadri19)
