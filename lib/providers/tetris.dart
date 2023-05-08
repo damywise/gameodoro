@@ -101,7 +101,6 @@ class Tetris extends _$Tetris {
         final levelY = [...newLevel[posX]];
         levelY[posY] = switch ((remove, lock)) {
           (true, _) => 7,
-          (false, true) => 8,
           (_, _) => block.index
         };
         newLevel[posX] = levelY;
@@ -282,7 +281,7 @@ class Tetris extends _$Tetris {
     final cleared = <int>[];
     for (final row in level) {
       i++;
-      if (row.every((element) => element == 8)) {
+      if (row.every((element) => element != 7)) {
         cleared.add(i);
       }
     }

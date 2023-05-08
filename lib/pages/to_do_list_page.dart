@@ -113,65 +113,59 @@ class ToDoListPage extends HookConsumerWidget {
     List<TextEditingController> controllers,
     void Function(int oldIndex, int newIndex) reorder,
   ) {
-    return Stack(
-      children: [
-        Flexible(
-          child: ReorderableListView.builder(
-            padding: const EdgeInsets.only(right: 12, bottom: 72 + 16),
-            proxyDecorator: (child, index, animation) => child,
-            scrollController: todoScrollController,
-            itemBuilder: (context, index) {
-              final task = tasks[index];
+    return ReorderableListView.builder(
+      padding: const EdgeInsets.only(right: 12, bottom: 72 + 16),
+      proxyDecorator: (child, index, animation) => child,
+      scrollController: todoScrollController,
+      itemBuilder: (context, index) {
+        final task = tasks[index];
 
-              return Card(
-                key: Key('${task.id}'),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+        return Card(
+          key: Key('${task.id}'),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(1),
+            child: Padding(
+              padding: const EdgeInsets.only(right: 16),
+              child: ListTile(
+                leading: Checkbox(
+                  value: false,
+                  onChanged: (done) => taskNotifier.toggle(task.id),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(1),
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 16),
-                    child: ListTile(
-                      leading: Checkbox(
-                        value: false,
-                        onChanged: (done) => taskNotifier.toggle(task.id),
-                      ),
-                      trailing: IconButton(
-                        onPressed: () => taskNotifier.remove(task.id),
-                        icon: const Icon(Icons.delete),
-                      ),
-                      title: TextFormField(
-                        controller: controllers[index],
-                        keyboardType: TextInputType.multiline,
-                        maxLines: null,
-                        decoration: const InputDecoration(
-                          hintText: 'Input your task here',
-                        ),
-                        onTapOutside: (_) => taskNotifier.edit(
-                          task.id,
-                          controllers[index].text,
-                        ),
-                        onEditingComplete: () => taskNotifier.edit(
-                          task.id,
-                          controllers[index].text,
-                        ),
-                        onSaved: (_) => taskNotifier.edit(
-                          task.id,
-                          controllers[index].text,
-                        ),
-                      ),
-                    ),
+                trailing: IconButton(
+                  onPressed: () => taskNotifier.remove(task.id),
+                  icon: const Icon(Icons.delete),
+                ),
+                title: TextFormField(
+                  controller: controllers[index],
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  decoration: const InputDecoration(
+                    hintText: 'Input your task here',
+                  ),
+                  onTapOutside: (_) => taskNotifier.edit(
+                    task.id,
+                    controllers[index].text,
+                  ),
+                  onEditingComplete: () => taskNotifier.edit(
+                    task.id,
+                    controllers[index].text,
+                  ),
+                  onSaved: (_) => taskNotifier.edit(
+                    task.id,
+                    controllers[index].text,
                   ),
                 ),
-              );
-            },
-            itemCount: tasks.length,
-            onReorderStart: (_) => FocusScope.of(context).unfocus(),
-            onReorder: reorder,
+              ),
+            ),
           ),
-        ),
-      ],
+        );
+      },
+      itemCount: tasks.length,
+      onReorderStart: (_) => FocusScope.of(context).unfocus(),
+      onReorder: reorder,
     );
   }
 }
