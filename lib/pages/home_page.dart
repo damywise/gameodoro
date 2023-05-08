@@ -14,6 +14,7 @@ import 'package:gameodoro/providers/tune.dart';
 import 'package:gameodoro/utils.dart';
 import 'package:gameodoro/widgets/state_text.dart';
 import 'package:gameodoro/widgets/timer.dart';
+import 'package:gameodoro/widgets/timer_picker.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
@@ -84,27 +85,48 @@ class HomePage extends HookConsumerWidget {
                       elevation: 24,
                       shape: const CircleBorder(),
                       clipBehavior: Clip.antiAlias,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          divider,
-                          divider,
-                          const StateText(),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 32,
+                      child: InkWell(
+                        onTap: () => showDialog<Widget>(
+                          context: context,
+                          builder: (context) {
+                            return const Dialog(
+                              child: Stack(
+                                children: [
+                                  Align(
+                                    alignment: Alignment.topLeft,
+                                    child: CloseButton(),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 32.0),
+                                    child: TimerPicker(),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            divider,
+                            divider,
+                            const StateText(),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 32,
+                              ),
+                              child: Timer(),
                             ),
-                            child: Timer(),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 24),
-                            child: buildButtons(
-                              context,
-                              sessionNotifier,
-                              isRunning: isRunning,
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 24),
+                              child: buildButtons(
+                                context,
+                                sessionNotifier,
+                                isRunning: isRunning,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -296,12 +318,9 @@ class _TuneWidget extends HookConsumerWidget {
         padding: const EdgeInsets.all(8),
         child: Stack(
           children: [
-            Align(
+            const Align(
               alignment: Alignment.topLeft,
-              child: IconButton(
-                onPressed: () => Navigator.of(context).pop(),
-                icon: const Icon(Icons.close),
-              ),
+              child: CloseButton(),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 4),
