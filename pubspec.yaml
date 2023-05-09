@@ -208,6 +208,7 @@ flutter_native_splash:
 flutter:
   uses-material-design: true
   assets:
+    - assets/shot_tetris.png
     - assets/img1.png
     - assets/img2.png
     - assets/img3.png

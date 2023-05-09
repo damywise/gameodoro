@@ -15,7 +15,7 @@ class GamesPage extends StatelessWidget {
     final games = [
       (
         title: 'Tetris',
-        url: 'https://i.imgur.com/LKdZejT.png',
+        path: 'assets/shot_tetris.png',
         page: TetrisPage.route
       ),
     ];
@@ -79,8 +79,8 @@ class GamesPage extends StatelessWidget {
                                     ),
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(6),
-                                      child: Image.network(
-                                        game.url,
+                                      child: Image.asset(
+                                        game.path,
                                         width: cardWidth,
                                         height: cardHeight,
                                         fit: BoxFit.fitWidth,
