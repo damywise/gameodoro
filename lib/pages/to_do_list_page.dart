@@ -40,6 +40,7 @@ class ToDoListPage extends HookConsumerWidget {
     final taskNotifier = ref.watch(toDoListProvider.notifier);
 
     final tabController = useTabController(initialLength: 2);
+    final isGoingToFirstTab = useState(false);
 
     return Scaffold(
       backgroundColor: context.colorScheme.surfaceVariant,
@@ -54,19 +55,32 @@ class ToDoListPage extends HookConsumerWidget {
           floatingActionButton: FloatingActionButton(
             backgroundColor: Theme.of(context).buttonTheme.colorScheme?.primary,
             onPressed: () {
-              todoScrollController.animateTo(
-                0,
-                duration: const Duration(milliseconds: 200),
-                curve: Curves.easeInOut,
-              );
-              taskNotifier.add();
+              if (isGoingToFirstTab.value == false) {
+                todoScrollController.animateTo(
+                  0,
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.easeInOut,
+                );
+                taskNotifier.add();
+              }
+
+              Future(() async {
+                isGoingToFirstTab.value = true;
+                while ((tabController.animation?.value ?? 0) > 0) {
+                  print('test');
+                  tabController.animateTo(0);
+                  await Future<void>.delayed(const Duration(milliseconds: 200));
+                }
+                isGoingToFirstTab.value = false;
+              });
             },
             child: Tooltip(
-                message: 'Add task',
-                child: Icon(
-                  Icons.add,
-                  color: Theme.of(context).colorScheme.onPrimary,
-                )),
+              message: 'Add task',
+              child: Icon(
+                Icons.add,
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
+            ),
           ),
           body: Column(
             children: [
@@ -81,11 +95,21 @@ class ToDoListPage extends HookConsumerWidget {
                 child: TabBarView(
                   controller: tabController,
                   children: [
-                    (tasksTodo, controllersTodo, taskNotifier.reorderTodo),
-                    (tasksDone, controllersDone, taskNotifier.reorderDone),
+                    (
+                      tasksTodo,
+                      controllersTodo,
+                      taskNotifier.reorderTodo,
+                      false
+                    ),
+                    (
+                      tasksDone,
+                      controllersDone,
+                      taskNotifier.reorderDone,
+                      true
+                    ),
                   ].map<Widget>(
                     (element) {
-                      final (tasks, controllers, reorder) = element;
+                      final (tasks, controllers, reorder, isDone) = element;
                       return _buildPage(
                         context,
                         todoScrollController,
@@ -93,6 +117,7 @@ class ToDoListPage extends HookConsumerWidget {
                         taskNotifier,
                         controllers,
                         reorder,
+                        isDone: isDone,
                       );
                     },
                   ).toList(),
@@ -111,8 +136,9 @@ class ToDoListPage extends HookConsumerWidget {
     List<Task> tasks,
     ToDoList taskNotifier,
     List<TextEditingController> controllers,
-    void Function(int oldIndex, int newIndex) reorder,
-  ) {
+    void Function(int oldIndex, int newIndex) reorder, {
+    required bool isDone,
+  }) {
     return ReorderableListView.builder(
       padding: const EdgeInsets.only(right: 12, bottom: 72 + 16),
       proxyDecorator: (child, index, animation) => child,
@@ -131,7 +157,7 @@ class ToDoListPage extends HookConsumerWidget {
               padding: const EdgeInsets.only(right: 16),
               child: ListTile(
                 leading: Checkbox(
-                  value: false,
+                  value: isDone,
                   onChanged: (done) => taskNotifier.toggle(task.id),
                 ),
                 trailing: IconButton(
@@ -145,6 +171,9 @@ class ToDoListPage extends HookConsumerWidget {
                   decoration: const InputDecoration(
                     hintText: 'Input your task here',
                   ),
+                  style: isDone
+                      ? const TextStyle(decoration: TextDecoration.lineThrough)
+                      : null,
                   onTapOutside: (_) => taskNotifier.edit(
                     task.id,
                     controllers[index].text,

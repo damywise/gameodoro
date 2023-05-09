@@ -310,7 +310,9 @@ class _TuneWidget extends HookConsumerWidget {
     useEffect(
       () {
         player.onPlayerComplete.listen((_) {
-          playingIndex.value = -1;
+          if (context.mounted) {
+            playingIndex.value = -1;
+          }
         });
         return null;
       },
@@ -387,3 +389,4 @@ class _TuneWidget extends HookConsumerWidget {
     );
   }
 }
+
