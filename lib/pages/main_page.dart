@@ -35,7 +35,10 @@ class MainPage extends HookConsumerWidget {
           "You've earned a well-deserved break. Take some time to recharge and come back ready to crush your next set of tasks!",
     };
     ref.listen(sessionProvider, (previous, next) {
-      if (next.sessionState != previous?.sessionState) {
+      // Notification is only triggered when changing session with timer, not
+      // manually
+      if (next.sessionState != previous?.sessionState &&
+          next.elapsed + 200 >= (previous?.duration.inMilliseconds ?? 0)) {
         player.stop();
         final tune = ref.read(
           tuneProvider.select(

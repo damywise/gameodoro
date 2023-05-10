@@ -41,7 +41,7 @@ class TimerPicker extends HookConsumerWidget {
               (false, 'Long Break', longBreakDuration)
             ].map((e) {
               final (state, title, duration) = e;
-              return buildTimerPicker(
+              return _buildTimerPicker(
                 context,
                 duration,
                 edit,
@@ -55,7 +55,7 @@ class TimerPicker extends HookConsumerWidget {
     );
   }
 
-  Widget buildTimerPicker(
+  Widget _buildTimerPicker(
     BuildContext context,
     Duration duration,
     void Function({
@@ -66,13 +66,17 @@ class TimerPicker extends HookConsumerWidget {
     String title, {
     required bool? state,
   }) {
-    return CupertinoTimerPicker(
-      initialTimerDuration: duration,
-      onTimerDurationChanged: (value) {
-        edit(
-          focusDuration: state == null ? value : null,
-          shortBreakDuration: state ?? false ? value : null,
-          longBreakDuration: state == false ? value : null,
+    return Builder(
+      builder: (context) {
+        return CupertinoTimerPicker(
+          initialTimerDuration: duration,
+          onTimerDurationChanged: (value) {
+            edit(
+              focusDuration: state == null ? value : null,
+              shortBreakDuration: state ?? false ? value : null,
+              longBreakDuration: state == false ? value : null,
+            );
+          },
         );
       },
     );

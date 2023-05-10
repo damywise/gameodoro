@@ -57,8 +57,11 @@ class HomePage extends HookConsumerWidget {
     useEffect(
       () {
         if (ref.read(sharedPreferences).getBool('firstopen') ?? true) {
-          WidgetsBinding.instance.addPostFrameCallback(
-            (_) => ShowCaseWidget.of(context).startShowCase(keys),
+          Future.delayed(
+            const Duration(seconds: 1),
+            () => WidgetsBinding.instance.addPostFrameCallback(
+              (_) => ShowCaseWidget.of(context).startShowCase(keys),
+            ),
           );
         }
         SystemChrome.setPreferredOrientations([
@@ -128,28 +131,12 @@ class HomePage extends HookConsumerWidget {
                         shape: const CircleBorder(),
                         clipBehavior: Clip.antiAlias,
                         child: InkWell(
-                          onTap: () => showDialog<Widget>(
-                            context: context,
-                            builder: (context) {
-                              return const Dialog(
-                                child: Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Stack(
-                                    children: [
-                                      Align(
-                                        alignment: Alignment.topLeft,
-                                        child: CloseButton(),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(top: 32.0),
-                                        child: TimerPicker(),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
+                          onTap: () {
+                            showDialog<Widget>(
+                              context: context,
+                              builder: (context) => const _TimerPickerDialog(),
+                            );
+                          },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -428,7 +415,68 @@ class HomePage extends HookConsumerWidget {
   }
 }
 
-/// This is a separate class for easier debugging (hot reload)
+/// This is a separate widget because showDialog doesn't work correctly
+/// otherwise
+class _TimerPickerDialog extends HookWidget {
+  const _TimerPickerDialog({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final showFirst = useState(true);
+    // This is a workaround because for some reason when the mouse is at the
+    // position of CupertinoTimerPicker when first painted, it throws exception
+    // `child paint transform happened to be null.`
+    // and
+    // `_debugDuringDeviceUpdate`
+    useEffect(() {
+      Future.delayed(Duration.zero, () {
+        if (context.mounted) {
+          showFirst.value = false;
+        }
+      });
+      return null;
+    });
+    return Align(
+      child: SizedBox(
+        width: 320,
+        height: 360,
+        child: Material(
+          color: Colors.transparent,
+          child: Card(
+            elevation: double.infinity,
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Stack(
+                children: [
+                  const Align(
+                    alignment: Alignment.topLeft,
+                    child: CloseButton(),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 32),
+                    child: AnimatedCrossFade(
+                      firstChild: const SizedBox.shrink(),
+                      secondChild: const TimerPicker(),
+                      crossFadeState: showFirst.value
+                          ? CrossFadeState.showFirst
+                          : CrossFadeState.showSecond,
+                      duration: const Duration(milliseconds: 200),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// This is a separate widget because showDialog doesn't work correctly
+/// otherwise
 class _TuneWidget extends HookConsumerWidget {
   const _TuneWidget();
 
@@ -451,71 +499,82 @@ class _TuneWidget extends HookConsumerWidget {
       [],
     );
 
-    return Dialog(
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Stack(
-          children: [
-            const Align(
-              alignment: Alignment.topLeft,
-              child: CloseButton(),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: Text(
-                  'Tune',
-                  style: context.textTheme.titleLarge,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 48),
-              child: Column(
+    return Align(
+      child: SizedBox(
+        width: 320,
+        height: 400,
+        child: Material(
+          color: Colors.transparent,
+          child: Card(
+            elevation: double.infinity,
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Stack(
                 children: [
-                  Expanded(
-                    child: ListView.builder(
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                  const Align(
+                    alignment: Alignment.topLeft,
+                    child: CloseButton(),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: Text(
+                        'Tune',
+                        style: context.textTheme.titleLarge,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 48),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: ListView.builder(
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                onTap: () => tunesNotifier.select(index),
+                                leading: tunes[index].path.isEmpty
+                                    ? null
+                                    : playingIndex.value == index
+                                        ? IconButton(
+                                            onPressed: () {
+                                              playingIndex.value = -1;
+                                              player.stop();
+                                            },
+                                            icon: const Icon(Icons.stop),
+                                          )
+                                        : IconButton(
+                                            onPressed: () async {
+                                              playingIndex.value = index;
+                                              await player.play(
+                                                AssetSource(tunes[index].path),
+                                              );
+                                            },
+                                            icon: const Icon(Icons.play_arrow),
+                                          ),
+                                trailing: Radio(
+                                  value: tunes[index].selected,
+                                  groupValue: true,
+                                  onChanged: (value) =>
+                                      tunesNotifier.select(index),
+                                ),
+                                title: Text(tunes[index].title),
+                              );
+                            },
+                            itemCount: tunes.length,
                           ),
-                          onTap: () => tunesNotifier.select(index),
-                          leading: tunes[index].path.isEmpty
-                              ? null
-                              : playingIndex.value == index
-                                  ? IconButton(
-                                      onPressed: () {
-                                        playingIndex.value = -1;
-                                        player.stop();
-                                      },
-                                      icon: const Icon(Icons.stop),
-                                    )
-                                  : IconButton(
-                                      onPressed: () async {
-                                        playingIndex.value = index;
-                                        await player.play(
-                                          AssetSource(tunes[index].path),
-                                        );
-                                      },
-                                      icon: const Icon(Icons.play_arrow),
-                                    ),
-                          trailing: Radio(
-                            value: tunes[index].selected,
-                            groupValue: true,
-                            onChanged: (value) => tunesNotifier.select(index),
-                          ),
-                          title: Text(tunes[index].title),
-                        );
-                      },
-                      itemCount: tunes.length,
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
-          ],
+          ),
         ),
       ),
     );
