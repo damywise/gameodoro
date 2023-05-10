@@ -12,7 +12,6 @@ class OnboardingPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final prefs = ref.read(sharedPreferences);
     final controller = usePageController();
     final buttonText = useState('Next');
     final index = useState(0);
@@ -112,7 +111,6 @@ class OnboardingPage extends HookConsumerWidget {
                         curve: Curves.easeOutCubic,
                       );
                     } else {
-                      prefs.setBool('firstopen', false);
                       Navigator.of(context).pushReplacementNamed(
                         MainPage.route,
                       );

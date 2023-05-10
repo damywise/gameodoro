@@ -13,6 +13,7 @@ import 'package:gameodoro/pages/to_do_list_page.dart';
 import 'package:gameodoro/utils.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,6 +46,7 @@ class Main extends HookConsumerWidget {
     return MaterialApp(
       title: 'Gameodoro',
       color: context.colorScheme.surfaceVariant,
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
@@ -55,6 +57,7 @@ class Main extends HookConsumerWidget {
         ),
       ),
       // home: const MainPage(title: 'Gameodoro'),
+      builder: (context, child) => ShowCaseWidget(builder: Builder(builder: (context) => child ?? SizedBox.shrink(),)),
       routes: {
         OnboardingPage.route: (context) => const OnboardingPage(),
         MainPage.route: (context) => const MainPage(),

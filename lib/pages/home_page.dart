@@ -17,14 +17,50 @@ import 'package:gameodoro/widgets/timer.dart';
 import 'package:gameodoro/widgets/timer_picker.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class HomePage extends HookConsumerWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final prefs = ref.read(sharedPreferences);
+
+    final timerCardKey = useMemoized(GlobalKey.new);
+    final sessionStateTextKey = useMemoized(GlobalKey.new);
+    final settingButtonKey = useMemoized(GlobalKey.new);
+    final startButtonKey = useMemoized(GlobalKey.new);
+    final previousButtonKey = useMemoized(GlobalKey.new);
+    final nextButtonKey = useMemoized(GlobalKey.new);
+    final resetButtonKey = useMemoized(GlobalKey.new);
+    final notificationButtonKey = useMemoized(GlobalKey.new);
+    final fullscreenButtonKey = useMemoized(GlobalKey.new);
+    final todolistButtonKey = useMemoized(GlobalKey.new);
+    final gamesButtonKey = useMemoized(GlobalKey.new);
+    final tutorialButtonKey = useMemoized(GlobalKey.new);
+
+    final keys = [
+      timerCardKey,
+      sessionStateTextKey,
+      settingButtonKey,
+      startButtonKey,
+      previousButtonKey,
+      nextButtonKey,
+      resetButtonKey,
+      notificationButtonKey,
+      fullscreenButtonKey,
+      todolistButtonKey,
+      gamesButtonKey,
+      tutorialButtonKey,
+    ];
+
     useEffect(
       () {
+        if (ref.read(sharedPreferences).getBool('firstopen') ?? true) {
+          WidgetsBinding.instance.addPostFrameCallback(
+            (_) => ShowCaseWidget.of(context).startShowCase(keys),
+          );
+        }
         SystemChrome.setPreferredOrientations([
           DeviceOrientation.portraitDown,
           DeviceOrientation.portraitUp,
@@ -80,55 +116,76 @@ class HomePage extends HookConsumerWidget {
                     progressColor: context.colorScheme.primary,
                     backgroundColor: context.colorScheme.onPrimary,
                     percent: percent.toDouble(),
-                    center: Card(
-                      margin: const EdgeInsets.all(5),
-                      elevation: 24,
-                      shape: const CircleBorder(),
-                      clipBehavior: Clip.antiAlias,
-                      child: InkWell(
-                        onTap: () => showDialog<Widget>(
-                          context: context,
-                          builder: (context) {
-                            return const Dialog(
-                              child: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Stack(
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.topLeft,
-                                      child: CloseButton(),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 32.0),
-                                      child: TimerPicker(),
-                                    ),
-                                  ],
+                    center: Showcase(
+                      key: timerCardKey,
+                      description: 'This is the pomodoro timer.\n'
+                          'You can tap on the timer to modify focus, short break, and long break session durations\n'
+                          '\nTap anywhere to continue',
+                      targetShapeBorder: const CircleBorder(),
+                      child: Card(
+                        margin: const EdgeInsets.all(5),
+                        elevation: 24,
+                        shape: const CircleBorder(),
+                        clipBehavior: Clip.antiAlias,
+                        child: InkWell(
+                          onTap: () => showDialog<Widget>(
+                            context: context,
+                            builder: (context) {
+                              return const Dialog(
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Stack(
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.topLeft,
+                                        child: CloseButton(),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 32.0),
+                                        child: TimerPicker(),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              divider,
+                              divider,
+                              Showcase(
+                                key: sessionStateTextKey,
+                                targetPadding: const EdgeInsets.all(12),
+                                description:
+                                    'This text shows the current session mode.\n'
+                                    'There 3 modes: "Focus", "Short Break, and "Long Break".',
+                                child: const StateText(),
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 32,
+                                ),
+                                child: Timer(),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 24),
+                                child: buildButtons(
+                                  context,
+                                  (
+                                    startButtonKey,
+                                    previousButtonKey,
+                                    nextButtonKey,
+                                    resetButtonKey,
+                                    notificationButtonKey,
+                                  ),
+                                  sessionNotifier,
+                                  isRunning: isRunning,
                                 ),
                               ),
-                            );
-                          },
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            divider,
-                            divider,
-                            const StateText(),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 32,
-                              ),
-                              child: Timer(),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 24),
-                              child: buildButtons(
-                                context,
-                                sessionNotifier,
-                                isRunning: isRunning,
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -141,35 +198,48 @@ class HomePage extends HookConsumerWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Tooltip(
-                          message: 'Fullscreen',
-                          child: IconButton(
-                            onPressed: () => Navigator.of(context).pushNamed(
-                              FullScreenPage.route,
+                        Showcase(
+                          key: fullscreenButtonKey,
+                          description: 'Fullscreen focus mode',
+                          child: Tooltip(
+                            message: 'Fullscreen',
+                            child: IconButton(
+                              onPressed: () => Navigator.of(context).pushNamed(
+                                FullScreenPage.route,
+                              ),
+                              icon: const Icon(Icons.fullscreen),
                             ),
-                            icon: const Icon(Icons.fullscreen),
                           ),
                         ),
                         buildVerticalDivider(),
-                        Tooltip(
-                          message: 'To Do List',
-                          child: IconButton(
-                            onPressed: () => Navigator.of(context).pushNamed(
-                              ToDoListPage.route,
+                        Showcase(
+                          key: todolistButtonKey,
+                          description: 'Todo List, manage your tasks here',
+                          child: Tooltip(
+                            message: 'To Do List',
+                            child: IconButton(
+                              onPressed: () => Navigator.of(context).pushNamed(
+                                ToDoListPage.route,
+                              ),
+                              icon: const Icon(Icons.edit_note),
                             ),
-                            icon: const Icon(Icons.edit_note),
                           ),
                         ),
                         buildVerticalDivider(),
-                        Tooltip(
-                          message: 'Games',
-                          child: IconButton(
-                            onPressed: () {
-                              Navigator.of(context).pushNamed(
-                                GamesPage.route,
-                              );
-                            },
-                            icon: const Icon(Icons.videogame_asset),
+                        Showcase(
+                          key: gamesButtonKey,
+                          description:
+                              'You can play games during break session.\nGames will be locked when focus session starts.',
+                          child: Tooltip(
+                            message: 'Games',
+                            child: IconButton(
+                              onPressed: () {
+                                Navigator.of(context).pushNamed(
+                                  GamesPage.route,
+                                );
+                              },
+                              icon: const Icon(Icons.videogame_asset),
+                            ),
                           ),
                         ),
                       ],
@@ -182,16 +252,39 @@ class HomePage extends HookConsumerWidget {
               alignment: Alignment.topLeft,
               child: Padding(
                 padding: const EdgeInsets.all(8),
-                child: Tooltip(
-                  message: 'Settings',
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pushNamed(
-                        SettingsPage.route,
-                      );
-                    },
-                    icon: const Icon(Icons.settings),
-                  ),
+                child: Row(
+                  children: [
+                    Showcase(
+                      key: settingButtonKey,
+                      description: 'All settings are over here',
+                      child: Tooltip(
+                        message: 'Settings',
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.of(context).pushNamed(
+                              SettingsPage.route,
+                            );
+                          },
+                          icon: const Icon(Icons.settings),
+                        ),
+                      ),
+                    ),
+                    Showcase(
+                      key: tutorialButtonKey,
+                      description:
+                          'You can repeat this tutorial anytime you want',
+                      onBarrierClick: () => prefs.setBool('firstopen', false),
+                      onToolTipClick: () => prefs.setBool('firstopen', false),
+                      child: Tooltip(
+                        message: 'Tutorial',
+                        child: IconButton(
+                          onPressed: () =>
+                              ShowCaseWidget.of(context).startShowCase(keys),
+                          icon: const Icon(Icons.info),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -213,50 +306,79 @@ class HomePage extends HookConsumerWidget {
 
   Widget buildButtons(
     BuildContext context,
+    (
+      GlobalKey startButtonKey,
+      GlobalKey previousButtonKey,
+      GlobalKey nextButtonKey,
+      GlobalKey resetButtonKey,
+      GlobalKey notificationButtonKey,
+    ) keys,
     Session sessionNotifier, {
     required bool isRunning,
   }) {
+    final (
+      startButtonKey,
+      previousButtonKey,
+      nextButtonKey,
+      resetButtonKey,
+      notificationButtonKey,
+    ) = keys;
     return Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Tooltip(
-              message: 'Previous Session',
-              child: Hero(
-                tag: 'button-previous',
-                child: IconButton(
-                  onPressed: sessionNotifier.previous,
-                  icon: const Icon(
-                    Icons.skip_previous,
-                    size: 32,
+            Showcase(
+              key: previousButtonKey,
+              description: 'Go back to previous session',
+              targetPadding: const EdgeInsets.all(-4),
+              child: Tooltip(
+                message: 'Previous Session',
+                child: Hero(
+                  tag: 'button-previous',
+                  child: IconButton(
+                    onPressed: sessionNotifier.previous,
+                    icon: const Icon(
+                      Icons.skip_previous,
+                      size: 32,
+                    ),
                   ),
                 ),
               ),
             ),
-            FilledButton(
-              onPressed: () {
-                if (isRunning) {
-                  sessionNotifier.pause();
-                } else {
-                  sessionNotifier.start();
-                }
-              },
-              child: AnimatedSize(
-                duration: const Duration(milliseconds: 100),
-                curve: Curves.easeInOut,
-                child: Text(isRunning ? 'Pause' : 'Start'),
+            Showcase(
+              key: startButtonKey,
+              description: 'Tap this button to start the pomodoro session',
+              targetShapeBorder: const CircleBorder(),
+              child: FilledButton(
+                onPressed: () {
+                  if (isRunning) {
+                    sessionNotifier.pause();
+                  } else {
+                    sessionNotifier.start();
+                  }
+                },
+                child: AnimatedSize(
+                  duration: const Duration(milliseconds: 100),
+                  curve: Curves.easeInOut,
+                  child: Text(isRunning ? 'Pause' : 'Start'),
+                ),
               ),
             ),
-            Tooltip(
-              message: 'Next Session',
-              child: Hero(
-                tag: 'button-next',
-                child: IconButton(
-                  onPressed: sessionNotifier.next,
-                  icon: const Icon(
-                    Icons.skip_next,
-                    size: 32,
+            Showcase(
+              key: nextButtonKey,
+              description: 'Skip to the next session',
+              targetPadding: const EdgeInsets.all(-4),
+              child: Tooltip(
+                message: 'Next Session',
+                child: Hero(
+                  tag: 'button-next',
+                  child: IconButton(
+                    onPressed: sessionNotifier.next,
+                    icon: const Icon(
+                      Icons.skip_next,
+                      size: 32,
+                    ),
                   ),
                 ),
               ),
@@ -266,21 +388,30 @@ class HomePage extends HookConsumerWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Tooltip(
-              message: 'Reset Timer',
-              child: IconButton(
-                onPressed: () {
-                  sessionNotifier.reset();
-                },
-                icon: const Icon(Icons.replay),
+            Showcase(
+              key: resetButtonKey,
+              description: 'Reset the timer for current session',
+              child: Tooltip(
+                message: 'Reset Timer',
+                child: IconButton(
+                  onPressed: () {
+                    sessionNotifier.reset();
+                  },
+                  icon: const Icon(Icons.replay),
+                ),
               ),
             ),
             buildVerticalDivider(),
-            Tooltip(
-              message: 'Notification Sound',
-              child: IconButton(
-                onPressed: () => handleTuneButton(context),
-                icon: const Icon(Icons.music_note),
+            Showcase(
+              key: notificationButtonKey,
+              description:
+                  "Change the notification sound.\nIt's silent by default",
+              child: Tooltip(
+                message: 'Notification Sound',
+                child: IconButton(
+                  onPressed: () => handleTuneButton(context),
+                  icon: const Icon(Icons.music_note),
+                ),
               ),
             ),
           ],
@@ -314,6 +445,7 @@ class _TuneWidget extends HookConsumerWidget {
             playingIndex.value = -1;
           }
         });
+
         return null;
       },
       [],
@@ -389,4 +521,3 @@ class _TuneWidget extends HookConsumerWidget {
     );
   }
 }
-
