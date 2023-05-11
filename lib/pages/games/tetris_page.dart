@@ -90,7 +90,9 @@ class TetrisPage extends HookConsumerWidget {
         body: SafeArea(
           minimum: safeAreaMinimumEdgeInsets,
           child: Scaffold(
-            appBar: AppBar(backgroundColor: Colors.transparent),
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+            ),
             extendBodyBehindAppBar: true,
             backgroundColor: Colors.transparent,
             body: Padding(

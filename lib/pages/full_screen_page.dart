@@ -77,7 +77,7 @@ class FullScreenPage extends HookConsumerWidget {
                                   ),
                                 ),
                               ),
-                              IconButton(
+                              IconButton.outlined(
                                 onPressed: () {
                                   if (isRunning) {
                                     sessionNotifier.pause();

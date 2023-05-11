@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gameodoro/constants.dart';
 import 'package:gameodoro/pages/onboarding_page.dart';
 import 'package:gameodoro/utils.dart';
+import 'package:gameodoro/widgets/gameodoro_logo.dart';
 import 'package:gameodoro/widgets/timer_picker.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -12,6 +14,9 @@ class SettingsPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final enableNotification = useState(
+      ref.read(sharedPreferences).getBool('enablenotification') ?? true,
+    );
     return Scaffold(
       backgroundColor: context.colorScheme.surfaceVariant,
       body: SafeArea(
@@ -21,16 +26,36 @@ class SettingsPage extends HookConsumerWidget {
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             title: const Text('Settings'),
+            actions: const [
+              Padding(
+                padding: EdgeInsets.all(8),
+                child: Logo(
+                  showLogo: false,
+                ),
+              )
+            ],
           ),
           body: ListView(
             padding: const EdgeInsets.all(16).copyWith(top: 0),
             children: [
-              const TimerPicker(),
+              SwitchListTile(
+                title: const Text('Notification'),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                value: enableNotification.value,
+                onChanged: (value) {
+                  ref.read(sharedPreferences).setBool(
+                    'enablenotification',
+                    value,
+                  );
+                  enableNotification.value = value;
+                },
+              ),
               const SizedBox(
                 height: 32,
               ),
               Align(
-                child: FilledButton.tonalIcon(
+                child: FilledButton.icon(
                   onPressed: () => Navigator.of(context)
                     ..pop()
                     ..pushReplacementNamed(

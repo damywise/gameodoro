@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gameodoro/constants.dart';
 import 'package:gameodoro/pages/main_page.dart';
 import 'package:gameodoro/utils.dart';
+import 'package:gameodoro/widgets/gameodoro_logo.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class OnboardingPage extends HookConsumerWidget {
@@ -71,17 +72,11 @@ class OnboardingPage extends HookConsumerWidget {
                 ),
               ],
             ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Tooltip(
-                message: 'Gameodoro',
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Image.asset(
-                    'assets/logo.png',
-                    height: 48,
-                  ),
-                ),
+            const Align(
+              alignment: Alignment.topCenter,
+              child: Padding(
+                padding: EdgeInsets.all(8),
+                child: Logo(),
               ),
             ),
             Column(

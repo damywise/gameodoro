@@ -113,7 +113,7 @@ class Tetris extends _$Tetris {
     if (state.currentBlock != null) place(state.currentBlock!, lock: true);
     cleanLines();
     final level = state.level;
-    if (level.first.contains(8)) {
+    if (level.first.where((element) => element != 7).isNotEmpty) {
       return false;
     }
     final index = Random().nextInt(blocks.length);

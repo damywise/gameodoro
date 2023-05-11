@@ -57,7 +57,36 @@ class Main extends HookConsumerWidget {
         ),
       ),
       // home: const MainPage(title: 'Gameodoro'),
-      builder: (context, child) => ShowCaseWidget(builder: Builder(builder: (context) => child ?? SizedBox.shrink(),)),
+      builder: (context, child) => ShowCaseWidget(
+        builder: Builder(
+          builder: (context) => Stack(
+            children: [
+              child ?? const SizedBox.shrink(),
+              AnimatedCrossFade(
+                duration: const Duration(milliseconds: 200),
+                crossFadeState: ref.watch(tutorialRunning)
+                    ? CrossFadeState.showSecond
+                    : CrossFadeState.showFirst,
+                firstChild: const SizedBox.shrink(),
+                secondChild: Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: FilledButton.icon(
+                      onPressed: () {
+                        ShowCaseWidget.of(context).dismiss();
+                        ref.read(tutorialRunning.notifier).state = false;
+                      },
+                      icon: const Icon(Icons.close),
+                      label: const Text('Skip Tutorial'),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
       routes: {
         OnboardingPage.route: (context) => const OnboardingPage(),
         MainPage.route: (context) => const MainPage(),

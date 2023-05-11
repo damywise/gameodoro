@@ -7,6 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 final sharedPreferences =
     Provider<SharedPreferences>((_) => throw UnimplementedError());
 
+final tutorialRunning = StateProvider<bool>((ref) => false);
+
 String getStudyStateName(SessionState sessionState) {
   switch (sessionState) {
     case SessionState.focus:

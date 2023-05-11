@@ -4,6 +4,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gameodoro/constants.dart';
+import 'package:gameodoro/pages/games_page.dart';
 import 'package:gameodoro/pages/home_page.dart';
 import 'package:gameodoro/providers/session.dart';
 import 'package:gameodoro/providers/tune.dart';
@@ -36,9 +37,11 @@ class MainPage extends HookConsumerWidget {
     };
     ref.listen(sessionProvider, (previous, next) {
       // Notification is only triggered when changing session with timer, not
-      // manually
+      // manually.
+      // Also, notification can be disabled
       if (next.sessionState != previous?.sessionState &&
-          next.elapsed + 200 >= (previous?.duration.inMilliseconds ?? 0)) {
+          next.elapsed + 200 >= (previous?.duration.inMilliseconds ?? 0) &&
+          (ref.read(sharedPreferences).getBool('enablenotification') ?? true)) {
         player.stop();
         final tune = ref.read(
           tuneProvider.select(
@@ -52,10 +55,11 @@ class MainPage extends HookConsumerWidget {
           Overlay.of(context),
           SafeArea(
             minimum: safeAreaMinimumEdgeInsets,
-            child: NotificationWidget(
+            child: _NotificationWidget(
               key: Key(Random.secure().nextInt(100000).toString()),
               title: titles[next.sessionState]!,
               text: texts[next.sessionState]!,
+              breakSession: next.sessionState != SessionState.focus,
             ),
           ),
           dismissDirection: const [
@@ -71,15 +75,17 @@ class MainPage extends HookConsumerWidget {
   }
 }
 
-class NotificationWidget extends StatelessWidget {
-  const NotificationWidget({
+class _NotificationWidget extends StatelessWidget {
+  const _NotificationWidget({
+    super.key,
     required this.text,
     required this.title,
-    super.key,
+    required this.breakSession,
   });
 
   final String text;
   final String title;
+  final bool breakSession;
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +98,16 @@ class NotificationWidget extends StatelessWidget {
           elevation: 24,
           child: ListTile(
             title: Text(title, style: textTheme.titleMedium),
-            subtitle: Text(text, style: textTheme.bodyMedium),
+            subtitle: Column(
+              children: [
+                Text(text, style: textTheme.bodyMedium),
+                TextButton(
+                  onPressed: () =>
+                      Navigator.of(context).pushNamed(GamesPage.route),
+                  child: const Text('Open games'),
+                ),
+              ],
+            ),
           ),
         ),
       ),

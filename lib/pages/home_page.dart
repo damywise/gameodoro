@@ -12,9 +12,11 @@ import 'package:gameodoro/pages/to_do_list_page.dart';
 import 'package:gameodoro/providers/session.dart';
 import 'package:gameodoro/providers/tune.dart';
 import 'package:gameodoro/utils.dart';
+import 'package:gameodoro/widgets/gameodoro_logo.dart';
 import 'package:gameodoro/widgets/state_text.dart';
 import 'package:gameodoro/widgets/timer.dart';
 import 'package:gameodoro/widgets/timer_picker.dart';
+import 'package:gameodoro/widgets/to_do_list.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:showcaseview/showcaseview.dart';
@@ -26,41 +28,45 @@ class HomePage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final prefs = ref.read(sharedPreferences);
 
-    final timerCardKey = useMemoized(GlobalKey.new);
-    final sessionStateTextKey = useMemoized(GlobalKey.new);
-    final settingButtonKey = useMemoized(GlobalKey.new);
-    final startButtonKey = useMemoized(GlobalKey.new);
-    final previousButtonKey = useMemoized(GlobalKey.new);
-    final nextButtonKey = useMemoized(GlobalKey.new);
-    final resetButtonKey = useMemoized(GlobalKey.new);
-    final notificationButtonKey = useMemoized(GlobalKey.new);
-    final fullscreenButtonKey = useMemoized(GlobalKey.new);
-    final todolistButtonKey = useMemoized(GlobalKey.new);
-    final gamesButtonKey = useMemoized(GlobalKey.new);
-    final tutorialButtonKey = useMemoized(GlobalKey.new);
-
     final keys = [
+      useMemoized(GlobalKey.new),
+      useMemoized(GlobalKey.new),
+      useMemoized(GlobalKey.new),
+      useMemoized(GlobalKey.new),
+      useMemoized(GlobalKey.new),
+      useMemoized(GlobalKey.new),
+      useMemoized(GlobalKey.new),
+      useMemoized(GlobalKey.new),
+      useMemoized(GlobalKey.new),
+      useMemoized(GlobalKey.new),
+      useMemoized(GlobalKey.new),
+      useMemoized(GlobalKey.new),
+      useMemoized(GlobalKey.new),
+    ];
+
+    final [
       timerCardKey,
       sessionStateTextKey,
-      settingButtonKey,
       startButtonKey,
       previousButtonKey,
       nextButtonKey,
       resetButtonKey,
       notificationButtonKey,
-      fullscreenButtonKey,
+      todolistKey,
       todolistButtonKey,
+      fullscreenButtonKey,
       gamesButtonKey,
+      settingButtonKey,
       tutorialButtonKey,
-    ];
+    ] = keys;
 
     useEffect(
       () {
         if (ref.read(sharedPreferences).getBool('firstopen') ?? true) {
-          Future.delayed(
-            const Duration(seconds: 1),
-            () => WidgetsBinding.instance.addPostFrameCallback(
-              (_) => ShowCaseWidget.of(context).startShowCase(keys),
+          WidgetsBinding.instance.addPostFrameCallback(
+            (_) => Future<void>.delayed(
+              const Duration(seconds: 1),
+              () => startShowcase(context, keys, ref),
             ),
           );
         }
@@ -106,6 +112,13 @@ class HomePage extends HookConsumerWidget {
         minimum: safeAreaMinimumEdgeInsets,
         child: Stack(
           children: [
+            const Align(
+              alignment: Alignment.topCenter,
+              child: Padding(
+                padding: EdgeInsets.all(12),
+                child: Logo(),
+              ),
+            ),
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -178,6 +191,21 @@ class HomePage extends HookConsumerWidget {
                     ),
                   ),
                 ),
+                SizedBox(
+                  height: 360,
+                  child: Showcase(
+                    key: todolistKey,
+                    description: 'This is a todo list preview.\n'
+                        'You can use the "Todo List" button below '
+                        'to further manage your tasks.',
+                    child: const Padding(
+                      padding: EdgeInsets.all(32),
+                      child: ToDoList(
+                        page: false,
+                      ),
+                    ),
+                  ),
+                ),
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Padding(
@@ -188,28 +216,24 @@ class HomePage extends HookConsumerWidget {
                         Showcase(
                           key: fullscreenButtonKey,
                           description: 'Fullscreen focus mode',
-                          child: Tooltip(
-                            message: 'Fullscreen',
-                            child: IconButton(
-                              onPressed: () => Navigator.of(context).pushNamed(
-                                FullScreenPage.route,
-                              ),
-                              icon: const Icon(Icons.fullscreen),
+                          child: TextButton.icon(
+                            onPressed: () => Navigator.of(context).pushNamed(
+                              FullScreenPage.route,
                             ),
+                            icon: const Icon(Icons.fullscreen),
+                            label: const Text('Fullscreen'),
                           ),
                         ),
                         buildVerticalDivider(),
                         Showcase(
                           key: todolistButtonKey,
                           description: 'Todo List, manage your tasks here',
-                          child: Tooltip(
-                            message: 'To Do List',
-                            child: IconButton(
-                              onPressed: () => Navigator.of(context).pushNamed(
-                                ToDoListPage.route,
-                              ),
-                              icon: const Icon(Icons.edit_note),
+                          child: TextButton.icon(
+                            onPressed: () => Navigator.of(context).pushNamed(
+                              ToDoListPage.route,
                             ),
+                            icon: const Icon(Icons.edit_note),
+                            label: const Text('Todo List'),
                           ),
                         ),
                         buildVerticalDivider(),
@@ -217,16 +241,14 @@ class HomePage extends HookConsumerWidget {
                           key: gamesButtonKey,
                           description:
                               'You can play games during break session.\nGames will be locked when focus session starts.',
-                          child: Tooltip(
-                            message: 'Games',
-                            child: IconButton(
-                              onPressed: () {
-                                Navigator.of(context).pushNamed(
-                                  GamesPage.route,
-                                );
-                              },
-                              icon: const Icon(Icons.videogame_asset),
-                            ),
+                          child: TextButton.icon(
+                            onPressed: () {
+                              Navigator.of(context).pushNamed(
+                                GamesPage.route,
+                              );
+                            },
+                            icon: const Icon(Icons.videogame_asset),
+                            label: const Text('Games'),
                           ),
                         ),
                       ],
@@ -260,13 +282,14 @@ class HomePage extends HookConsumerWidget {
                       key: tutorialButtonKey,
                       description:
                           'You can repeat this tutorial anytime you want',
-                      onBarrierClick: () => prefs.setBool('firstopen', false),
-                      onToolTipClick: () => prefs.setBool('firstopen', false),
+                      onBarrierClick: () {
+                        prefs.setBool('firstopen', false);
+                        ref.read(tutorialRunning.notifier).state = false;
+                      },
                       child: Tooltip(
                         message: 'Tutorial',
                         child: IconButton(
-                          onPressed: () =>
-                              ShowCaseWidget.of(context).startShowCase(keys),
+                          onPressed: () => startShowcase(context, keys, ref),
                           icon: const Icon(Icons.info),
                         ),
                       ),
@@ -279,6 +302,15 @@ class HomePage extends HookConsumerWidget {
         ),
       ),
     );
+  }
+
+  void startShowcase(
+    BuildContext context,
+    List<GlobalKey<State<StatefulWidget>>> keys,
+    WidgetRef ref,
+  ) {
+    ref.read(tutorialRunning.notifier).state = true;
+    ShowCaseWidget.of(context).startShowCase(keys);
   }
 
   Widget buildVerticalDivider() {
