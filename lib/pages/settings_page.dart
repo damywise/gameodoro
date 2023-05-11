@@ -4,7 +4,6 @@ import 'package:gameodoro/constants.dart';
 import 'package:gameodoro/pages/onboarding_page.dart';
 import 'package:gameodoro/utils.dart';
 import 'package:gameodoro/widgets/gameodoro_logo.dart';
-import 'package:gameodoro/widgets/timer_picker.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class SettingsPage extends HookConsumerWidget {
@@ -41,13 +40,14 @@ class SettingsPage extends HookConsumerWidget {
               SwitchListTile(
                 title: const Text('Notification'),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
+                  borderRadius: BorderRadius.circular(8),
+                ),
                 value: enableNotification.value,
                 onChanged: (value) {
                   ref.read(sharedPreferences).setBool(
-                    'enablenotification',
-                    value,
-                  );
+                        'enablenotification',
+                        value,
+                      );
                   enableNotification.value = value;
                 },
               ),

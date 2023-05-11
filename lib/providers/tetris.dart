@@ -99,10 +99,8 @@ class Tetris extends _$Tetris {
         /// if locked, change to 8 (static blocks)
         /// else (is moving), change to the current block
         final levelY = [...newLevel[posX]];
-        levelY[posY] = switch ((remove, lock)) {
-          (true, _) => 7,
-          (_, _) => block.index
-        };
+        levelY[posY] =
+            switch ((remove, lock)) { (true, _) => 7, (_, _) => block.index };
         newLevel[posX] = levelY;
       }
     }

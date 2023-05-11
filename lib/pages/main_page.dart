@@ -77,10 +77,10 @@ class MainPage extends HookConsumerWidget {
 
 class _NotificationWidget extends StatelessWidget {
   const _NotificationWidget({
-    super.key,
     required this.text,
     required this.title,
     required this.breakSession,
+    super.key,
   });
 
   final String text;

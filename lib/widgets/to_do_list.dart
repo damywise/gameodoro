@@ -62,7 +62,8 @@ class ToDoList extends HookConsumerWidget {
                   while ((tabController.animation?.value ?? 0) > 0) {
                     tabController.animateTo(0);
                     await Future<void>.delayed(
-                        const Duration(milliseconds: 200));
+                      const Duration(milliseconds: 200),
+                    );
                   }
                   isGoingToFirstTab.value = false;
                 });
@@ -208,7 +209,8 @@ class ToDoList extends HookConsumerWidget {
                                   style: isDone
                                       ? const TextStyle(
                                           decoration:
-                                              TextDecoration.lineThrough)
+                                              TextDecoration.lineThrough,
+                                        )
                                       : null,
                                   onTapOutside: (_) => taskNotifier.edit(
                                     task.id,

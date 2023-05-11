@@ -17,10 +17,11 @@ class Logo extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          if (showLogo) Image.asset(
-            'assets/logo.png',
-            height: 32,
-          ),
+          if (showLogo)
+            Image.asset(
+              'assets/logo.png',
+              height: 32,
+            ),
           if (showText) ...[
             const SizedBox(
               width: 8,

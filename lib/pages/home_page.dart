@@ -450,9 +450,7 @@ class HomePage extends HookConsumerWidget {
 /// This is a separate widget because showDialog doesn't work correctly
 /// otherwise
 class _TimerPickerDialog extends HookWidget {
-  const _TimerPickerDialog({
-    super.key,
-  });
+  const _TimerPickerDialog();
 
   @override
   Widget build(BuildContext context) {

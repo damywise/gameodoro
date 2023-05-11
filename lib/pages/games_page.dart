@@ -132,8 +132,9 @@ class GamesPage extends StatelessWidget {
                                           ?.copyWith(
                                         shadows: [
                                           const Shadow(
-                                              blurRadius: 8,
-                                              offset: Offset(0, 2))
+                                            blurRadius: 8,
+                                            offset: Offset(0, 2),
+                                          )
                                         ],
                                       ),
                                     ),
