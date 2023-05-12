@@ -13,6 +13,7 @@ import 'package:gameodoro/providers/session.dart';
 import 'package:gameodoro/providers/tune.dart';
 import 'package:gameodoro/utils.dart';
 import 'package:gameodoro/widgets/gameodoro_logo.dart';
+import 'package:gameodoro/widgets/notification_widget.dart';
 import 'package:gameodoro/widgets/state_text.dart';
 import 'package:gameodoro/widgets/timer.dart';
 import 'package:gameodoro/widgets/timer_picker.dart';
@@ -20,12 +21,42 @@ import 'package:gameodoro/widgets/to_do_list.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:showcaseview/showcaseview.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class HomePage extends HookConsumerWidget {
   const HomePage({super.key});
 
+  static const route = '/home';
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    /// notif
+    ref.listen(sessionProvider, (previous, next) {
+      // Notification is only triggered when changing session with timer, not
+      // manually.
+      // Also, notification can be disabled
+      if (next.sessionState != previous?.sessionState &&
+          next.elapsed + 200 >= (previous?.duration.inMilliseconds ?? 0) &&
+          (ref.read(sharedPreferences).getBool('enablenotification') ?? true)) {
+        showTopSnackBar(
+          Overlay.of(context),
+          SafeArea(
+            minimum: safeAreaMinimumEdgeInsets,
+            child: NotificationWidget(
+              key: Key(Random.secure().nextInt(100000).toString()),
+              ref: ref,
+              state: next.sessionState,
+            ),
+          ),
+          dismissDirection: const [
+            DismissDirection.up,
+            DismissDirection.horizontal
+          ],
+          dismissType: DismissType.onSwipe,
+        );
+      }
+    });
+
     final prefs = ref.read(sharedPreferences);
 
     final keys = [

@@ -1,10 +1,15 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gameodoro/constants.dart';
-import 'package:gameodoro/pages/main_page.dart';
+import 'package:gameodoro/pages/home_page.dart';
+import 'package:gameodoro/providers/session.dart';
 import 'package:gameodoro/utils.dart';
 import 'package:gameodoro/widgets/gameodoro_logo.dart';
+import 'package:gameodoro/widgets/notification_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class OnboardingPage extends HookConsumerWidget {
   const OnboardingPage({super.key});
@@ -13,6 +18,33 @@ class OnboardingPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    /// notif
+    ref.listen(sessionProvider, (previous, next) {
+      // Notification is only triggered when changing session with timer, not
+      // manually.
+      // Also, notification can be disabled
+      if (next.sessionState != previous?.sessionState &&
+          next.elapsed + 200 >= (previous?.duration.inMilliseconds ?? 0) &&
+          (ref.read(sharedPreferences).getBool('enablenotification') ?? true)) {
+        showTopSnackBar(
+          Overlay.of(context),
+          SafeArea(
+            minimum: safeAreaMinimumEdgeInsets,
+            child: NotificationWidget(
+              key: Key(Random.secure().nextInt(100000).toString()),
+              ref: ref,
+              state: next.sessionState,
+            ),
+          ),
+          dismissDirection: const [
+            DismissDirection.up,
+            DismissDirection.horizontal
+          ],
+          dismissType: DismissType.onSwipe,
+        );
+      }
+    });
+
     final controller = usePageController();
     final buttonText = useState('Next');
     final index = useState(0);
@@ -107,7 +139,7 @@ class OnboardingPage extends HookConsumerWidget {
                       );
                     } else {
                       Navigator.of(context).pushReplacementNamed(
-                        MainPage.route,
+                        HomePage.route,
                       );
                     }
                   },

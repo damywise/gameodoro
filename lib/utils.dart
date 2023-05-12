@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:gameodoro/models/block.dart';
 import 'package:gameodoro/providers/session.dart';
@@ -8,6 +9,7 @@ final sharedPreferences =
     Provider<SharedPreferences>((_) => throw UnimplementedError());
 
 final tutorialRunning = StateProvider<bool>((ref) => false);
+final audioplayer = Provider<AudioPlayer>((ref) => AudioPlayer());
 
 String getStudyStateName(SessionState sessionState) {
   switch (sessionState) {
