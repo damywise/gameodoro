@@ -10,7 +10,7 @@ class TimerPicker extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final focusDuration = ref.watch(
-      sessionProvider.select((value) => value.data.studyDuration),
+      sessionProvider.select((value) => value.data.focusDuration),
     );
     final shortBreakDuration = ref.watch(
       sessionProvider.select((value) => value.data.shortBreakDuration),
@@ -21,7 +21,7 @@ class TimerPicker extends HookConsumerWidget {
     final edit = ref.watch(sessionProvider.notifier).edit;
 
     final tabController = useTabController(initialLength: 3);
-    return Column(
+    return ListView(
       children: [
         TabBar(
           tabs: const [
@@ -51,6 +51,30 @@ class TimerPicker extends HookConsumerWidget {
             }).toList(),
           ),
         ),
+        TextButton(
+          onPressed: () => showDialog<Widget>(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Reset All Timers'),
+              content: const Text('Are you sure you want to reset all timers?'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('Cancel'),
+                ),
+                FilledButton(
+                  onPressed: () {
+                    ref.read(sessionProvider.notifier).defaultSettings();
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Reset All Timers'),
+                ),
+              ],
+            ),
+          ),
+          child: const Text('Reset to default settings'),
+        )
       ],
     );
   }

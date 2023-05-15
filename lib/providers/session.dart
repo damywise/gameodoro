@@ -22,7 +22,7 @@ class Session extends _$Session {
     final data = SessionModel.fromJson(
       json.decode(dataRaw ?? '{}') as Map<String, dynamic>,
     );
-    final duration = data.studyDuration;
+    final duration = data.focusDuration;
 
     return SessionData(
       data: data,
@@ -39,7 +39,7 @@ class Session extends _$Session {
   void _updateDuration() {
     switch (state.sessionState) {
       case SessionState.focus:
-        state = state.copyWith(duration: state.data.studyDuration);
+        state = state.copyWith(duration: state.data.focusDuration);
         break;
       case SessionState.shortBreak:
         state = state.copyWith(duration: state.data.shortBreakDuration);
@@ -84,9 +84,9 @@ class Session extends _$Session {
   }) {
     final data = state.data;
     final newData = data.copyWith(
-      studyDuration: focusDuration?.inSeconds == 0
+      focusDuration: focusDuration?.inSeconds == 0
           ? const Duration(seconds: 1)
-          : focusDuration ?? data.studyDuration,
+          : focusDuration ?? data.focusDuration,
       shortBreakDuration: shortBreakDuration?.inSeconds == 0
           ? const Duration(seconds: 1)
           : shortBreakDuration ?? data.shortBreakDuration,
@@ -94,10 +94,17 @@ class Session extends _$Session {
           ? const Duration(seconds: 1)
           : longBreakDuration ?? data.longBreakDuration,
     );
-    if (newData.studyDuration.inSeconds == 1) {}
+    if (newData.focusDuration.inSeconds == 1) {}
     state = state.copyWith(data: newData);
     _updateStudyState();
     saveData();
+  }
+
+  void defaultSettings() {
+    state = state.copyWith(
+      data: const SessionModel(),
+    );
+    edit();
   }
 
   void next() {
@@ -187,7 +194,7 @@ class SessionModel with _$SessionModel {
   /// Short break duration, and
   /// Long break duration
   const factory SessionModel({
-    @Default(Duration(minutes: 25)) Duration studyDuration,
+    @Default(Duration(minutes: 25)) Duration focusDuration,
     @Default(Duration(minutes: 5)) Duration shortBreakDuration,
     @Default(Duration(minutes: 15)) Duration longBreakDuration,
   }) = _SessionModel;

@@ -153,6 +153,9 @@ class HomePage extends HookConsumerWidget {
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
+                const SizedBox(
+                  height: 48,
+                ),
                 Expanded(
                   child: CircularPercentIndicator(
                     radius: radius.toDouble() / 2,
@@ -222,8 +225,7 @@ class HomePage extends HookConsumerWidget {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 360,
+                Expanded(
                   child: Showcase(
                     key: todolistKey,
                     description: 'This is a todo list preview.\n'
@@ -502,7 +504,7 @@ class _TimerPickerDialog extends HookWidget {
     return Align(
       child: SizedBox(
         width: 320,
-        height: 360,
+        height: 380,
         child: Material(
           color: Colors.transparent,
           child: Card(

@@ -292,7 +292,7 @@ SessionModel _$SessionModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$SessionModel {
-  Duration get studyDuration => throw _privateConstructorUsedError;
+  Duration get focusDuration => throw _privateConstructorUsedError;
   Duration get shortBreakDuration => throw _privateConstructorUsedError;
   Duration get longBreakDuration => throw _privateConstructorUsedError;
 
@@ -309,7 +309,7 @@ abstract class $SessionModelCopyWith<$Res> {
       _$SessionModelCopyWithImpl<$Res, SessionModel>;
   @useResult
   $Res call(
-      {Duration studyDuration,
+      {Duration focusDuration,
       Duration shortBreakDuration,
       Duration longBreakDuration});
 }
@@ -327,14 +327,14 @@ class _$SessionModelCopyWithImpl<$Res, $Val extends SessionModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? studyDuration = null,
+    Object? focusDuration = null,
     Object? shortBreakDuration = null,
     Object? longBreakDuration = null,
   }) {
     return _then(_value.copyWith(
-      studyDuration: null == studyDuration
-          ? _value.studyDuration
-          : studyDuration // ignore: cast_nullable_to_non_nullable
+      focusDuration: null == focusDuration
+          ? _value.focusDuration
+          : focusDuration // ignore: cast_nullable_to_non_nullable
               as Duration,
       shortBreakDuration: null == shortBreakDuration
           ? _value.shortBreakDuration
@@ -357,7 +357,7 @@ abstract class _$$_SessionModelCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {Duration studyDuration,
+      {Duration focusDuration,
       Duration shortBreakDuration,
       Duration longBreakDuration});
 }
@@ -373,14 +373,14 @@ class __$$_SessionModelCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? studyDuration = null,
+    Object? focusDuration = null,
     Object? shortBreakDuration = null,
     Object? longBreakDuration = null,
   }) {
     return _then(_$_SessionModel(
-      studyDuration: null == studyDuration
-          ? _value.studyDuration
-          : studyDuration // ignore: cast_nullable_to_non_nullable
+      focusDuration: null == focusDuration
+          ? _value.focusDuration
+          : focusDuration // ignore: cast_nullable_to_non_nullable
               as Duration,
       shortBreakDuration: null == shortBreakDuration
           ? _value.shortBreakDuration
@@ -398,7 +398,7 @@ class __$$_SessionModelCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_SessionModel implements _SessionModel {
   const _$_SessionModel(
-      {this.studyDuration = const Duration(minutes: 25),
+      {this.focusDuration = const Duration(minutes: 25),
       this.shortBreakDuration = const Duration(minutes: 5),
       this.longBreakDuration = const Duration(minutes: 15)});
 
@@ -407,7 +407,7 @@ class _$_SessionModel implements _SessionModel {
 
   @override
   @JsonKey()
-  final Duration studyDuration;
+  final Duration focusDuration;
   @override
   @JsonKey()
   final Duration shortBreakDuration;
@@ -417,7 +417,7 @@ class _$_SessionModel implements _SessionModel {
 
   @override
   String toString() {
-    return 'SessionModel(studyDuration: $studyDuration, shortBreakDuration: $shortBreakDuration, longBreakDuration: $longBreakDuration)';
+    return 'SessionModel(focusDuration: $focusDuration, shortBreakDuration: $shortBreakDuration, longBreakDuration: $longBreakDuration)';
   }
 
   @override
@@ -425,8 +425,8 @@ class _$_SessionModel implements _SessionModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_SessionModel &&
-            (identical(other.studyDuration, studyDuration) ||
-                other.studyDuration == studyDuration) &&
+            (identical(other.focusDuration, focusDuration) ||
+                other.focusDuration == focusDuration) &&
             (identical(other.shortBreakDuration, shortBreakDuration) ||
                 other.shortBreakDuration == shortBreakDuration) &&
             (identical(other.longBreakDuration, longBreakDuration) ||
@@ -436,7 +436,7 @@ class _$_SessionModel implements _SessionModel {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType, studyDuration, shortBreakDuration, longBreakDuration);
+      runtimeType, focusDuration, shortBreakDuration, longBreakDuration);
 
   @JsonKey(ignore: true)
   @override
@@ -454,7 +454,7 @@ class _$_SessionModel implements _SessionModel {
 
 abstract class _SessionModel implements SessionModel {
   const factory _SessionModel(
-      {final Duration studyDuration,
+      {final Duration focusDuration,
       final Duration shortBreakDuration,
       final Duration longBreakDuration}) = _$_SessionModel;
 
@@ -462,7 +462,7 @@ abstract class _SessionModel implements SessionModel {
       _$_SessionModel.fromJson;
 
   @override
-  Duration get studyDuration;
+  Duration get focusDuration;
   @override
   Duration get shortBreakDuration;
   @override

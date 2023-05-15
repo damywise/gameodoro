@@ -40,9 +40,9 @@ const _$SessionStateEnumMap = {
 
 _$_SessionModel _$$_SessionModelFromJson(Map<String, dynamic> json) =>
     _$_SessionModel(
-      studyDuration: json['studyDuration'] == null
+      focusDuration: json['focusDuration'] == null
           ? const Duration(minutes: 25)
-          : Duration(microseconds: json['studyDuration'] as int),
+          : Duration(microseconds: json['focusDuration'] as int),
       shortBreakDuration: json['shortBreakDuration'] == null
           ? const Duration(minutes: 5)
           : Duration(microseconds: json['shortBreakDuration'] as int),
@@ -53,7 +53,7 @@ _$_SessionModel _$$_SessionModelFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$_SessionModelToJson(_$_SessionModel instance) =>
     <String, dynamic>{
-      'studyDuration': instance.studyDuration.inMicroseconds,
+      'focusDuration': instance.focusDuration.inMicroseconds,
       'shortBreakDuration': instance.shortBreakDuration.inMicroseconds,
       'longBreakDuration': instance.longBreakDuration.inMicroseconds,
     };
@@ -62,7 +62,7 @@ Map<String, dynamic> _$$_SessionModelToJson(_$_SessionModel instance) =>
 // RiverpodGenerator
 // **************************************************************************
 
-String _$sessionHash() => r'59376ac9c0b6a50d14bef29f823089c7e39304a4';
+String _$sessionHash() => r'c210740538c8bfc63f4ffef4a89ef25f10b9bd72';
 
 /// See also [Session].
 @ProviderFor(Session)

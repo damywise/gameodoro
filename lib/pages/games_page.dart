@@ -166,7 +166,7 @@ class GamesPage extends StatelessWidget {
                 const Center(
                   child: Padding(
                     padding: EdgeInsets.all(24),
-                    child: Text('New games are coming soon!'),
+                    child: Text('More games are coming soon!'),
                   ),
                 ),
               ],
