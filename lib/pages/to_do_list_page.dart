@@ -25,7 +25,7 @@ class ToDoListPage extends ConsumerWidget {
               Padding(
                 padding: EdgeInsets.all(8),
                 child: Logo(
-                  showLogo: false,
+                  showText: false,
                 ),
               )
             ],

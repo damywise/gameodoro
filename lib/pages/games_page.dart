@@ -35,7 +35,7 @@ class GamesPage extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.all(8),
                 child: Logo(
-                  showLogo: false,
+                  showText: false,
                 ),
               )
             ],

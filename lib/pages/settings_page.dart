@@ -29,7 +29,7 @@ class SettingsPage extends HookConsumerWidget {
               Padding(
                 padding: EdgeInsets.all(8),
                 child: Logo(
-                  showLogo: false,
+                  showText: false,
                 ),
               )
             ],
