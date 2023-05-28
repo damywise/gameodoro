@@ -20,8 +20,8 @@ class GamesPage extends StatelessWidget {
       (title: 'Tetris', path: 'assets/shot_tetris.png', page: TetrisPage.route),
       (title: 'Snake', path: 'assets/shot_snake.png', page: SnakePage.route),
     ];
-    const cardWidth = 240.0;
-    const cardHeight = 380.0;
+    const cardWidth = 240.0 * 3 / 4;
+    const cardHeight = 380.0 * 3 / 4;
     // final rows = MediaQuery.of(context).size.width / cardWidth;
     // final columns = games.length / rows;
 
