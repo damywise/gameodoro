@@ -4,37 +4,39 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gameodoro/constants.dart';
 import 'package:gameodoro/pages/games_page.dart';
 import 'package:gameodoro/providers/session.dart';
-import 'package:gameodoro/providers/tetris.dart';
+import 'package:gameodoro/providers/snake.dart';
 import 'package:gameodoro/utils.dart';
 import 'package:gameodoro/widgets/alert_dialog_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class TetrisPage extends HookConsumerWidget {
-  const TetrisPage({super.key});
+class SnakePage extends HookConsumerWidget {
+  const SnakePage({super.key});
 
-  static const route = '${GamesPage.route}/tetris';
+  static const route = '${GamesPage.route}/snake';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final colors = getColors();
     final sessionState =
         ref.watch(sessionProvider.select((value) => value.sessionState));
     final isFocusing = sessionState == SessionState.focus;
     final isPlaying =
-        ref.watch(tetrisProvider.select((value) => value.isPlaying));
-    final isPaused =
-        ref.watch(tetrisProvider.select((value) => value.isPaused));
+        ref.watch(snakeProvider.select((value) => value.isPlaying));
+    final isPaused = ref.watch(snakeProvider.select((value) => value.isPaused));
     final isGameover =
-        ref.watch(tetrisProvider.select((value) => value.isGameover));
-    final level = ref.watch(tetrisProvider.select((value) => value.level));
+        ref.watch(snakeProvider.select((value) => value.isGameover));
+    final level = ref.watch(snakeProvider.select((value) => value.level));
 
     final isDialogShowing = useState(false);
+
+    final direction =
+        ref.watch(snakeProvider.select((value) => value.direction));
 
     ref.listen(sessionProvider.select((value) => value.sessionState), (
       previous,
       next,
     ) {
       if (next == SessionState.focus) {
+        ref.read(snakeProvider.notifier).pause();
         if (!isDialogShowing.value) {
           isDialogShowing.value = true;
           showDialog<Widget>(
@@ -64,7 +66,7 @@ class TetrisPage extends HookConsumerWidget {
           }
         });
 
-        return ref.read(tetrisProvider.notifier).dispose;
+        return ref.read(snakeProvider.notifier).dispose;
       },
       [],
     );
@@ -72,7 +74,7 @@ class TetrisPage extends HookConsumerWidget {
     return RawKeyboardListener(
       focusNode: FocusNode(),
       onKey: (value) {
-        final game = ref.watch(tetrisProvider.notifier);
+        final game = ref.watch(snakeProvider.notifier);
         if (value.isKeyPressed(LogicalKeyboardKey.arrowRight)) {
           game.move(AxisDirection.right);
         }
@@ -80,10 +82,10 @@ class TetrisPage extends HookConsumerWidget {
           game.move(AxisDirection.left);
         }
         if (value.isKeyPressed(LogicalKeyboardKey.arrowUp)) {
-          game.rotate();
+          game.move(AxisDirection.up);
         }
         if (value.isKeyPressed(LogicalKeyboardKey.arrowDown)) {
-          game.move(AxisDirection.down, fall: true);
+          game.move(AxisDirection.down);
         }
       },
       child: Scaffold(
@@ -119,9 +121,7 @@ class TetrisPage extends HookConsumerWidget {
                                           children: [
                                             LayoutBuilder(
                                               builder: (context, constraints) {
-                                                return Column(
-                                                  children: buildTiles(level),
-                                                );
+                                                return buildTiles(level);
                                               },
                                             ),
                                             if (isGameover && !isPlaying) ...[
@@ -195,7 +195,7 @@ class TetrisPage extends HookConsumerWidget {
                                       3,
                                   child: AspectRatio(
                                     aspectRatio: 1,
-                                    child: _buildControls(ref, context),
+                                    child: _buildControls(ref, context, direction),
                                   ),
                                 ),
                               ],
@@ -231,7 +231,7 @@ class TetrisPage extends HookConsumerWidget {
     required bool isPaused,
     required bool isPlaying,
   }) {
-    final game = ref.watch(tetrisProvider.notifier);
+    final game = ref.watch(snakeProvider.notifier);
     if (isPaused) {
       game.play();
     } else if (isPlaying) {
@@ -240,98 +240,114 @@ class TetrisPage extends HookConsumerWidget {
       game.start();
     }
   }
-}
 
-Widget _buildControls(WidgetRef ref, BuildContext context) {
-  return Column(
-    children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          FloatingActionButton.large(
-            backgroundColor: Theme.of(context).buttonTheme.colorScheme?.primary,
-            heroTag: '1',
-            onPressed: ref.watch(tetrisProvider.notifier).rotate,
-            child: Icon(
-              Icons.rotate_right,
-              color: Theme.of(context).colorScheme.onPrimary,
+  Widget _buildControls(
+      WidgetRef ref, BuildContext context, AxisDirection direction) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            FloatingActionButton.large(
+              backgroundColor: direction == AxisDirection.up
+                  ? Theme.of(context).buttonTheme.colorScheme?.primaryContainer
+                  : Theme.of(context).buttonTheme.colorScheme?.primary,
+              heroTag: '1',
+              onPressed: () =>
+                  ref.watch(snakeProvider.notifier).move(AxisDirection.up),
+              child: Icon(
+                Icons.arrow_drop_up,
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
             ),
-          ),
-        ],
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          FloatingActionButton.large(
-            backgroundColor: Theme.of(context).buttonTheme.colorScheme?.primary,
-            heroTag: '2',
-            onPressed: () =>
-                ref.watch(tetrisProvider.notifier).move(AxisDirection.left),
-            child: Icon(
-              Icons.arrow_left,
-              color: Theme.of(context).colorScheme.onPrimary,
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            FloatingActionButton.large(
+              backgroundColor: direction == AxisDirection.left
+                  ? Theme.of(context).buttonTheme.colorScheme?.primaryContainer
+                  : Theme.of(context).buttonTheme.colorScheme?.primary,
+              heroTag: '2',
+              onPressed: () =>
+                  ref.watch(snakeProvider.notifier).move(AxisDirection.left),
+              child: Icon(
+                Icons.arrow_left,
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
             ),
-          ),
-          FloatingActionButton.large(
-            backgroundColor: Theme.of(context).buttonTheme.colorScheme?.primary,
-            heroTag: '3',
-            onPressed: () =>
-                ref.watch(tetrisProvider.notifier).move(AxisDirection.right),
-            child: Icon(
-              Icons.arrow_right,
-              color: Theme.of(context).colorScheme.onPrimary,
+            FloatingActionButton.large(
+              backgroundColor: direction == AxisDirection.right
+                  ? Theme.of(context).buttonTheme.colorScheme?.primaryContainer
+                  : Theme.of(context).buttonTheme.colorScheme?.primary,
+              heroTag: '3',
+              onPressed: () =>
+                  ref.watch(snakeProvider.notifier).move(AxisDirection.right),
+              child: Icon(
+                Icons.arrow_right,
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
             ),
-          ),
-        ],
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          FloatingActionButton.large(
-            backgroundColor: Theme.of(context).buttonTheme.colorScheme?.primary,
-            heroTag: '4',
-            onPressed: () => ref
-                .watch(tetrisProvider.notifier)
-                .move(AxisDirection.down, fall: true),
-            child: Icon(
-              Icons.arrow_drop_down,
-              color: Theme.of(context).colorScheme.onPrimary,
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            FloatingActionButton.large(
+              backgroundColor: direction == AxisDirection.down
+                  ? Theme.of(context).buttonTheme.colorScheme?.primaryContainer
+                  : Theme.of(context).buttonTheme.colorScheme?.primary,
+              heroTag: '4',
+              onPressed: () => ref.watch(snakeProvider.notifier).move(
+                    AxisDirection.down,
+                  ),
+              child: Icon(
+                Icons.arrow_drop_down,
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
             ),
-          ),
-        ],
-      ),
-    ],
-  );
-}
+          ],
+        ),
+      ],
+    );
+  }
 
-List<Widget> buildTiles(List<List<int>> level) {
-  return level
-      .map(
-        (column) => Expanded(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: column
-                .map(
-                  (block) => Expanded(
-                    child: AspectRatio(
-                      aspectRatio: 1,
-                      child: Padding(
-                        padding: const EdgeInsets.all(2),
-                        child: DecoratedBox(
-                          decoration: BoxDecoration(
-                            color: getColors()[block],
-                            borderRadius: BorderRadius.circular(
-                              2,
+  Widget buildTiles(List<List<int>> level) {
+    return Row(
+      children: level
+          .map(
+            (column) => Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: column
+                    .map(
+                      (block) => Expanded(
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(2),
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                color: switch (block) {
+                                  2 => Colors.orangeAccent,
+                                  1 => Colors.blue,
+                                  _ => Colors.grey.withOpacity(.2),
+                                },
+                                borderRadius: BorderRadius.circular(
+                                  2,
+                                ),
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                )
-                .toList(),
-          ),
-        ),
-      )
-      .toList();
+                    )
+                    .toList(),
+              ),
+            ),
+          )
+          .toList(),
+    );
+  }
 }

@@ -62,7 +62,7 @@ Map<String, dynamic> _$$_SessionModelToJson(_$_SessionModel instance) =>
 // RiverpodGenerator
 // **************************************************************************
 
-String _$sessionHash() => r'c210740538c8bfc63f4ffef4a89ef25f10b9bd72';
+String _$sessionHash() => r'dd671a2b0a4481a3b33eb0923fcc37d74cbf6462';
 
 /// See also [Session].
 @ProviderFor(Session)

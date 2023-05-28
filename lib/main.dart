@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gameodoro/constants.dart';
 import 'package:gameodoro/pages/full_screen_page.dart';
+import 'package:gameodoro/pages/games/snake_page.dart';
 import 'package:gameodoro/pages/games/tetris_page.dart';
 import 'package:gameodoro/pages/games_page.dart';
 import 'package:gameodoro/pages/home_page.dart';
@@ -70,6 +71,7 @@ class Main extends HookConsumerWidget {
         GamesPage.route: (context) => const GamesPage(),
         // games
         TetrisPage.route: (context) => const TetrisPage(),
+        SnakePage.route: (context) => const SnakePage(),
       },
       initialRoute:
           firstTimeOpen ?? true ? OnboardingPage.route : HomePage.route,

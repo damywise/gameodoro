@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:gameodoro/constants.dart';
+import 'package:gameodoro/pages/games/snake_page.dart';
 import 'package:gameodoro/pages/games/tetris_page.dart';
 import 'package:gameodoro/utils.dart';
 import 'package:gameodoro/widgets/gameodoro_logo.dart';
@@ -17,6 +18,7 @@ class GamesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final games = [
       (title: 'Tetris', path: 'assets/shot_tetris.png', page: TetrisPage.route),
+      (title: 'Snake', path: 'assets/shot_snake.png', page: SnakePage.route),
     ];
     const cardWidth = 240.0;
     const cardHeight = 380.0;
@@ -45,6 +47,7 @@ class GamesPage extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             child: GridView(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                childAspectRatio: cardWidth / cardHeight,
                 crossAxisCount:
                     max(1, MediaQuery.of(context).size.width ~/ cardWidth),
               ),
