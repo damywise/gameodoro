@@ -10,4 +10,4 @@ Pomodoro + Game, made with Flutter
 ## Team
 - [damywise](https://github.com/damywise) - Code
 - [dennis](https://github.com/Dennis9980) - UI
-- [sadri](https://github.com/muhammadsadri19)
+- [sadri](https://github.com/muhammadsadri19) - Doc
