@@ -13,7 +13,6 @@ class NotificationWidget extends StatelessWidget {
     required WidgetRef ref,
     super.key,
   }) {
-    print('test');
     final tune = ref.read(
       tuneProvider.select(
         (value) => value.firstWhere((element) => element.selected),

@@ -6,7 +6,7 @@ part of 'snake.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$snakeHash() => r'536dab29daf0c75c08defe2584c04d236e157dbe';
+String _$snakeHash() => r'e82db68ec052b361f39793e9e36ea2325e6a4878';
 
 /// See also [Snake].
 @ProviderFor(Snake)

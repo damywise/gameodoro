@@ -20,6 +20,12 @@ class Tetris extends _$Tetris {
   @override
   TetrisData build() {
     _prefs = ref.read(sharedPreferences);
+    final loadData = _prefs.getString('tetris');
+    if (loadData != null) {
+      return TetrisData.fromJson(
+        json.decode(loadData) as Map<String, dynamic>,
+      );
+    }
 
     return TetrisData(
       level: List.filled(18, List.filled(10, blocks.length)),
@@ -32,25 +38,15 @@ class Tetris extends _$Tetris {
 
   late SharedPreferences _prefs;
 
-  void dispose() {
+  Future<bool> dispose() async {
+    pause();
     _timer.cancel();
+    return _prefs.setString('tetris', json.encode(state.toJson()));
   }
 
   var _timer = Timer(Duration.zero, () {
     return;
   });
-
-  Future<void> init() async {
-    _prefs = await SharedPreferences.getInstance();
-    final data = TetrisData.fromJson(
-      json.decode(_prefs.getString('tetris') ?? '') as Map<String, dynamic>,
-    );
-    state = data.level.isNotEmpty ? data : state;
-  }
-
-  Future<void> save() async {
-    await _prefs.setString('tetris', json.encode(state.toJson()));
-  }
 
   void start() {
     state = state.copyWith(
@@ -63,6 +59,11 @@ class Tetris extends _$Tetris {
   }
 
   void play() {
+    const duration = Duration(milliseconds: 500);
+    _timer.cancel();
+    _timer = Timer.periodic(duration, (timer) {
+      _tick(false, timer);
+    });
     state = state.copyWith(
       isPlaying: true,
       isPaused: false,
@@ -70,6 +71,7 @@ class Tetris extends _$Tetris {
   }
 
   void pause() {
+    _timer.cancel();
     state = state.copyWith(
       isPaused: true,
     );
@@ -78,6 +80,7 @@ class Tetris extends _$Tetris {
   void end() {
     state = state.copyWith(
       isPlaying: false,
+      isPaused: false,
       isGameover: true,
     );
   }

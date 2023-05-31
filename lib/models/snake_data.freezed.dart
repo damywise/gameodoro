@@ -22,7 +22,6 @@ SnakeData _$SnakeDataFromJson(Map<String, dynamic> json) {
 mixin _$SnakeData {
   List<List<int>> get level => throw _privateConstructorUsedError;
   List<SnakePos> get pos => throw _privateConstructorUsedError;
-  int get length => throw _privateConstructorUsedError;
   AxisDirection get direction => throw _privateConstructorUsedError;
   bool get isPlaying => throw _privateConstructorUsedError;
   bool get isPaused => throw _privateConstructorUsedError;
@@ -42,7 +41,6 @@ abstract class $SnakeDataCopyWith<$Res> {
   $Res call(
       {List<List<int>> level,
       List<SnakePos> pos,
-      int length,
       AxisDirection direction,
       bool isPlaying,
       bool isPaused,
@@ -64,7 +62,6 @@ class _$SnakeDataCopyWithImpl<$Res, $Val extends SnakeData>
   $Res call({
     Object? level = null,
     Object? pos = null,
-    Object? length = null,
     Object? direction = null,
     Object? isPlaying = null,
     Object? isPaused = null,
@@ -79,10 +76,6 @@ class _$SnakeDataCopyWithImpl<$Res, $Val extends SnakeData>
           ? _value.pos
           : pos // ignore: cast_nullable_to_non_nullable
               as List<SnakePos>,
-      length: null == length
-          ? _value.length
-          : length // ignore: cast_nullable_to_non_nullable
-              as int,
       direction: null == direction
           ? _value.direction
           : direction // ignore: cast_nullable_to_non_nullable
@@ -113,7 +106,6 @@ abstract class _$$_SnakeDataCopyWith<$Res> implements $SnakeDataCopyWith<$Res> {
   $Res call(
       {List<List<int>> level,
       List<SnakePos> pos,
-      int length,
       AxisDirection direction,
       bool isPlaying,
       bool isPaused,
@@ -133,7 +125,6 @@ class __$$_SnakeDataCopyWithImpl<$Res>
   $Res call({
     Object? level = null,
     Object? pos = null,
-    Object? length = null,
     Object? direction = null,
     Object? isPlaying = null,
     Object? isPaused = null,
@@ -148,10 +139,6 @@ class __$$_SnakeDataCopyWithImpl<$Res>
           ? _value._pos
           : pos // ignore: cast_nullable_to_non_nullable
               as List<SnakePos>,
-      length: null == length
-          ? _value.length
-          : length // ignore: cast_nullable_to_non_nullable
-              as int,
       direction: null == direction
           ? _value.direction
           : direction // ignore: cast_nullable_to_non_nullable
@@ -178,7 +165,6 @@ class _$_SnakeData implements _SnakeData {
   const _$_SnakeData(
       {required final List<List<int>> level,
       required final List<SnakePos> pos,
-      required this.length,
       required this.direction,
       required this.isPlaying,
       required this.isPaused,
@@ -206,8 +192,6 @@ class _$_SnakeData implements _SnakeData {
   }
 
   @override
-  final int length;
-  @override
   final AxisDirection direction;
   @override
   final bool isPlaying;
@@ -218,7 +202,7 @@ class _$_SnakeData implements _SnakeData {
 
   @override
   String toString() {
-    return 'SnakeData(level: $level, pos: $pos, length: $length, direction: $direction, isPlaying: $isPlaying, isPaused: $isPaused, isGameover: $isGameover)';
+    return 'SnakeData(level: $level, pos: $pos, direction: $direction, isPlaying: $isPlaying, isPaused: $isPaused, isGameover: $isGameover)';
   }
 
   @override
@@ -228,7 +212,6 @@ class _$_SnakeData implements _SnakeData {
             other is _$_SnakeData &&
             const DeepCollectionEquality().equals(other._level, _level) &&
             const DeepCollectionEquality().equals(other._pos, _pos) &&
-            (identical(other.length, length) || other.length == length) &&
             (identical(other.direction, direction) ||
                 other.direction == direction) &&
             (identical(other.isPlaying, isPlaying) ||
@@ -245,7 +228,6 @@ class _$_SnakeData implements _SnakeData {
       runtimeType,
       const DeepCollectionEquality().hash(_level),
       const DeepCollectionEquality().hash(_pos),
-      length,
       direction,
       isPlaying,
       isPaused,
@@ -269,7 +251,6 @@ abstract class _SnakeData implements SnakeData {
   const factory _SnakeData(
       {required final List<List<int>> level,
       required final List<SnakePos> pos,
-      required final int length,
       required final AxisDirection direction,
       required final bool isPlaying,
       required final bool isPaused,
@@ -282,8 +263,6 @@ abstract class _SnakeData implements SnakeData {
   List<List<int>> get level;
   @override
   List<SnakePos> get pos;
-  @override
-  int get length;
   @override
   AxisDirection get direction;
   @override

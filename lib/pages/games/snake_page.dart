@@ -66,7 +66,7 @@ class SnakePage extends HookConsumerWidget {
           }
         });
 
-        return ref.read(snakeProvider.notifier).dispose;
+        return null;
       },
       [],
     );
@@ -88,124 +88,143 @@ class SnakePage extends HookConsumerWidget {
           game.move(AxisDirection.down);
         }
       },
-      child: Scaffold(
-        backgroundColor: context.colorScheme.surfaceVariant,
-        body: SafeArea(
-          minimum: safeAreaMinimumEdgeInsets,
-          child: Scaffold(
-            appBar: AppBar(
+      child: WillPopScope(
+        onWillPop: ref.read(snakeProvider.notifier).dispose,
+        child: Scaffold(
+          backgroundColor: context.colorScheme.surfaceVariant,
+          body: SafeArea(
+            minimum: safeAreaMinimumEdgeInsets,
+            child: Scaffold(
+              appBar: AppBar(
+                backgroundColor: Colors.transparent,
+              ),
+              extendBodyBehindAppBar: true,
               backgroundColor: Colors.transparent,
-            ),
-            extendBodyBehindAppBar: true,
-            backgroundColor: Colors.transparent,
-            body: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: AspectRatio(
-                            aspectRatio: 10 / 18,
-                            child: LayoutBuilder(
-                              builder: (context, constraints) {
-                                return Card(
-                                  color: Theme.of(context).cardColor,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8),
-                                    child: LayoutBuilder(
-                                      builder: (context, constraints) {
-                                        return Stack(
-                                          alignment: Alignment.center,
-                                          children: [
-                                            LayoutBuilder(
-                                              builder: (context, constraints) {
-                                                return buildTiles(level);
-                                              },
-                                            ),
-                                            if (isGameover && !isPlaying) ...[
-                                              Center(
-                                                child: Text(
-                                                  'Game Over',
-                                                  style: context
-                                                      .textTheme.headlineLarge
-                                                      ?.copyWith(
-                                                    foreground: Paint()
-                                                      ..color = Theme.of(
-                                                                context,
-                                                              ).brightness ==
-                                                              Brightness.dark
-                                                          ? Colors.black
-                                                          : Colors.white
-                                                      ..style =
-                                                          PaintingStyle.stroke
-                                                      ..strokeWidth = 2.0,
+              body: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: AspectRatio(
+                              aspectRatio: 10 / 18,
+                              child: LayoutBuilder(
+                                builder: (context, constraints) {
+                                  return Card(
+                                    color: Theme.of(context).cardColor,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8),
+                                      child: LayoutBuilder(
+                                        builder: (context, constraints) {
+                                          return Stack(
+                                            alignment: Alignment.center,
+                                            children: [
+                                              LayoutBuilder(
+                                                builder:
+                                                    (context, constraints) {
+                                                  return buildTiles(level);
+                                                },
+                                              ),
+                                              if (isGameover && !isPlaying) ...[
+                                                Center(
+                                                  child: Text(
+                                                    'Game Over',
+                                                    style: context
+                                                        .textTheme.headlineLarge
+                                                        ?.copyWith(
+                                                      foreground: Paint()
+                                                        ..color = Theme.of(
+                                                                  context,
+                                                                ).brightness ==
+                                                                Brightness.dark
+                                                            ? Colors.black
+                                                            : Colors.white
+                                                        ..style =
+                                                            PaintingStyle.stroke
+                                                        ..strokeWidth = 2.0,
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              Center(
-                                                child: Text(
-                                                  'Game Over',
-                                                  style: context
-                                                      .textTheme.headlineLarge,
+                                                Center(
+                                                  child: Text(
+                                                    'Game Over',
+                                                    style: context.textTheme
+                                                        .headlineLarge,
+                                                  ),
                                                 ),
-                                              ),
+                                              ],
                                             ],
-                                          ],
-                                        );
-                                      },
+                                          );
+                                        },
+                                      ),
                                     ),
-                                  ),
-                                );
-                              },
+                                  );
+                                },
+                              ),
                             ),
                           ),
-                        ),
-                        FilledButton(
-                          onPressed: () => handleStartButton(
-                            ref,
-                            isPaused: isPaused,
-                            isPlaying: isPlaying,
-                          ),
-                          child: Text(
-                            getStartButtonText(
-                              isGameover: isGameover,
-                              isPaused: isPaused,
-                              isPlaying: isPlaying,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 32,
-                        ),
-                        FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: SizedBox(
-                            width: 240 + 48,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  width: (Theme.of(context)
-                                              .floatingActionButtonTheme
-                                              .largeSizeConstraints
-                                              ?.maxWidth ??
-                                          96) *
-                                      3,
-                                  child: AspectRatio(
-                                    aspectRatio: 1,
-                                    child: _buildControls(ref, context, direction),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              FilledButton(
+                                onPressed: () => handleStartButton(
+                                  ref,
+                                  isPaused: isPaused,
+                                  isPlaying: isPlaying,
+                                ),
+                                child: Text(
+                                  getStartButtonText(
+                                    isGameover: isGameover,
+                                    isPaused: isPaused,
+                                    isPlaying: isPlaying,
                                   ),
                                 ),
-                              ],
+                              ),
+                              FilledButton(
+                                onPressed: ref.read(snakeProvider.notifier).end,
+                                child: const Text(
+                                  'End Game',
+                                ),
+                              )
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 32,
+                          ),
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: SizedBox(
+                              width: 240 + 48,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: (Theme.of(context)
+                                                .floatingActionButtonTheme
+                                                .largeSizeConstraints
+                                                ?.maxWidth ??
+                                            96) *
+                                        3,
+                                    child: AspectRatio(
+                                      aspectRatio: 1,
+                                      child: _buildControls(
+                                        ref,
+                                        context,
+                                        direction,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -242,7 +261,10 @@ class SnakePage extends HookConsumerWidget {
   }
 
   Widget _buildControls(
-      WidgetRef ref, BuildContext context, AxisDirection direction) {
+    WidgetRef ref,
+    BuildContext context,
+    AxisDirection direction,
+  ) {
     return Column(
       children: [
         Row(
@@ -330,8 +352,11 @@ class SnakePage extends HookConsumerWidget {
                             child: DecoratedBox(
                               decoration: BoxDecoration(
                                 color: switch (block) {
-                                  2 => Colors.orangeAccent,
-                                  1 => Colors.blue,
+                                  > 2 => Colors.blue
+                                      .withBlue(150 * (180 - block) ~/ 180)
+                                      .withGreen(120 * (180 - block) ~/ 180),
+                                  2 => Colors.lightBlueAccent,
+                                  1 => Colors.orangeAccent,
                                   _ => Colors.grey.withOpacity(.2),
                                 },
                                 borderRadius: BorderRadius.circular(

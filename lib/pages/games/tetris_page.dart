@@ -64,7 +64,7 @@ class TetrisPage extends HookConsumerWidget {
           }
         });
 
-        return ref.read(tetrisProvider.notifier).dispose;
+        return null;
       },
       [],
     );
@@ -86,126 +86,142 @@ class TetrisPage extends HookConsumerWidget {
           game.move(AxisDirection.down, fall: true);
         }
       },
-      child: Scaffold(
-        backgroundColor: context.colorScheme.surfaceVariant,
-        body: SafeArea(
-          minimum: safeAreaMinimumEdgeInsets,
-          child: Scaffold(
-            appBar: AppBar(
+      child: WillPopScope(
+        onWillPop: ref.read(tetrisProvider.notifier).dispose,
+        child: Scaffold(
+          backgroundColor: context.colorScheme.surfaceVariant,
+          body: SafeArea(
+            minimum: safeAreaMinimumEdgeInsets,
+            child: Scaffold(
+              appBar: AppBar(
+                backgroundColor: Colors.transparent,
+              ),
+              extendBodyBehindAppBar: true,
               backgroundColor: Colors.transparent,
-            ),
-            extendBodyBehindAppBar: true,
-            backgroundColor: Colors.transparent,
-            body: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: AspectRatio(
-                            aspectRatio: 10 / 18,
-                            child: LayoutBuilder(
-                              builder: (context, constraints) {
-                                return Card(
-                                  color: Theme.of(context).cardColor,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8),
-                                    child: LayoutBuilder(
-                                      builder: (context, constraints) {
-                                        return Stack(
-                                          alignment: Alignment.center,
-                                          children: [
-                                            LayoutBuilder(
-                                              builder: (context, constraints) {
-                                                return Column(
-                                                  children: buildTiles(level),
-                                                );
-                                              },
-                                            ),
-                                            if (isGameover && !isPlaying) ...[
-                                              Center(
-                                                child: Text(
-                                                  'Game Over',
-                                                  style: context
-                                                      .textTheme.headlineLarge
-                                                      ?.copyWith(
-                                                    foreground: Paint()
-                                                      ..color = Theme.of(
-                                                                context,
-                                                              ).brightness ==
-                                                              Brightness.dark
-                                                          ? Colors.black
-                                                          : Colors.white
-                                                      ..style =
-                                                          PaintingStyle.stroke
-                                                      ..strokeWidth = 2.0,
+              body: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: AspectRatio(
+                              aspectRatio: 10 / 18,
+                              child: LayoutBuilder(
+                                builder: (context, constraints) {
+                                  return Card(
+                                    color: Theme.of(context).cardColor,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8),
+                                      child: LayoutBuilder(
+                                        builder: (context, constraints) {
+                                          return Stack(
+                                            alignment: Alignment.center,
+                                            children: [
+                                              LayoutBuilder(
+                                                builder:
+                                                    (context, constraints) {
+                                                  return Column(
+                                                    children: buildTiles(level),
+                                                  );
+                                                },
+                                              ),
+                                              if (isGameover && !isPlaying) ...[
+                                                Center(
+                                                  child: Text(
+                                                    'Game Over',
+                                                    style: context
+                                                        .textTheme.headlineLarge
+                                                        ?.copyWith(
+                                                      foreground: Paint()
+                                                        ..color = Theme.of(
+                                                                  context,
+                                                                ).brightness ==
+                                                                Brightness.dark
+                                                            ? Colors.black
+                                                            : Colors.white
+                                                        ..style =
+                                                            PaintingStyle.stroke
+                                                        ..strokeWidth = 2.0,
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              Center(
-                                                child: Text(
-                                                  'Game Over',
-                                                  style: context
-                                                      .textTheme.headlineLarge,
+                                                Center(
+                                                  child: Text(
+                                                    'Game Over',
+                                                    style: context.textTheme
+                                                        .headlineLarge,
+                                                  ),
                                                 ),
-                                              ),
+                                              ],
                                             ],
-                                          ],
-                                        );
-                                      },
+                                          );
+                                        },
+                                      ),
                                     ),
-                                  ),
-                                );
-                              },
+                                  );
+                                },
+                              ),
                             ),
                           ),
-                        ),
-                        FilledButton(
-                          onPressed: () => handleStartButton(
-                            ref,
-                            isPaused: isPaused,
-                            isPlaying: isPlaying,
-                          ),
-                          child: Text(
-                            getStartButtonText(
-                              isGameover: isGameover,
-                              isPaused: isPaused,
-                              isPlaying: isPlaying,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 32,
-                        ),
-                        FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: SizedBox(
-                            width: 240 + 48,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  width: (Theme.of(context)
-                                              .floatingActionButtonTheme
-                                              .largeSizeConstraints
-                                              ?.maxWidth ??
-                                          96) *
-                                      3,
-                                  child: AspectRatio(
-                                    aspectRatio: 1,
-                                    child: _buildControls(ref, context),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              FilledButton(
+                                onPressed: () => handleStartButton(
+                                  ref,
+                                  isPaused: isPaused,
+                                  isPlaying: isPlaying,
+                                ),
+                                child: Text(
+                                  getStartButtonText(
+                                    isGameover: isGameover,
+                                    isPaused: isPaused,
+                                    isPlaying: isPlaying,
                                   ),
                                 ),
-                              ],
+                              ),
+                              FilledButton(
+                                onPressed:
+                                    ref.read(tetrisProvider.notifier).end,
+                                child: const Text(
+                                  'End Game',
+                                ),
+                              )
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 32,
+                          ),
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: SizedBox(
+                              width: 240 + 48,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: (Theme.of(context)
+                                                .floatingActionButtonTheme
+                                                .largeSizeConstraints
+                                                ?.maxWidth ??
+                                            96) *
+                                        3,
+                                    child: AspectRatio(
+                                      aspectRatio: 1,
+                                      child: _buildControls(ref, context),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

@@ -6,7 +6,10 @@ part 'snake_data.freezed.dart';
 part 'snake_data.g.dart';
 
 class SnakePos {
-  SnakePos({required this.x, required this.y,});
+  SnakePos({
+    required this.x,
+    required this.y,
+  });
 
   SnakePos.fromJson(Map<String, dynamic> json)
       : x = json['x'] as int,
@@ -25,7 +28,6 @@ class SnakeData with _$SnakeData {
   const factory SnakeData({
     required List<List<int>> level,
     required List<SnakePos> pos,
-    required int length,
     required AxisDirection direction,
     required bool isPlaying,
     required bool isPaused,

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:collection/collection.dart';
@@ -11,17 +12,24 @@ import 'package:shared_preferences/shared_preferences.dart';
 part 'snake.g.dart';
 
 const duration = Duration(milliseconds: 300);
+const emptyIndex = 0;
+const foodIndex = 1;
 
 @riverpod
 class Snake extends _$Snake {
   @override
   SnakeData build() {
     _prefs = ref.read(sharedPreferences);
+    final loadData = _prefs.getString('snake');
+    if (loadData != null) {
+      return SnakeData.fromJson(
+        json.decode(loadData) as Map<String, dynamic>,
+      );
+    }
 
     return SnakeData(
       level: List.filled(10, List.filled(18, 0)),
       pos: [],
-      length: 0,
       direction: AxisDirection.down,
       isPlaying: false,
       isPaused: false,
@@ -35,7 +43,7 @@ class Snake extends _$Snake {
     return;
   });
 
-  var newDirection = AxisDirection.down;
+  var _newDirection = AxisDirection.down;
 
   void start() {
     final newSnake = SnakePos(
@@ -48,7 +56,6 @@ class Snake extends _$Snake {
         newSnake,
         SnakePos(x: newSnake.x, y: newSnake.y - 1),
       ],
-      length: 0,
       direction: AxisDirection.down,
       isPlaying: true,
       isPaused: false,
@@ -82,6 +89,7 @@ class Snake extends _$Snake {
     _timer.cancel();
     state = state.copyWith(
       isPlaying: false,
+      isPaused: false,
       isGameover: true,
     );
   }
@@ -90,15 +98,15 @@ class Snake extends _$Snake {
     // handle direction
     state = state.copyWith(
       direction: switch (state.direction) {
-        AxisDirection.down when newDirection == AxisDirection.up =>
+        AxisDirection.down when _newDirection == AxisDirection.up =>
           AxisDirection.down,
-        AxisDirection.up when newDirection == AxisDirection.down =>
+        AxisDirection.up when _newDirection == AxisDirection.down =>
           AxisDirection.up,
-        AxisDirection.right when newDirection == AxisDirection.left =>
+        AxisDirection.right when _newDirection == AxisDirection.left =>
           AxisDirection.right,
-        AxisDirection.left when newDirection == AxisDirection.right =>
+        AxisDirection.left when _newDirection == AxisDirection.right =>
           AxisDirection.left,
-        _ => newDirection,
+        _ => _newDirection,
       },
     );
 
@@ -135,11 +143,11 @@ class Snake extends _$Snake {
       ),
     ];
 
-    if (state.level[newPos.first.x][newPos.first.y] == 1) {
+    if (state.level[newPos.first.x][newPos.first.y] > foodIndex) {
       end();
     }
 
-    if (state.level[newPos.first.x][newPos.first.y] == 2) {
+    if (state.level[newPos.first.x][newPos.first.y] == foodIndex) {
       newPos.addAll(state.pos);
     } else {
       newPos.addAll([...state.pos]..removeLast());
@@ -149,9 +157,11 @@ class Snake extends _$Snake {
       pos: newPos,
     );
 
-    _drawSnake(food: state.level[state.pos.first.x][state.pos.first.y] == 2);
+    _drawSnake(
+      food: state.level[state.pos.first.x][state.pos.first.y] == foodIndex,
+    );
 
-    if (!state.level.flattened.contains(2) && !state.isGameover) {
+    if (!state.level.flattened.contains(foodIndex) && !state.isGameover) {
       _spawnFood();
     }
   }
@@ -161,8 +171,8 @@ class Snake extends _$Snake {
     while (true) {
       final newX = Random().nextInt(9);
       final newY = Random().nextInt(17);
-      if (newLevel[newX][newY] == 0) {
-        newLevel[newX] = [...newLevel[newX]]..[newY] = 2;
+      if (newLevel[newX][newY] == emptyIndex) {
+        newLevel[newX] = [...newLevel[newX]]..[newY] = foodIndex;
         break;
       }
     }
@@ -171,14 +181,15 @@ class Snake extends _$Snake {
 
   void _drawSnake({required bool food}) {
     final newLevel = [
-      ...state.level.map(
-        (e) => [
-          ...e.map((e) => e == 2 ? 2 : 0),
+      ...state.level.mapIndexed(
+        (i, e) => [
+          ...e.map((e) => e == foodIndex ? foodIndex : emptyIndex),
         ],
       )
     ];
     state.pos.forEachIndexed((index, element) {
-      newLevel[element.x] = [...newLevel[element.x]]..[element.y] = 1;
+      newLevel[element.x] = [...newLevel[element.x]]..[element.y] =
+          foodIndex + index + 1;
     });
     state = state.copyWith(level: newLevel);
   }
@@ -194,7 +205,7 @@ class Snake extends _$Snake {
 
   void move(AxisDirection direction) {
     // set temporary direction
-    newDirection = switch (state.direction) {
+    _newDirection = switch (state.direction) {
       AxisDirection.down when direction == AxisDirection.up =>
         AxisDirection.down,
       AxisDirection.up when direction == AxisDirection.down => AxisDirection.up,
@@ -204,10 +215,11 @@ class Snake extends _$Snake {
         AxisDirection.left,
       _ => direction,
     };
-    newDirection = direction;
+    _newDirection = direction;
   }
 
-  void dispose() {
-    _timer.cancel();
+  Future<bool> dispose() async {
+    pause();
+    return _prefs.setString('snake', json.encode(state.toJson()));
   }
 }

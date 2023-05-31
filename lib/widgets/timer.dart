@@ -26,6 +26,9 @@ class Timer extends ConsumerWidget {
       minutes %= 60;
       milliseconds %= 1000;
     }
+    final timerText =
+        '${minutes < 10 ? '0' : ''}$minutes : ${seconds < 10 ? '0' : ''}'
+        '$seconds';
 
     return Hero(
       tag: 'timer',
@@ -37,7 +40,7 @@ class Timer extends ConsumerWidget {
           children: [
             Expanded(
               child: AutoSizeText(
-                '${minutes < 10 ? '0' : ''}$minutes : ${seconds < 10 ? '0' : ''}$seconds',
+                timerText,
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 style: Theme.of(context)
