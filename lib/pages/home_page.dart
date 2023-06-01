@@ -95,10 +95,14 @@ class HomePage extends HookConsumerWidget {
       () {
         if (ref.read(sharedPreferences).getBool('firstopen') ?? true) {
           WidgetsBinding.instance.addPostFrameCallback(
-            (_) => Future<void>.delayed(
-              const Duration(seconds: 1),
-              () => startShowcase(context, keys, ref),
-            ),
+            (_) {
+              Future<void>.delayed(
+                const Duration(seconds: 1),
+                () {
+                  startShowcase(context, keys, ref);
+                },
+              );
+            },
           );
         }
         SystemChrome.setPreferredOrientations([
@@ -181,7 +185,7 @@ class HomePage extends HookConsumerWidget {
                           onTap: () {
                             showDialog<Widget>(
                               context: context,
-                              builder: (context) => const _TimerPickerDialog(),
+                              builder: (context) => const TimerPickerDialog(),
                             );
                           },
                           child: Column(
@@ -475,15 +479,15 @@ class HomePage extends HookConsumerWidget {
   void handleTuneButton(BuildContext context) {
     showDialog<Widget>(
       context: context,
-      builder: (context) => const _TuneWidget(),
+      builder: (context) => const TuneWidget(),
     );
   }
 }
 
 /// This is a separate widget because showDialog doesn't work correctly
 /// otherwise
-class _TimerPickerDialog extends HookWidget {
-  const _TimerPickerDialog();
+class TimerPickerDialog extends HookWidget {
+  const TimerPickerDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -540,8 +544,8 @@ class _TimerPickerDialog extends HookWidget {
 
 /// This is a separate widget because showDialog doesn't work correctly
 /// otherwise
-class _TuneWidget extends HookConsumerWidget {
-  const _TuneWidget();
+class TuneWidget extends HookConsumerWidget {
+  const TuneWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

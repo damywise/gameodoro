@@ -54,7 +54,7 @@ class Session extends _$Session {
 
   void start() {
     Wakelock.enable();
-    state = state.copyWith(stopwatchState: StopwatchState.started, number: 1);
+    state = state.copyWith(stopwatchState: StopwatchState.started, number: state.number);
     _stopwatch.start();
   }
 
@@ -67,14 +67,6 @@ class Session extends _$Session {
   void reset() {
     _stopwatch.reset();
     state = state.copyWith(elapsed: 0);
-  }
-
-  void stop() {
-    pause();
-    state = state.copyWith(
-      number: 0,
-      sessionState: SessionState.focus,
-    );
   }
 
   void edit({
@@ -108,24 +100,19 @@ class Session extends _$Session {
   }
 
   void next() {
-    state = state.copyWith(
-      number: switch (state.number) {
-        >= 4 => 1,
-        == 0 => 2,
-        _ => state.number + 1,
-      },
-    );
+    print(state.number);
+    state = state.copyWith(number: state.number >= 3 ? 0 : state.number + 1);
+    print(state.number);
     _updateStudyState();
   }
 
   void previous() {
-    state = state.copyWith(number: state.number <= 1 ? 4 : state.number - 1);
+    state = state.copyWith(number: state.number <= 0 ? 3 : state.number - 1);
     _updateStudyState();
   }
 
   void _updateStudyState() {
     const sessionStates = [
-      SessionState.focus,
       SessionState.focus,
       SessionState.shortBreak,
       SessionState.focus,
@@ -140,9 +127,11 @@ class Session extends _$Session {
 
   void _tick(Timer timer) {
     if (_stopwatch.isRunning) {
+      print('test1');
       final isSessionDone =
           _stopwatch.elapsedMilliseconds + 100 >= state.duration.inMilliseconds;
       if (isSessionDone) {
+        print('test2');
         return next();
       }
       state = state.copyWith(elapsed: _stopwatch.elapsedMilliseconds);

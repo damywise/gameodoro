@@ -16,6 +16,12 @@ class OnboardingPage extends HookConsumerWidget {
 
   static const route = '/onboarding';
 
+  static const descriptions = [
+    'Gameodoro is a fun and effective tool for learning. With built-in timers and pomodoro techniques, users can easily set up learning time using time settings. No more boring study sessions!',
+    'Gameodoro also provides a to-do list to organize your tasks. With this feature, you can easily keep track of your daily duties and stay on top of your game.',
+    'You can play games provided by Gameodoro during recess to improve your study mood.',
+  ];
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     /// notif
@@ -60,11 +66,6 @@ class OnboardingPage extends HookConsumerWidget {
       [],
     );
     const cardSize = 240.0;
-    const descriptions = [
-      'Gameodoro is a fun and effective tool for learning. With built-in timers and pomodoro techniques, users can easily set up learning time using time settings. No more boring study sessions!',
-      'Gameodoro also provides a to-do list to organize your tasks. With this feature, you can easily keep track of your daily duties and stay on top of your game.',
-      'You can play games provided by Gameodoro during recess to improve your study mood.',
-    ];
     const images = [
       'assets/img1.png',
       'assets/img2.png',
