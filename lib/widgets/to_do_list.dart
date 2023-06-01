@@ -49,11 +49,13 @@ class ToDoList extends HookConsumerWidget {
                   Theme.of(context).buttonTheme.colorScheme?.primary,
               onPressed: () {
                 if (isGoingToFirstTab.value == false) {
-                  todoScrollController.animateTo(
-                    0,
-                    duration: const Duration(milliseconds: 200),
-                    curve: Curves.easeInOut,
-                  );
+                  if (todoScrollController.hasClients) {
+                    todoScrollController.animateTo(
+                      0,
+                      duration: const Duration(milliseconds: 200),
+                      curve: Curves.easeInOut,
+                    );
+                  }
                   taskNotifier.add();
                 }
 
