@@ -146,6 +146,7 @@ class GamesPage extends StatelessWidget {
                                       height: 12,
                                     ),
                                     ElevatedButton(
+                                      key: ValueKey('play_${game.title}'),
                                       onPressed: () {
                                         Navigator.of(context)
                                             .pushNamed(game.page);

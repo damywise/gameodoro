@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gameodoro/main.dart';
+import 'package:gameodoro/pages/games/snake_page.dart';
+import 'package:gameodoro/pages/games/tetris_page.dart';
+import 'package:gameodoro/pages/games_page.dart';
 import 'package:gameodoro/pages/home_page.dart';
 import 'package:gameodoro/pages/onboarding_page.dart';
 import 'package:gameodoro/pages/to_do_list_page.dart';
 import 'package:gameodoro/utils.dart';
+import 'package:gameodoro/widgets/alert_dialog_widget.dart';
 import 'package:gameodoro/widgets/notification_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:integration_test/integration_test.dart';
@@ -327,7 +331,137 @@ void main() {
       expect(find.byType(HomePage), findsOneWidget);
       // make sure no task is in home page
       expect(find.byType(TextFormField), findsNothing);
-
     });
+  });
+
+  testWidgets('Test Game Pause', (tester) async {
+    SharedPreferences.setMockInitialValues({
+      'firstopen': false,
+    });
+    final pref = await SharedPreferences.getInstance();
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [sharedPreferences.overrideWithValue(pref)],
+        child: const Main(),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    // make sure we are in home page
+    expect(find.byType(HomePage), findsOneWidget);
+
+    // tap on the 'Focus' text to show timer dialog
+    await tester.tap(find.text('Focus'));
+    await tester.pumpAndSettle();
+    // make sure timer dialog is shown
+    expect(find.byType(TimerPickerDialog), findsOneWidget);
+
+    // set all timers to 2 seconds
+    await tester.drag(
+      find.text('min.'),
+      const Offset(0, 200 * 25 / 6),
+      warnIfMissed: false,
+    );
+    await tester.pumpAndSettle();
+    await tester.drag(
+      find.text('sec.'),
+      const Offset(0, -200 * 2.5 / 6),
+      warnIfMissed: false,
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Short Break'));
+    await tester.pumpAndSettle();
+    await tester.drag(
+      find.text('min.'),
+      const Offset(0, 200 * 5 / 6),
+      warnIfMissed: false,
+    );
+    await tester.pumpAndSettle();
+    await tester.drag(
+      find.text('sec.'),
+      const Offset(0, -200 * 2.5 / 6),
+      warnIfMissed: false,
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Long Break'));
+    await tester.pumpAndSettle();
+    await tester.drag(
+      find.text('min.'),
+      const Offset(0, 200 * 15 / 6),
+      warnIfMissed: false,
+    );
+    await tester.pumpAndSettle();
+    await tester.drag(
+      find.text('sec.'),
+      const Offset(0, -200 * 2.5 / 6),
+      warnIfMissed: false,
+    );
+    await tester.pumpAndSettle();
+
+    // close the timer dialog
+    await tester.tap(find.byTooltip('Close'));
+    await tester.pumpAndSettle();
+    // make sure timer dialog is not shown
+    expect(find.byType(TimerPickerDialog), findsNothing);
+
+    // start from short break
+    await tester.tap(find.byTooltip('Next Session'));
+    await tester.pumpAndSettle();
+    // tap on the 'Start' button
+    await tester.tap(find.text('Start'));
+    await tester.pump();
+
+    // go to games page
+    await tester.tap(find.byIcon(Icons.videogame_asset));
+    await tester.pump();
+    await tester.pump();
+    await tester.pump();
+    expect(find.byType(GamesPage), findsOneWidget);
+    // go to tetris page
+    await tester.tap(find.byKey(const ValueKey('play_Tetris')));
+    await tester.pump();
+    await tester.pump();
+    await tester.pump();
+    expect(find.byType(TetrisPage), findsOneWidget);
+    // expect no AlertDialogWidget
+    expect(find.byType(AlertDialogWidget), findsNothing);
+
+    // wait 2 seconds
+    await tester.pump(const Duration(seconds: 2));
+    // expect notification widget
+    expect(find.byType(NotificationWidget), findsOneWidget);
+
+    // expect AlertDialogWidget
+    expect(find.byType(AlertDialogWidget), findsOneWidget);
+    // press go back
+    await tester.tap(find.text('Go back'));
+    await tester.pump();
+    await tester.pump();
+    await tester.pump();
+
+    await tester.drag(find.byType(NotificationWidget), const Offset(1000, 0));
+    await tester.pump();
+    await tester.pump();
+    await tester.pump();
+    // go to snake game
+    await tester.tap(find.byKey(const ValueKey('play_Snake')));
+    await tester.pump();
+    await tester.pump();
+    await tester.pump();
+    expect(find.byType(SnakePage), findsOneWidget);
+    // expect AlertDialogWidget immediately
+    expect(find.byType(AlertDialogWidget), findsOneWidget);
+    // press let's go
+    await tester.tap(find.text("Let's go!"));
+    await tester.pump();
+    await tester.pump();
+    await tester.pump();
+
+    // make sure we're in home page
+    expect(find.byType(HomePage), findsOneWidget);
+
   });
 }
