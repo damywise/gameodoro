@@ -20,7 +20,7 @@ dependencies:
   # generators
   riverpod_annotation: ^2.1.1
   freezed_annotation: ^2.2.0
-  json_annotation: ^4.8.0
+  json_annotation: ^4.8.1
 
   # UI/UX
   auto_size_text: ^3.0.0
@@ -28,13 +28,15 @@ dependencies:
   top_snackbar_flutter: ^3.0.0+1
 
   # misc
-  shared_preferences: ^2.1.0
-  audioplayers: ^4.0.1
+  shared_preferences: ^2.1.1
+  audioplayers: ^4.1.0
   wakelock: ^0.6.2
   showcaseview: ^2.0.3
 
 dev_dependencies:
   flutter_test:
+    sdk: flutter
+  integration_test:
     sdk: flutter
 
   custom_lint:
