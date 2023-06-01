@@ -47,17 +47,17 @@ jobs:
       - name: Upload Android APK arm64 Release
         uses: actions/upload-artifact@v2
         with:
-          name: android-apk-arm64.apk
+          name: android-apk-arm64
           path: build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
       - name: Upload Android APK arm Release
         uses: actions/upload-artifact@v2
         with:
-          name: android-apk-arm.apk
+          name: android-apk-arm
           path: build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
       - name: Upload Android APK x86 Release
         uses: actions/upload-artifact@v2
         with:
-          name: android-apk-x86.apk
+          name: android-apk-x86
           path: build/app/outputs/flutter-apk/app-x86_64-release.apk
       - name: Upload Android AAB Release
         uses: actions/upload-artifact@v2
