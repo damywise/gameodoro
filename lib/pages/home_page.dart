@@ -100,6 +100,7 @@ class HomePage extends HookConsumerWidget {
                 const Duration(seconds: 1),
                 () {
                   startShowcase(context, keys, ref);
+                  prefs.setBool('firstopen', false);
                 },
               );
             },
@@ -320,7 +321,6 @@ class HomePage extends HookConsumerWidget {
                       description:
                           'You can repeat this tutorial anytime you want',
                       onBarrierClick: () {
-                        prefs.setBool('firstopen', false);
                         ref.read(tutorialRunning.notifier).state = false;
                       },
                       child: Tooltip(
