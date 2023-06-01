@@ -54,7 +54,10 @@ class Session extends _$Session {
 
   void start() {
     Wakelock.enable();
-    state = state.copyWith(stopwatchState: StopwatchState.started, number: state.number);
+    state = state.copyWith(
+      stopwatchState: StopwatchState.started,
+      number: state.number,
+    );
     _stopwatch.start();
   }
 
@@ -100,9 +103,7 @@ class Session extends _$Session {
   }
 
   void next() {
-    print(state.number);
     state = state.copyWith(number: state.number >= 3 ? 0 : state.number + 1);
-    print(state.number);
     _updateStudyState();
   }
 
@@ -127,11 +128,9 @@ class Session extends _$Session {
 
   void _tick(Timer timer) {
     if (_stopwatch.isRunning) {
-      print('test1');
       final isSessionDone =
           _stopwatch.elapsedMilliseconds + 100 >= state.duration.inMilliseconds;
       if (isSessionDone) {
-        print('test2');
         return next();
       }
       state = state.copyWith(elapsed: _stopwatch.elapsedMilliseconds);
