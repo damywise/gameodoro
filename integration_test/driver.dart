@@ -356,7 +356,7 @@ void main() {
       // make sure timer dialog is shown
       expect(find.byType(TimerPickerDialog), findsOneWidget);
 
-      // set all timers to 2 seconds
+      // set timers
       await tester.drag(
         find.text('min.'),
         const Offset(0, 200 * 25 / 6),
@@ -365,7 +365,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.drag(
         find.text('sec.'),
-        const Offset(0, -200 * 2.5 / 6),
+        const Offset(0, -200 * 10 / 6),
         warnIfMissed: false,
       );
       await tester.pumpAndSettle();
