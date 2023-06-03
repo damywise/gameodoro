@@ -51,6 +51,7 @@ class Tetris extends _$Tetris {
   void start() {
     state = state.copyWith(
       level: List.filled(18, List.filled(10, blocks.length)),
+      currentBlock: null,
       isPlaying: true,
       isPaused: false,
       isGameover: false,
