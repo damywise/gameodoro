@@ -78,6 +78,7 @@ class Tetris extends _$Tetris {
   }
 
   void end() {
+    _timer.cancel();
     state = state.copyWith(
       isPlaying: false,
       isPaused: false,
