@@ -65,11 +65,11 @@ class Snake extends _$Snake {
   }
 
   void play() {
-    startGame();
     state = state.copyWith(
       isPlaying: true,
       isPaused: false,
     );
+    startGame();
   }
 
   void pause() {
@@ -120,9 +120,7 @@ class Snake extends _$Snake {
                 -9,
               AxisDirection.right => 1,
               // When hit wall, start from the right
-              AxisDirection.left
-                  when state.pos.first.x == 0 =>
-                9,
+              AxisDirection.left when state.pos.first.x == 0 => 9,
               AxisDirection.left => -1,
               _ => 0,
             },
@@ -134,9 +132,7 @@ class Snake extends _$Snake {
                 -17,
               AxisDirection.down => 1,
               // When hit wall, start from the bottom
-              AxisDirection.up
-                  when state.pos.first.y == 0 =>
-                17,
+              AxisDirection.up when state.pos.first.y == 0 => 17,
               AxisDirection.up => -1,
               _ => 0,
             },

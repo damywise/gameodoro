@@ -39,8 +39,10 @@ class TetrisPage extends HookConsumerWidget {
           isDialogShowing.value = true;
           showDialog<Widget>(
             context: context,
-            builder: (context) =>
-                AlertDialogWidget(isDialogShowing: isDialogShowing),
+            builder: (context) => AlertDialogWidget(
+              isDialogShowing: isDialogShowing,
+              dispose: ref.read(tetrisProvider.notifier).dispose,
+            ),
             barrierDismissible: false,
           );
         }
@@ -57,8 +59,10 @@ class TetrisPage extends HookConsumerWidget {
             isDialogShowing.value = true;
             showDialog<Widget>(
               context: context,
-              builder: (context) =>
-                  AlertDialogWidget(isDialogShowing: isDialogShowing),
+              builder: (context) => AlertDialogWidget(
+                isDialogShowing: isDialogShowing,
+                dispose: ref.read(tetrisProvider.notifier).dispose,
+              ),
               barrierDismissible: false,
             );
           }
