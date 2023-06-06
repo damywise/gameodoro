@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-Gameodoro is a Flutter app that combines the concept of Pomodoro and Game. It helps users manage their time and stay focused while working on tasks. Classic games are provided in the app so you don't get distracted anywhere else.
+Gameodoro is a Flutter app that combines the concept of Pomodoro and Game. It helps users manage their time and stay focused while working on tasks. Classic games are provided in the app so you don't get distracted anywhere else (the games will be paused when during focus session).
 
 ## Features
 
@@ -45,7 +45,7 @@ flutter run -d <device>
 3. Customize the settings according to your preferences.
 4. Add tasks to your to-do list.
 5. Start the Pomodoro timer and begin working on your tasks.
-6. Play games in the app during breaks if you want (the games will be paused when during focus session).
+6. Play games in the app during breaks if you want.
 
 ## Contributing
 
