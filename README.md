@@ -10,10 +10,6 @@ Gameodoro is a Flutter app that combines the concept of Pomodoro and Game. It he
 - Task management with the ability to add, edit, and delete tasks
 - Games: Tetris and Snake
 
-## Screenshots
-
-[TBD]
-
 ## Limitations
 
 - Due to lack of motivation, only Android is fully supported for now.
@@ -46,6 +42,32 @@ flutter run -d <device>
 4. Add tasks to your to-do list.
 5. Start the Pomodoro timer and begin working on your tasks.
 6. Play games in the app during breaks if you want.
+
+## Screenshots
+
+### Onboarding Page
+
+<img src="https://github.com/damywise/gameodoro/assets/25608913/e1004178-07b0-4c98-8c76-521f43573781" height=600 />
+
+### Home Page
+
+<img src="https://github.com/damywise/gameodoro/assets/25608913/ee2c61f9-239d-44d9-9c02-a73d0b4f5aa7" height=600 />
+
+### Tutorial
+
+<img src="https://github.com/damywise/gameodoro/assets/25608913/baaa057f-903c-4144-97e8-0a1d7874a1f0" height=600 />
+
+### Full Screen Mode
+
+<img src="https://github.com/damywise/gameodoro/assets/25608913/87df2e09-fd9c-4de9-a8ec-3bfb9eb34dc7" width=600 />
+
+### Tetris
+
+<img src="https://github.com/damywise/gameodoro/assets/25608913/33760798-8ab1-4ad6-a9c9-e5b930c9a717" height=600 />
+
+### Snake
+
+<img src="https://github.com/damywise/gameodoro/assets/25608913/204922f5-8026-4de2-8f8a-97dccbab432d" height=600 />
 
 ## Contributing
 
