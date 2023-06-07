@@ -23,6 +23,10 @@ void main() async {
   final prefs = await SharedPreferences.getInstance();
 
   if (Platform.isAndroid) {
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.portraitUp,
+    ]);
     await SystemChrome.setEnabledSystemUIMode(
       SystemUiMode.immersiveSticky,
       overlays: [SystemUiOverlay.top],

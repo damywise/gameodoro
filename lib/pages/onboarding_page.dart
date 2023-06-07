@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gameodoro/constants.dart';
 import 'package:gameodoro/pages/home_page.dart';
@@ -56,6 +57,10 @@ class OnboardingPage extends HookConsumerWidget {
     final index = useState(0);
     useEffect(
       () {
+        SystemChrome.setPreferredOrientations([
+          DeviceOrientation.portraitDown,
+          DeviceOrientation.portraitUp,
+        ]);
         controller.addListener(() {
           index.value = (controller.page ?? 0).round();
           buttonText.value = index.value < 2 ? 'Next' : 'Take me to Gameodoro!';
