@@ -27,11 +27,18 @@ class Snake extends _$Snake {
       );
     }
 
+    final newSnake = SnakePos(
+      x: Random().nextInt(9),
+      y: Random().nextInt(17),
+    );
     return SnakeData(
       level: List.filled(10, List.filled(18, 0)),
-      pos: [],
+      pos: [
+        newSnake,
+        SnakePos(x: newSnake.x, y: newSnake.y - 1),
+      ],
       direction: AxisDirection.down,
-      isPlaying: false,
+      isPlaying: true,
       isPaused: false,
       isGameover: false,
     );

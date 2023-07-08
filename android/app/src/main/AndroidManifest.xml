@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.gameodoro">
+    package="id.my.foamify.gameodoro">
    <application
         android:label="gameodoro"
         android:name="${applicationName}"
